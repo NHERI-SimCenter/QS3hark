@@ -7,7 +7,7 @@
 
 ## What is <i>QS<sup>3</sup>hark</i>
 
-<i>Qs<sup>3</sup>hark</i> is the acronym of site-specific seismic hazard analysis and research kit.
+<i>QS<sup>3</sup>hark</i> reads as Q-shark, which is a site-specific seismic hazard analysis and research kit with uncertainties quantified.
 This tool focuses on simulating wave propagation along soil depth using finite element (FE) method.
 The intended audience for <i>QS<sup>3</sup>hark</i> is researchers and practitioners interested in 
 performing site-specific analysis of soil in response to earthquakes, and educators interested in 
