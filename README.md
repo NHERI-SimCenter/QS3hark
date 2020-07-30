@@ -1,4 +1,4 @@
-# <i>s<sup>3</sup>hark</i>
+# <i>QS<sup>3</sup>hark</i>
 <h2>A SimCenter Tool For Site Response Analysis under Uncertainty</h2>
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3463594.svg)](https://doi.org/10.5281/zenodo.3246641)
