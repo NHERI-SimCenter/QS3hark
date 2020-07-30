@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
     //Setting Core Application Name, Organization, Version and Google Analytics Tracking Id
     //
 
-    QCoreApplication::setApplicationName("s3hark");
+    QCoreApplication::setApplicationName("QS3hark");
     QCoreApplication::setOrganizationName("SimCenter");
-    QCoreApplication::setApplicationVersion("1.5");
+    QCoreApplication::setApplicationVersion("0.9");
 
     //
     // set up logging of output messages for user debugging
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     QDir dirWork(logFilePath);
     if (!dirWork.exists())
         if (!dirWork.mkpath(logFilePath)) {
-            qDebug() << "s3hark - main - could not create directory for log file";
+            qDebug() << "QS3hark - main - could not create directory for log file";
         }
 
     // remove old log file as want to append to an empty file
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 
 
     MainWindow m;
-    m.setWindowTitle(QString("S") + QChar(0x00B3) + "HARK - Site-Specific Seismic Hazard Analysis & Research Kit" );
+    m.setWindowTitle(QString("QS") + QChar(0x00B3) + "HARK - Site-Specific Seismic Hazard Analysis & Research Kit with Uncertainty Quantification" );
     m.show();
 
     m.move ((QApplication::desktop()->width() - m.width())/2,(QApplication::desktop()->height() - m.height())/2);

@@ -1,15 +1,15 @@
 # <i>s<sup>3</sup>hark</i>
-<h2>A SimCenter Tool For Site Response Analysis</h2>
+<h2>A SimCenter Tool For Site Response Analysis under Uncertainty</h2>
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3463594.svg)](https://doi.org/10.5281/zenodo.3246641)
 
 ![image](resources/images/SRT.png)
 
-## What is <i>s<sup>3</sup>hark</i>
+## What is <i>QS<sup>3</sup>hark</i>
 
-<i>s<sup>3</sup>hark</i> is the acronym of site-specific seismic hazard analysis and research kit.
+<i>Qs<sup>3</sup>hark</i> is the acronym of site-specific seismic hazard analysis and research kit.
 This tool focuses on simulating wave propagation along soil depth using finite element (FE) method.
-The intended audience for <i>s<sup>3</sup>hark</i> is researchers and practitioners interested in 
+The intended audience for <i>QS<sup>3</sup>hark</i> is researchers and practitioners interested in 
 performing site-specific analysis of soil in response to earthquakes, and educators interested in 
 teaching site response analysis in their classes. The tool provides a friendly interface for users
 to input and modify soil layers using tables, while the built soil profile and the FE mesh being
@@ -17,7 +17,7 @@ visualized simultaneously. Results including acceleration, velocity, displacemen
 are visualized for the soil profile and for each node as well, from which the user can comprehend the 
 wave propagation and liquefaction status along the soil depth.
 
-Features of <i>s<sup>3</sup>hark</i> include:
+Features of <i>QS<sup>3</sup>hark</i> include:
 * 2D and 3D elements for dynamic analysis of fluid saturated porous media
 * Advanced linear / nonlinear soil material models
 * Total stress / effective stress analysis
@@ -49,11 +49,11 @@ Available material models:
 
 ## Instructions for developers: how to build
 
-#### 1. Make sure the paths of your blas and lapack are set correctly in s3hark.pri 
+#### 1. Make sure the paths of your blas and lapack are set correctly in QS3hark.pri 
 
 #### 2. Make sure you have fortran and c++ compilers installed.
 
-#### 3. Build <i>s<sup>3</sup>hark</i> by clicking Run in Qt Creator
+#### 3. Build <i>QS<sup>3</sup>hark</i> by clicking Run in Qt Creator
 
 ## How to Cite
 You can cite this software as follows:
