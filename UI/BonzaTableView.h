@@ -191,6 +191,9 @@ public:
         editor->addItem("PDMY02");
         editor->addItem("ManzariDafalias");
         editor->addItem("J2Bounding");
+        editor->addItem("PDMY03");
+        editor->addItem("PM4Sand_Random");
+        editor->addItem("PDMY03_Random");
         return editor;
     }
 
