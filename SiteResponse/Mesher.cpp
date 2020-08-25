@@ -35,7 +35,7 @@ bool Mesher::mesh2DColumnFromJson(json &j){
         dashpotCoeff = basicSettings["dashpotCoeff"];
         eSizeH = basicSettings["eSizeH"];
         eSizeV = basicSettings["eSizeV"];
-        groundMotion = basicSettings["groundMotion"];
+        groundMotion = basicSettings["groundMotion"].get<std::string>();;
         groundWaterTable = basicSettings["groundWaterTable"];
         rockDen = basicSettings["rockDen"];
         rockVs = basicSettings["rockVs"];
@@ -161,7 +161,7 @@ bool Mesher::mesh2DColumnFromFile(){
         dashpotCoeff = basicSettings["dashpotCoeff"];
         eSizeH = basicSettings["eSizeH"];
         eSizeV = basicSettings["eSizeV"];
-        groundMotion = basicSettings["groundMotion"];
+        groundMotion = basicSettings["groundMotion"].get<std::string>();
         groundWaterTable = basicSettings["groundWaterTable"];
         rockDen = basicSettings["rockDen"];
         rockVs = basicSettings["rockVs"];

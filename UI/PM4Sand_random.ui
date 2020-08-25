@@ -1046,6 +1046,32 @@
     <string>Element size (Vertical)</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="K0">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>180</y>
+     <width>41</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="whatsThis">
+    <string>At-rest coefficient of lateral earch pressure for initial stress</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="K0_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>180</y>
+     <width>111</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>K0 (Intial stress state)</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -105,6 +105,7 @@ private:
     std::string     theAnalysisDir;
     bool forward = true;
     bool m_doAnalysis = false;
+    bool m_runningStochastic = false;
 
     // 2D solver
     std::vector<double> dt;

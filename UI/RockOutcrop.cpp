@@ -1152,6 +1152,12 @@ void RockOutcrop::on_reBtn_clicked()
             }else if(list.at(MATERIAL-2).toString()=="J2Bounding")
             {//TODO: double check
                 DrInd = 1; hPermInd = 10; vPermInd = 11; uBulkInd = 12; voidInd = 13;
+            }else if(list.at(MATERIAL-2).toString()=="PM4Sand_Random")
+            {//TODO: double check
+                DrInd = 1; hPermInd = 25; vPermInd = 26; uBulkInd = 27; voidInd = 28;
+            }else if(list.at(MATERIAL-2).toString()=="PDMY03" || list.at(MATERIAL-2).toString()=="PDMY03_Random")
+            {//TODO: double check
+                DrInd = 1; hPermInd = 24; vPermInd = 25; uBulkInd = 26; voidInd = 27;
             }
 
 
@@ -1563,6 +1569,7 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["m"] = atof(pars[22].c_str());
         mat["Fsed_min"] = atof(pars[23].c_str());
         mat["p_sedo"] = atof(pars[24].c_str());
+        mat["K0"] = atof(pars[29].c_str());
     } else if (!matType.compare("PM4Silt"))
     {
         mat["Dr"] = atof(pars[1].c_str());
@@ -1593,6 +1600,7 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
 
         mat["m_m"] = atof(pars[25].c_str());
         mat["CG_consol"] = atof(pars[26].c_str());
+        mat["K0"] = atof(pars[31].c_str());
 
     } else if (!matType.compare("PIMY"))
     {
@@ -1687,6 +1695,7 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["z_max"] = atof(pars[17].c_str());
         mat["cz"] = atof(pars[18].c_str());
         mat["Den"] = atof(pars[19].c_str());
+        mat["K0"] = atof(pars[24].c_str());
 
     } else if (!matType.compare("J2Bounding"))
     {
@@ -1700,7 +1709,101 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["k_in"] = atof(pars[8].c_str());
         mat["beta"] = atof(pars[9].c_str());
 
+    } else if (!matType.compare("PM4Sand_Random"))
+    {
+        mat["Dr"] = atof(pars[1].c_str());
+        mat["G0"] = atof(pars[2].c_str());
+        mat["hpo"] = atof(pars[3].c_str());
+        mat["Den"] = atof(pars[4].c_str());
+        mat["P_atm"] = atof(pars[5].c_str());
+        mat["h0"] = atof(pars[6].c_str());
+        mat["emax"] = atof(pars[7].c_str());
+        mat["emin"] = atof(pars[8].c_str());
+        mat["nb"] = atof(pars[9].c_str());
+        mat["nd"] = atof(pars[10].c_str());
+        mat["Ado"] = atof(pars[11].c_str());
+        mat["z_max"] = atof(pars[12].c_str());
+        mat["cz"] = atof(pars[13].c_str());
+        mat["ce"] = atof(pars[14].c_str());
+        mat["phic"] = atof(pars[15].c_str());
+        mat["nu"] = atof(pars[16].c_str());
+        mat["cgd"] = atof(pars[17].c_str());
+        mat["cdr"] = atof(pars[18].c_str());
+
+        mat["ckaf"] = atof(pars[19].c_str());
+        mat["Q"] = atof(pars[20].c_str());
+        mat["R"] = atof(pars[21].c_str());
+        mat["m"] = atof(pars[22].c_str());
+        mat["Fsed_min"] = atof(pars[23].c_str());
+        mat["p_sedo"] = atof(pars[24].c_str());
+        mat["K0"] = atof(pars[29].c_str());
+
+        mat["Variable"] = pars[30].c_str();
+        mat["mean"] = atof(pars[31].c_str());
+        mat["COV"] = atof(pars[32].c_str());
+        mat["Ly"] = atof(pars[33].c_str());
+        mat["realization"] =atoi(pars[34].c_str());
+        mat["concurrency"] =atoi(pars[35].c_str());
     }
+    else if (!matType.compare("PDMY03"))
+        {
+        mat["nd"] = atoi(pars[1].c_str());
+        mat["rho"] = atof(pars[2].c_str());
+        mat["refShearModul"] = atof(pars[3].c_str());
+        mat["refBulkModul"] = atof(pars[4].c_str());
+        mat["frictionAng"] = atof(pars[5].c_str());
+        mat["peakShearStra"] = atof(pars[6].c_str());
+        mat["refPress"] = atof(pars[7].c_str());
+        mat["pressDependCoe"] = atof(pars[8].c_str());
+        mat["PTAng"] = atof(pars[9].c_str());
+        mat["mType"] = atoi(pars[10].c_str());
+        mat["ca"] = atof(pars[11].c_str());
+        mat["cb"] = atof(pars[12].c_str());
+        mat["cc"] = atof(pars[13].c_str());
+        mat["cd"] = atof(pars[14].c_str());
+        mat["ce"] = atof(pars[15].c_str());
+        mat["da"] = atof(pars[16].c_str());
+        mat["db"] = atof(pars[17].c_str());
+        mat["dc"] = atof(pars[18].c_str());
+        mat["noYieldSurf"] = atof(pars[19].c_str());
+        mat["liquefac1"] = atof(pars[20].c_str());
+        mat["liquefac2"] = atof(pars[21].c_str());
+        mat["pa"] = atof(pars[22].c_str());
+        mat["s0"] = atof(pars[23].c_str());
+        }
+    else if (!matType.compare("PDMY03_Random"))
+        {
+        mat["nd"] = atoi(pars[1].c_str());
+        mat["rho"] = atof(pars[2].c_str());
+        mat["refShearModul"] = atof(pars[3].c_str());
+        mat["refBulkModul"] = atof(pars[4].c_str());
+        mat["frictionAng"] = atof(pars[5].c_str());
+        mat["peakShearStra"] = atof(pars[6].c_str());
+        mat["refPress"] = atof(pars[7].c_str());
+        mat["pressDependCoe"] = atof(pars[8].c_str());
+        mat["PTAng"] = atof(pars[9].c_str());
+        mat["mType"] = atoi(pars[10].c_str());
+        mat["ca"] = atof(pars[11].c_str());
+        mat["cb"] = atof(pars[12].c_str());
+        mat["cc"] = atof(pars[13].c_str());
+        mat["cd"] = atof(pars[14].c_str());
+        mat["ce"] = atof(pars[15].c_str());
+        mat["da"] = atof(pars[16].c_str());
+        mat["db"] = atof(pars[17].c_str());
+        mat["dc"] = atof(pars[18].c_str());
+        mat["noYieldSurf"] = atof(pars[19].c_str());
+        mat["liquefac1"] = atof(pars[20].c_str());
+        mat["liquefac2"] = atof(pars[21].c_str());
+        mat["pa"] = atof(pars[22].c_str());
+        mat["s0"] = atof(pars[23].c_str());
+
+        mat["Variable"] = pars[28].c_str();
+        mat["mean"] = atof(pars[29].c_str());
+        mat["COV"] = atof(pars[30].c_str());
+        mat["Ly"] = atof(pars[31].c_str());
+        mat["realization"] =atoi(pars[32].c_str());
+        mat["concurrency"] =atoi(pars[33].c_str());
+        }
     return mat;
 }
 
