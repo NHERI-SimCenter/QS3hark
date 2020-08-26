@@ -92,6 +92,8 @@ BonzaTableView::BonzaTableView(QWidget *parent) :
     layerParsName.push_back("Layer3");
     layerParsValue.push_back(3.);
 
+    this->horizontalHeader()->setStretchLastSection(true);
+
 }
 
 BonzaTableView::~BonzaTableView()
@@ -749,4 +751,13 @@ void BonzaTableView::setGWT(double GWT)
 {
     m_nGWT = GWT;
     emit gwtChanged(m_nGWT);
+}
+
+void BonzaTableView::resizeEvent(QResizeEvent *event) {
+    this->setColumnWidth(0, this->width()/6);
+    this->setColumnWidth(1, this->width()/6);
+    this->setColumnWidth(2, this->width()/6);
+    this->setColumnWidth(3, this->width()/6);
+    this->setColumnWidth(4, this->width()/6);
+    this->setColumnWidth(5, this->width()/6);
 }
