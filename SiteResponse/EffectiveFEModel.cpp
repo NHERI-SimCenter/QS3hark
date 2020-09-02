@@ -12,7 +12,6 @@
 ** ********************************************************************* */
 
 #include <functional>
-#include <vector>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -69,7 +68,7 @@
 #include "ManzariDafalias.h"
 
 #include "Information.h"
-#include <vector> 
+#include <vector>
 #include <map>
 
 #include <fstream>
@@ -398,9 +397,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 }else if(!matType.compare("PM4Sand"))
                 {
                     double thisDr = mat["Dr"];
-                    double G0 = mat["G0"];
+                    double Go = mat["Go"];
                     double hpo = mat["hpo"];
-                    double thisDen = mat["Den"];
+                    double thisDen = mat["rho"];
 
                     double P_atm = mat["P_atm"];
                     double h0 = mat["h0"];
@@ -429,8 +428,8 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     rho_d = Gs / (1 + evoid);
                     rho_s = rho_d *(1.0+evoid/Gs);
                     //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
-                    theMat = new PM4Sand(numElems + 1, thisDr,G0,hpo,thisDen,P_atm,h0,emax,emin,nb,nd,Ado,z_max,cz,ce,phic,nu,cgd,cdr,ckaf,Q,R,m,Fsed_min,p_sedo);
-                    s << "nDMaterial PM4Sand " << numElems + 1<< " " << thisDr<< " " <<G0<< " " <<hpo<< " " <<thisDen<< " " <<P_atm<< " " <<h0<< " "<<emax<< " "<<emin<< " " <<
+                    theMat = new PM4Sand(numElems + 1, thisDr,Go,hpo,thisDen,P_atm,h0,emax,emin,nb,nd,Ado,z_max,cz,ce,phic,nu,cgd,cdr,ckaf,Q,R,m,Fsed_min,p_sedo);
+                    s << "nDMaterial PM4Sand " << numElems + 1<< " " << thisDr<< " " <<Go<< " " <<hpo<< " " <<thisDen<< " " <<P_atm<< " " <<h0<< " "<<emax<< " "<<emin<< " " <<
                          nb<< " " <<nd<< " " <<Ado<< " " <<z_max<< " " <<cz<< " " <<ce<< " " <<phic<< " " <<(K0 / (1.0 + K0))<< " " <<cgd<< " " <<cdr<< " " <<ckaf<< " " <<
                          Q<< " " <<R<< " " <<m<< " " <<Fsed_min<< " " <<p_sedo << endln;
 
@@ -445,7 +444,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double Su_Rat = mat["Su_Rat"];
                     double G_o = mat["G_o"];
                     double h_po = mat["h_po"];
-                    double thisDen = mat["Den"];
+                    double thisDen = mat["rho"];
 
                     double Su_factor = mat["Su_factor"];
                     double P_atm = mat["P_atm"];
@@ -3120,7 +3119,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     //theTest->setTolerance(1.0e-5);
 
 
-    
+
     //s << "constraints Transformation" << endln;
     //s << "test NormDispIncr 1.0e-4 35 0" << endln; // TODO
     //s << "algorithm   Newton" << endln;
@@ -3181,7 +3180,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
         opserr << "a0 = " << a0 << "    a1 = " << a1 << endln;
     }
     //theDomain->setRayleighDampingFactors(a0, 0.0, a1, 0.0);
-    
+
 
     //DirectIntegrationAnalysis* theTransientAnalysis;
     theTransientAnalysis = new DirectIntegrationAnalysis(*theDomain, *theHandler, *theNumberer, *theModel, *theSolnAlgo, *theSOE, *theTransientIntegrator, theTest);
@@ -3202,7 +3201,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     ////s << "analysis Transient" << endln << endln;
     //s << "analysis Transient" << endln << endln;
 
-    
+
 
 
 
@@ -3241,7 +3240,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s << "# ------------------------------------------------------------\n";
     s << "# 5.3 Define outputs and recorders                            \n";
     s << "# ------------------------------------------------------------\n\n";
-    
+
     int dimDofToRecord = 3;
     ID dofToRecord(dimDofToRecord);
     dofToRecord(0) = 0;

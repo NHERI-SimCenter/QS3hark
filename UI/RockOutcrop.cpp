@@ -21,7 +21,6 @@
 #include <QSizePolicy>
 #include <QTabBar>
 
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -1295,6 +1294,7 @@ void RockOutcrop::on_runBtn_clicked()
     }
     else{
         QString openseespath = theTabManager->openseespath();;//"OpenSees";//theTabManager->openseespath();
+        QString pythonpath = "C:/Tools/Python/python.exe";
         //QProcess* openseesTesterProcess = new QProcess(this);
         //bool osrun = openseesProcess->startDetached(openseespath);
         //osrun = true;
@@ -1345,8 +1345,13 @@ void RockOutcrop::on_runBtn_clicked()
                     theTabManager->setSimulationD(2);
                     srt->buildTcl();
                 }
-
-                openseesProcess->start(openseespath,QStringList()<<tclName);
+                // if (!srt->runningStochastic())
+                // {
+                    openseesProcess->start(openseespath,QStringList()<<tclName);
+                // } else {
+                //     // call python to create files for dakota
+                //     pythonProcess->start(pythonpath,QStringList()<<pythonName);
+                // }
                 openseesErrCount = 1;
                 emit runBtnClicked();
 
@@ -1545,9 +1550,9 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
     } else if (!matType.compare("PM4Sand"))
     {
         mat["Dr"] = atof(pars[1].c_str());
-        mat["G0"] = atof(pars[2].c_str());
+        mat["Go"] = atof(pars[2].c_str());
         mat["hpo"] = atof(pars[3].c_str());
-        mat["Den"] = atof(pars[4].c_str());
+        mat["rho"] = atof(pars[4].c_str());
         mat["P_atm"] = atof(pars[5].c_str());
         mat["h0"] = atof(pars[6].c_str());
         mat["emax"] = atof(pars[7].c_str());
@@ -1577,7 +1582,7 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["Su_Rat"] = atof(pars[3].c_str());
         mat["G_o"] = atof(pars[4].c_str());
         mat["h_po"] = atof(pars[5].c_str());
-        mat["Den"] = atof(pars[6].c_str());
+        mat["rho"] = atof(pars[6].c_str());
         mat["Su_factor"] = atof(pars[7].c_str());
         mat["P_atm"] = atof(pars[8].c_str());
         mat["nu"] = atof(pars[9].c_str());
@@ -1712,9 +1717,9 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
     } else if (!matType.compare("PM4Sand_Random"))
     {
         mat["Dr"] = atof(pars[1].c_str());
-        mat["G0"] = atof(pars[2].c_str());
+        mat["Go"] = atof(pars[2].c_str());
         mat["hpo"] = atof(pars[3].c_str());
-        mat["Den"] = atof(pars[4].c_str());
+        mat["rho"] = atof(pars[4].c_str());
         mat["P_atm"] = atof(pars[5].c_str());
         mat["h0"] = atof(pars[6].c_str());
         mat["emax"] = atof(pars[7].c_str());
