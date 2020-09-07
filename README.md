@@ -37,6 +37,7 @@ Available material models:
 | PressureIndependMultiYield | 2D/3D      |    ✓ |
 | PressureDependMultiYield | 2D/3D      |    ✓ |
 | PressureDependMultiYield02 | 2D/3D      |    ✓ |
+| PressureDependMultiYield03 | 2D/3D      |    ✓ |
 | ManzariDafalias | 2D/3D      |    ✓ |
 | Borja-Amies | 3D      |    ✓ |
 
