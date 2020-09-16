@@ -380,8 +380,20 @@ void RockOutcrop::onConfigTabUpdated()
 
 bool  RockOutcrop::copyFiles(QString &destDir)
 {
+    this->on_runBtn_clicked(); // link EE-UQ run button with analyze
     QString fileName = "EVENT.json";
-    QFile::copy(evtjFileName, destDir + "/" + fileName);
+    if (m_runningStochastic) {
+        // for stochastic field
+        fileName = "model.tcl"; // SRT model template
+        QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        fileName = "Rock-x.vel";  // input motion
+        QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        theTabManager->writeSurfaceMotion();
+        fileName = "EVENT.json";
+        QFile::copy(evtjFileName, destDir + "/" + fileName);
+    } else {
+        QFile::copy(evtjFileName, destDir + "/" + fileName);
+    }
     return true;
 }
 
@@ -1294,7 +1306,7 @@ void RockOutcrop::on_runBtn_clicked()
     }
     else{
         QString openseespath = theTabManager->openseespath();;//"OpenSees";//theTabManager->openseespath();
-        QString pythonpath = "C:/Tools/Python/python.exe";
+        QString pythonpath = "C:/Python/python.exe";
         //QProcess* openseesTesterProcess = new QProcess(this);
         //bool osrun = openseesProcess->startDetached(openseespath);
         //osrun = true;
@@ -1345,13 +1357,17 @@ void RockOutcrop::on_runBtn_clicked()
                     theTabManager->setSimulationD(2);
                     srt->buildTcl();
                 }
-                // if (!srt->runningStochastic())
-                // {
+                m_runningStochastic = srt->runningStochastic(); // check if running random field
+
+                if (!m_runningStochastic)
+                {
                     openseesProcess->start(openseespath,QStringList()<<tclName);
-                // } else {
-                //     // call python to create files for dakota
-                //     pythonProcess->start(pythonpath,QStringList()<<pythonName);
-                // }
+                } else {
+                  // call python to create files for dakota, need external python script to create inputs for dakota
+
+                    // pythonProcess->start(pythonpath);
+                    // pythonProcess->close();
+                }
                 openseesErrCount = 1;
                 emit runBtnClicked();
 

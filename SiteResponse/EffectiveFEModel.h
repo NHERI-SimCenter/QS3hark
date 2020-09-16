@@ -63,18 +63,18 @@
 class SiteResponseModel {
 
 public:
-	SiteResponseModel();
-	SiteResponseModel(SiteLayering, std::string, OutcropMotion*, OutcropMotion*);
-	SiteResponseModel(SiteLayering, std::string, OutcropMotion*);
+    SiteResponseModel();
+    SiteResponseModel(SiteLayering, std::string, OutcropMotion*, OutcropMotion*);
+    SiteResponseModel(SiteLayering, std::string, OutcropMotion*);
     SiteResponseModel(std::string, OutcropMotion*,std::function<bool(double)>);
     SiteResponseModel(std::string, OutcropMotion*, OutcropMotion *, std::function<bool(double)>);
     SiteResponseModel(std::string , OutcropMotion *);
     SiteResponseModel(std::string , OutcropMotion *, OutcropMotion *);
-	~SiteResponseModel();
+    ~SiteResponseModel();
 
-	int   buildEffectiveStressModel2D(bool doAnalysis);
+    int   buildEffectiveStressModel2D(bool doAnalysis);
     int   buildEffectiveStressModel3D(bool doAnalysis);
-	int   runEffectiveStressModel2D();
+    int   runEffectiveStressModel2D();
     int   runEffectiveStressModel3D();
     void  setOutputDir(std::string outDir) { theOutputDir = outDir; }
     void setConfigFile(std::string configFile) { theConfigFile = configFile; }
@@ -91,21 +91,21 @@ public:
     void setCallback(bool cal) {callback = cal;}
     void setForward(bool f) {forward = f;}
     int trueRun();
+    bool m_runningStochastic = false;
 
 
 private:
-	Domain *theDomain;
-	SiteLayering    SRM_layering;
-	OutcropMotion*  theMotionX;
-	OutcropMotion*  theMotionZ;
-	std::string     theOutputDir;
-	std::string 	theModelType;
+    Domain *theDomain;
+    SiteLayering    SRM_layering;
+    OutcropMotion*  theMotionX;
+    OutcropMotion*  theMotionZ;
+    std::string     theOutputDir;
+    std::string 	theModelType;
     std::string 	theConfigFile;
     std::string     theTclOutputDir;
     std::string     theAnalysisDir;
     bool forward = true;
     bool m_doAnalysis = false;
-    bool m_runningStochastic = false;
 
     // 2D solver
     std::vector<double> dt;
