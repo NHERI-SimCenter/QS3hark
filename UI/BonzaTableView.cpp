@@ -1,4 +1,4 @@
-﻿#include "BonzaTableView.h"
+#include "BonzaTableView.h"
 #include <QHeaderView>
 #include <QFocusEvent>
 #include <QMenu>
@@ -754,10 +754,11 @@ void BonzaTableView::setGWT(double GWT)
 }
 
 void BonzaTableView::resizeEvent(QResizeEvent *event) {
-    this->setColumnWidth(0, this->width()/6);
-    this->setColumnWidth(1, this->width()/6);
-    this->setColumnWidth(2, this->width()/6);
-    this->setColumnWidth(3, this->width()/6);
-    this->setColumnWidth(4, this->width()/6);
-    this->setColumnWidth(5, this->width()/6);
+    // only six columns are currently visible
+    this->setColumnWidth(2, this->width()/25 * 4);  // "LayerName"
+    this->setColumnWidth(3, this->width()/25 * 4);  // "Thickness"
+    this->setColumnWidth(4, this->width()/25 * 4);  // "Density"
+    this->setColumnWidth(5, this->width()/25 * 4);  // "Vs"
+    this->setColumnWidth(6, this->width()/5);   // "Material"
+    this->setColumnWidth(7, this->width()/25 * 4);   // "ElementSize"
 }
