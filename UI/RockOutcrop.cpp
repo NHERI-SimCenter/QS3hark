@@ -1362,6 +1362,8 @@ void RockOutcrop::on_runBtn_clicked()
                 if (!m_runningStochastic)
                 {
                     openseesProcess->start(openseespath,QStringList()<<tclName);
+                    openseesProcess->waitForFinished();
+                    openseesProcess->close();
                 } else {
                   // call python to create files for dakota, need external python script to create inputs for dakota
 
