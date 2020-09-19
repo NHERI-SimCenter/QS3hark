@@ -131,6 +131,10 @@ private:
     QWidget* defaultWidget;
     QWidget* GMWidget;
     QWidget* FEMWidget;
+    // add addtional UI
+    QWidget* PM4SandRandomWidget;
+    QWidget* PDMY03Widget;
+    QWidget* PDMY03RandomWidget;
 
     QWebEngineView *quickstart;
     QWebEngineView *GMView;
@@ -149,11 +153,11 @@ private:
                                       "P_atm", "h0", "emax", "emin", "nb", "nd", "Ado",
                                       "z_max", "cz", "ce", "phic", "nu", "cgd", "cdr",
                                       "ckaf", "Q", "R", "m", "Fsed_min", "p_sedo",
-                                        "hPerm","vPerm","uBulk","evoid"};
+                                        "hPerm","vPerm","uBulk","evoid", "K0"};
     QList<QString> listPM4SiltFEM = {"eSize", "Dr", "S_u", "Su_Rat", "G_o", "h_po", "Den", "Su_factor", "P_atm",
                                       "nu", "nG", "h0", "eInit", "lambda", "phicv", "nb_wet", "nb_dry", "nd", "Ado", "ru_max", "z_max",
                                      "cz", "ce", "cgd", "ckaf", "m_m", "CG_consol",
-                                        "hPerm","vPerm","uBulk","evoid"};
+                                        "hPerm","vPerm","uBulk","evoid", "K0"};
     QList<QString> listPIMYFEM = {"eSize", "Dr", "nd", "rho", "refShearModul", "refBulkModul", "cohesi", "peakShearStra",
                                       "frictionAng", "refPress", "pressDependCoe", "noYieldSurf",
                                         "hPerm","vPerm","uBulk","evoid"};
@@ -167,9 +171,26 @@ private:
            "hPerm","vPerm","uBulk","evoid"};
     QList<QString> listManzariDafaliasFEM = {"eSize", "Dr", "G0", "nu", "e_init", "Mc", "c", "lambda_c", "e0", "ksi", "P_atm", "m", "h0",
                                               "ch", "nb", "A0", "nd", "z_max", "cz", "Den",
-                                        "hPerm","vPerm","uBulk","evoid"};
+                                        "hPerm","vPerm","uBulk","evoid", "K0"};
     QList<QString> listJ2BoundingFEM = {"eSize", "Dr", "G", "K", "su", "rho", "h", "m", "k_in", "beta",
                                         "hPerm","vPerm","uBulk","evoid"};
+
+    QList<QString> listPM4SandRandomFEM = {"eSize", "Dr", "G0", "hpo", "Den",
+                                      "P_atm", "h0", "emax", "emin", "nb", "nd", "Ado",
+                                      "z_max", "cz", "ce", "phic", "nu", "cgd", "cdr",
+                                      "ckaf", "Q", "R", "m", "Fsed_min", "p_sedo",
+                                        "hPerm","vPerm","uBulk","evoid", "K0", "varName", "mean", "cov", "Ly", "realization", "processor"};
+
+    QList<QString> listPDMY03FEM = {"eSize", "nd", "rho", "refShearModul", "refBulkModul", "frictionAng", "peakShearStra",
+         "refPress", "pressDependCoe", "PTAng", "mType", "ca","cb", "cc", "cd", "ce", "da", "db", "dc",
+           "noYieldSurf", "liquefac1", "liquefac2", "pa", "s0",
+           "hPerm","vPerm","uBulk","evoid"};
+
+    QList<QString> listPDMY03RandomFEM = {"eSize", "nd", "rho", "refShearModul", "refBulkModul", "frictionAng", "peakShearStra",
+         "refPress", "pressDependCoe", "PTAng", "mType", "ca","cb", "cc", "cd", "ce", "da", "db", "dc",
+           "noYieldSurf", "liquefac1", "liquefac2", "pa", "s0",
+           "hPerm","vPerm","uBulk","evoid", "varName", "mean", "cov", "Ly", "realization", "processor"};
+
     QVector<QLineEdit*> edtsFEM;
     QVector<QLineEdit*> edtsElasticIsotropicFEM;
     QVector<QLineEdit*> edtsPM4SandFEM;
@@ -179,6 +200,10 @@ private:
     QVector<QLineEdit*> edtsPDMY02FEM;
     QVector<QLineEdit*> edtsManzariDafaliasFEM;
     QVector<QLineEdit*> edtsJ2BoundingFEM;
+    // add additional UI
+    QVector<QLineEdit*> edtsPM4SandRandomFEM;
+    QVector<QLineEdit*> edtsPDMY03FEM;
+    QVector<QLineEdit*> edtsPDMY03RandomFEM;
 
     QLineEdit* slopex1=0;
     QLineEdit* slopex2=0;

@@ -23,5 +23,8 @@
         <file>UI/DefaultMatTab.ui</file>
         <file>UI/GroundMotion.ui</file>
         <file>UI/FEM.ui</file>
+        <file>UI/PDMY03.ui</file>
+        <file>UI/PDMY03_random.ui</file>
+        <file>UI/PM4Sand_random.ui</file>
     </qresource>
 </RCC>

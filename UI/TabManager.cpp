@@ -364,7 +364,81 @@ void TabManager::init(QTabWidget* theTab){
     QLabel *uBulkLabel= ElasticIsotropicWidget->findChild<QLabel*>("uBulkLabel");
     uBulkLabel->setToolTip("kPa");
 
+    // add addtional UI
+    QFile uiFilePDMY03(":/UI/PDMY03.ui");
+    uiFilePDMY03.open(QIODevice::ReadOnly);
+    PDMY03Widget = uiLoader.load(&uiFilePDMY03,this);
+    for (int i = 0; i < listPDMY03FEM.size(); ++i) {
+        QString edtName = listPDMY03FEM[i] ;
+        edtsPDMY03FEM.push_back(PDMY03Widget->findChild<QLineEdit*>(edtName));
+    }
+    // connect edit signal with onDataEdited
+    for (int i = 0; i < edtsPDMY03FEM.size(); ++i) {
+        connect(edtsPDMY03FEM[i], SIGNAL(editingFinished()), this, SLOT(onDataEdited()));
+    }
+    eSizeEdtTmp= PDMY03Widget->findChild<QLineEdit*>("eSize");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PDMY03Widget->findChild<QLabel*>("eSizeLabel");
+    eSizeLabelTmp->hide();
 
+    PDMY03Widget->findChild<QLineEdit*>("rho")->setReadOnly(true);
+    PDMY03Widget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+
+
+    QFile uiFilePM4Sand_random(":/UI/PM4Sand_random.ui");
+    uiFilePM4Sand_random.open(QIODevice::ReadOnly);
+    PM4SandRandomWidget = uiLoader.load(&uiFilePM4Sand_random,this);
+    for (int i = 0; i < listPM4SandRandomFEM.size(); ++i) {
+        QString edtName = listPM4SandRandomFEM[i] ;
+        edtsPM4SandRandomFEM.push_back(PM4SandRandomWidget->findChild<QLineEdit*>(edtName));
+    }
+    // connect edit signal with onDataEdited
+    for (int i = 0; i < edtsPM4SandRandomFEM.size(); ++i) {
+        connect(edtsPM4SandRandomFEM[i], SIGNAL(editingFinished()), this, SLOT(onDataEdited()));
+    }
+    eSizeEdtTmp= PM4SandRandomWidget->findChild<QLineEdit*>("eSize");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PM4SandRandomWidget->findChild<QLabel*>("eSizeLabel");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= PM4SandRandomWidget->findChild<QLineEdit*>("realization");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PM4SandRandomWidget->findChild<QLabel*>("realization2");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= PM4SandRandomWidget->findChild<QLineEdit*>("processor");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PM4SandRandomWidget->findChild<QLabel*>("processor2");
+    eSizeLabelTmp->hide();
+
+    PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setReadOnly(true);
+    PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
+
+
+    QFile uiFilePDMY03_random(":/UI/PDMY03_random.ui");
+    uiFilePDMY03_random.open(QIODevice::ReadOnly);
+    PDMY03RandomWidget = uiLoader.load(&uiFilePDMY03_random,this);
+    for (int i = 0; i < listPDMY03RandomFEM.size(); ++i) {
+        QString edtName = listPDMY03RandomFEM[i];
+        edtsPDMY03RandomFEM.push_back(PDMY03RandomWidget->findChild<QLineEdit*>(edtName));
+    }
+    // connect edit signal with onDataEdited
+    for (int i = 0; i < edtsPDMY03RandomFEM.size(); ++i) {
+        connect(edtsPDMY03RandomFEM[i], SIGNAL(editingFinished()), this, SLOT(onDataEdited()));
+    }
+    eSizeEdtTmp= PDMY03RandomWidget->findChild<QLineEdit*>("eSize");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PDMY03RandomWidget->findChild<QLabel*>("eSizeLabel");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= PDMY03RandomWidget->findChild<QLineEdit*>("realization");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PDMY03RandomWidget->findChild<QLabel*>("realization2");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= PDMY03RandomWidget->findChild<QLineEdit*>("processor");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= PDMY03RandomWidget->findChild<QLabel*>("processor2");
+    eSizeLabelTmp->hide();
+
+    PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
+    PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
 
     //reFreshGMTab();
     initGMTab();
@@ -2405,6 +2479,21 @@ void TabManager::onTableViewClicked(const QModelIndex &index){
         currentEdts = edtsJ2BoundingFEM;
         currentWidget = J2BoundingWidget;
     }
+    else if (thisMatType=="PM4Sand_Random")
+        {
+            currentEdts = edtsPM4SandRandomFEM;
+            currentWidget = PM4SandRandomWidget;
+        }
+    else if (thisMatType=="PDMY03")
+        {
+            currentEdts = edtsPDMY03FEM;
+            currentWidget = PDMY03Widget;
+        }
+    else if (thisMatType=="PDMY03_Random")
+        {
+            currentEdts = edtsPDMY03RandomFEM;
+            currentWidget = PDMY03RandomWidget;
+        }
     else
         currentWidget = defaultWidget;
 
@@ -2584,6 +2673,23 @@ void TabManager::updateLayerTab(QJsonObject l,QJsonObject mat)
         QLineEdit *evoid= J2BoundingWidget->findChild<QLineEdit*>("evoid");
         evoid->setText(QString::number(evoidval,'g',16));
     }
+    // add additional materials
+    else if(matType=="PM4Sand_Random")
+        {
+            for (int i = 0; i < listPM4SandRandomFEM.size(); ++i) {
+                QString edtName = listPM4SandRandomFEM[i];
+                if(!mat[edtName].isNull())
+                    edtsPM4SandRandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
+            }
+            QLineEdit *hPerm= PM4SandRandomWidget->findChild<QLineEdit*>("hPerm");
+            hPerm->setText(QString::number(hPermval,'g',16));
+            QLineEdit *vPerm= PM4SandRandomWidget->findChild<QLineEdit*>("vPerm");
+            vPerm->setText(QString::number(vPermval,'g',16));
+            QLineEdit *uBulk= PM4SandRandomWidget->findChild<QLineEdit*>("uBulk");
+            uBulk->setText(QString::number(uBulkval,'g',16));
+            QLineEdit *evoid= PM4SandRandomWidget->findChild<QLineEdit*>("evoid");
+            evoid->setText(QString::number(evoidval,'g',16));
+        }
 
     // send the signal to update FEM cell
     onDataEdited();
@@ -2947,8 +3053,125 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
                 }
             }
         }
+        // add additonal materials
+        if (thisMatType == "PM4Sand_Random")
+        {
+            QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
 
-        //onDataEdited();
+            QLineEdit* DenEdt = PM4SandRandomWidget->findChild<QLineEdit*>("Den");
+            QString densityFromForm = DenEdt->text();
+
+            if(densityFromTable != densityFromForm)
+            {
+                //qDebug() << "Den here is different from the above table. ";
+                if (densityFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
+                    DenEdt->setText(densityFromForm);
+                }
+                else
+                {
+                    DenEdt->setText(densityFromTable);
+                }
+                onDataEdited();
+            }
+
+            QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
+            QLineEdit* esizeEdt = PM4SandRandomWidget->findChild<QLineEdit*>("eSize");
+            QString esizeFromForm = esizeEdt->text();
+            if(esizeFromTable != esizeFromForm)
+            {
+                //qDebug() << "esize here is different from the above table. ";
+                if (esizeFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
+                }
+                else
+                {
+                    esizeEdt->setText(esizeFromTable);
+                    onDataEdited();
+                }
+            }
+        }
+        if (thisMatType == "PDMY03")
+        {
+            QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+
+            QLineEdit* DenEdt = PDMY03Widget->findChild<QLineEdit*>("rho");
+            QString densityFromForm = DenEdt->text();
+
+            if(densityFromTable != densityFromForm)
+            {
+                //qDebug() << "Den here is different from the above table. ";
+                if (densityFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
+                    DenEdt->setText(densityFromForm);
+                }
+                else
+                {
+                    DenEdt->setText(densityFromTable);
+                }
+                onDataEdited();
+            }
+
+            QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
+            QLineEdit* esizeEdt = PDMY03Widget->findChild<QLineEdit*>("eSize");
+            QString esizeFromForm = esizeEdt->text();
+            if(esizeFromTable != esizeFromForm)
+            {
+                //qDebug() << "esize here is different from the above table. ";
+                if (esizeFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
+                }
+                else
+                {
+                    esizeEdt->setText(esizeFromTable);
+                    onDataEdited();
+                }
+            }
+        }
+        if (thisMatType == "PDMY03_Random")
+        {
+            QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+
+            QLineEdit* DenEdt = PDMY03RandomWidget->findChild<QLineEdit*>("rho");
+            QString densityFromForm = DenEdt->text();
+
+            if(densityFromTable != densityFromForm)
+            {
+                //qDebug() << "Den here is different from the above table. ";
+                if (densityFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
+                    DenEdt->setText(densityFromForm);
+                }
+                else
+                {
+                    DenEdt->setText(densityFromTable);
+                }
+                onDataEdited();
+            }
+
+            QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
+            QLineEdit* esizeEdt = PDMY03RandomWidget->findChild<QLineEdit*>("eSize");
+            QString esizeFromForm = esizeEdt->text();
+            if(esizeFromTable != esizeFromForm)
+            {
+                //qDebug() << "esize here is different from the above table. ";
+                if (esizeFromTable == "")
+                {
+                    tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
+                }
+                else
+                {
+                    esizeEdt->setText(esizeFromTable);
+                    onDataEdited();
+                }
+            }
+        }
+        // onDataEdited();
 
     } else
     {
@@ -2979,6 +3202,12 @@ void TabManager::onDataEdited()
         currentEdts = edtsManzariDafaliasFEM;
     else if (thisMatType=="J2Bounding")
         currentEdts = edtsJ2BoundingFEM;
+    else if (thisMatType=="PM4Sand_Random")
+        currentEdts = edtsPM4SandRandomFEM;
+    else if (thisMatType=="PDMY03")
+        currentEdts = edtsPDMY03FEM;
+    else if (thisMatType=="PDMY03_Random")
+        currentEdts = edtsPDMY03RandomFEM;
 
     // collect data in the form
     QString thisFEmString;
@@ -3031,6 +3260,21 @@ void TabManager::onDataEdited()
         QLineEdit* DenEdt = J2BoundingWidget->findChild<QLineEdit*>("rho");
         tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
     }
+    if (thisMatType=="PM4Sand_Random")
+    {
+        QLineEdit* DenEdt = PM4SandRandomWidget->findChild<QLineEdit*>("Den");
+        tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
+    }
+    if (thisMatType=="PDMY03")
+    {
+        QLineEdit* DenEdt = PDMY03Widget->findChild<QLineEdit*>("rho");
+        tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
+    }
+    if (thisMatType=="PDMY03_Random")
+    {
+        QLineEdit* DenEdt = PDMY03RandomWidget->findChild<QLineEdit*>("rho");
+        tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
+    }
 
 
 }
@@ -3052,9 +3296,9 @@ void TabManager::checkDefaultFEM(QString thisMatType,const QModelIndex &index)
     if (thisMatType == "Elastic")
         numPars = 11;
     else if (thisMatType == "PM4Sand")
-        numPars = 29;
+        numPars = 30;
     else if (thisMatType == "PM4Silt")
-        numPars = 31;
+        numPars = 32;
     else if (thisMatType == "PIMY")
         numPars = 16;
     else if (thisMatType == "PDMY")
@@ -3062,12 +3306,17 @@ void TabManager::checkDefaultFEM(QString thisMatType,const QModelIndex &index)
     else if (thisMatType == "PDMY02")
         numPars = 30;
     else if (thisMatType == "ManzariDafalias")
-        numPars = 24;
+        numPars = 25;
     else if (thisMatType == "J2Bounding")
         numPars = 14;
+    else if (thisMatType == "PM4Sand_Random")
+        numPars = 36;
+    else if (thisMatType == "PDMY03")
+        numPars = 28;
+    else if (thisMatType == "PDMY03_Random")
+        numPars = 34;
     else
         numPars =0;
-
     if (FEMStringList.size() != numPars)
         setDefaultFEM(thisMatType, index);
 
@@ -3121,7 +3370,7 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
         QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
         if (density=="")
             density = "2.0";
-        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 500.0 0.45 "+ density +" 101.3 -1. 0.8 0.5 0.5 0.1 -1. -1. 250 -1. 33.0 0.3 2.0 -1. -1. 10. 1.5 0.01 -1. -1. "+"1.0e-7 1.0e-7 2.2e6 0.46");
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 500.0 0.45 "+ density +" 101.3 -1. 0.8 0.5 0.5 0.1 -1. -1. 250 -1. 33.0 0.3 2.0 -1. -1. 10. 1.5 0.01 -1. -1. "+"1.0e-7 1.0e-7 2.2e6 0.46 0.5");
         //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
     }
     else if (thisMatType == "PM4Silt")
@@ -3129,7 +3378,7 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
         QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
         if (density=="")
             density = "2.0";
-        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 100.0 1.0 500.0 0.45 "+ density +" 1.0 101.3 0.3 0.75 0.5 0.9 0.06 32.0 0.8 0.5 0.3 0.8 -1 -1 100.0 -1 3.0 4.0 0.01 2.0 "+"1.0e-7 1.0e-7 2.2e6 0.46");
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 100.0 1.0 500.0 0.45 "+ density +" 1.0 101.3 0.3 0.75 0.5 0.9 0.06 32.0 0.8 0.5 0.3 0.8 -1 -1 100.0 -1 3.0 4.0 0.01 2.0 "+"1.0e-7 1.0e-7 2.2e6 0.46 0.5");
         //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
     }
     else if (thisMatType == "PIMY")
@@ -3162,7 +3411,7 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
         QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
         if (density=="")
             density = "2.0";
-        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 125 0.05 0.8 1.25 0.712 0.019 0.934 0.7 100 0.01 7.05 0.968 1.1 0.704 3.5 4 600 "+ density +" 1.0e-7 1.0e-7 2.2e6 0.46");
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 125 0.05 0.8 1.25 0.712 0.019 0.934 0.7 100 0.01 7.05 0.968 1.1 0.704 3.5 4 600 "+ density +" 1.0e-7 1.0e-7 2.2e6 0.46 0.5");
     }
     else if (thisMatType == "J2Bounding")
     {
@@ -3172,7 +3421,36 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
 
         tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 80000.0 1.7333e+05 150.0 "+ density +" 20000.0 1.5 0.0 0.5 1.0e-7 1.0e-7 2.2e6 0.46");
     }
+    // add additional material
+    else if (thisMatType == "PM4Sand_Random")
+    {
+        QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+        if (density=="")
+            density = "2.0";
 
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 500.0 0.45 "+ density +" 101.3 -1. 0.8 0.5 0.5 0.1 -1. -1. 250 -1. 33.0 0.3 2.0 -1. -1. 10. 1.5 0.01 -1. -1. 1.0e-7 1.0e-7 2.2e6 0.46 0.5 "+ "Dr 0.5 0.3 1.0 100 4");
+        //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36"
+    }
+    else if (thisMatType == "PDMY03")
+    {
+        QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+        if (density=="")
+            density = "2.0";
+        QString nd = "2";
+        // DR = 57%
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 "+nd+" "+density+" 7.37e4 19.68e4 30.3 0.1 101 0.5 25.3 0 0.012 3.0 0.4 9.0 0.0 0.3 3.0 -0.3 30 1.0 0.0 101 1.73"+" 1.0e-7 1.0e-7 2.2e6 0.46");
+    //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28"
+    }
+    else if (thisMatType == "PDMY03_Random")
+    {
+        QString density = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+        if (density=="")
+            density = "2.0";
+        QString nd = "2";
+        // DR = 57%
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 "+nd+" "+density+" 7.37e4 19.68e4 30.3 0.1 101 0.5 25.3 0 0.012 3.0 0.4 9.0 0.0 0.3 3.0 -0.3 30 1.0 0.0 101 1.73"+" 1.0e-7 1.0e-7 2.2e6 0.46 " + "Dr 0.5 0.3 1.0 100 4");
+    //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34"
+    }
 }
 
 void TabManager::onRunBtnClicked()

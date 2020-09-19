@@ -26,6 +26,7 @@ public:
     void buildTcl();
     void buildTcl3D();
     void kill();
+    bool runningStochastic() {return model->m_runningStochastic;};
 
     std::function<bool(double)> m_callbackFunction;
 

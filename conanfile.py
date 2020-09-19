@@ -10,7 +10,7 @@ class S3harkConan(ConanFile):
     description = "A Tool For Site Response Analysis"
     settings = "os", "compiler", "build_type", "arch"
     generators = "qmake", "cmake"
-    requires = "lapack/3.7.1@conan/stable", "SimCenterCommonQt/0.1.1@simcenter/testing"
+    requires = "lapack/3.7.1@conan/stable", "SimCenterCommonQt/0.1.10@simcenter/testing"
     build_policy = "missing"
     
     options = {

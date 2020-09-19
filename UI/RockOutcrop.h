@@ -136,6 +136,7 @@ private:// some of them were public
     //QQuickView *pgaView;
     ElementModel* elementModel;
     QProcess* openseesProcess;
+    QProcess* pythonProcess;
     TabManager* theTabManager;
     QTabWidget* resultsTab;
     ProfileManager* profiler;
@@ -148,6 +149,7 @@ private:// some of them were public
     QString dimMsg = "";
 
     bool loadPreviousResults = true;
+    bool m_runningStochastic = false;
 
     SSSharkThread *shark;
 
@@ -159,7 +161,7 @@ private:// some of them were public
     QString srtFileName = QDir(analysisDir).filePath("SRT.json");
     QString evtjFileName =  QDir(analysisDir).filePath("EVENT-SRT.json");
     QString femLog = QDir(analysisDir).filePath("fem.log");
-
+    QString pythonName = QDir(analysisDir).filePath("runDakota.py");
 
 
 };

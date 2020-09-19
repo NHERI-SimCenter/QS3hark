@@ -1,4 +1,4 @@
-﻿#include "BonzaTableView.h"
+#include "BonzaTableView.h"
 #include <QHeaderView>
 #include <QFocusEvent>
 #include <QMenu>
@@ -91,6 +91,8 @@ BonzaTableView::BonzaTableView(QWidget *parent) :
 
     layerParsName.push_back("Layer3");
     layerParsValue.push_back(3.);
+
+    this->horizontalHeader()->setStretchLastSection(true);
 
 }
 
@@ -749,4 +751,14 @@ void BonzaTableView::setGWT(double GWT)
 {
     m_nGWT = GWT;
     emit gwtChanged(m_nGWT);
+}
+
+void BonzaTableView::resizeEvent(QResizeEvent *event) {
+    // only six columns are currently visible
+    this->setColumnWidth(2, this->width()/25 * 4);  // "LayerName"
+    this->setColumnWidth(3, this->width()/25 * 4);  // "Thickness"
+    this->setColumnWidth(4, this->width()/25 * 4);  // "Density"
+    this->setColumnWidth(5, this->width()/25 * 4);  // "Vs"
+    this->setColumnWidth(6, this->width()/5);   // "Material"
+    this->setColumnWidth(7, this->width()/25 * 4);   // "ElementSize"
 }
