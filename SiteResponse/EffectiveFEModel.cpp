@@ -1518,7 +1518,12 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  disp\""<<endln;
     s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  vel\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+    if (m_runningStochastic) {
+        // write acceleration output to current workDir for EE-UQ
+        s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+    } else {
+        s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+    }
     s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<endln;
 
     if(doAnalysis)

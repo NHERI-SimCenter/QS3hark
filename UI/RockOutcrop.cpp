@@ -392,7 +392,7 @@ bool  RockOutcrop::copyFiles(QString &destDir)
         fileName = "EVENT.json";
         QFile::copy(evtjFileName, destDir + "/" + fileName);
     } else {
-        QFile::copy(evtjFileName, destDir + "/" + fileName);
+        QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
     }
     return true;
 }
