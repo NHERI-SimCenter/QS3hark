@@ -6,82 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>732</width>
+    <width>892</width>
     <height>335</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="hPerm_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>300</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>hPerm</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="vPerm_2">
-   <property name="geometry">
-    <rect>
-     <x>128</x>
-     <y>300</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>vPerm</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="uBulk_2">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>300</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>uBulk</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="hPerm">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>300</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="vPerm">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>300</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="uBulk">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>300</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="hydraulicLabel">
    <property name="geometry">
     <rect>
@@ -92,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Hydraulic properties of this layer (Keep defaults unless you know their meanings)</string>
+    <string> Hydraulic properties of this layer</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_34">
@@ -100,12 +31,12 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>291</width>
+     <width>371</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Parameters of PDMY03 model with spatial variation</string>
+    <string>Parameters of PDMY03 model with spatial variability</string>
    </property>
   </widget>
   <widget class="QLabel" name="line1_2">
@@ -119,29 +50,6 @@
    </property>
    <property name="text">
     <string>------------------------------------------------------------------------------------------------</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="evoid">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
-     <y>300</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="evoid_2">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>300</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>void</string>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">
@@ -783,7 +691,7 @@
     <rect>
      <x>10</x>
      <y>220</y>
-     <width>688</width>
+     <width>801</width>
      <height>31</height>
     </rect>
    </property>
@@ -801,6 +709,9 @@
         <width>100</width>
         <height>16777215</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string>Variable with spatial variability</string>
       </property>
       <property name="text">
        <string>Variable</string>
@@ -852,6 +763,9 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Mean of the variable with spatial variability</string>
+      </property>
       <property name="text">
        <string>Mean</string>
       </property>
@@ -902,6 +816,9 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Coefficient of variation of the variable</string>
+      </property>
       <property name="text">
        <string>COV</string>
       </property>
@@ -951,6 +868,9 @@
         <width>120</width>
         <height>16777215</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string>Corelation length in vertical direction</string>
       </property>
       <property name="text">
        <string>Corelation Length</string>
@@ -1092,27 +1012,91 @@
     <string>------------------------------------------------------------------------------------------------</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="eSize">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>590</x>
+     <x>10</x>
      <y>300</y>
-     <width>41</width>
-     <height>21</height>
+     <width>463</width>
+     <height>25</height>
     </rect>
    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="hPerm_2">
+      <property name="toolTip">
+       <string>Hydraulic conductivity (L/T) in horizontal direction</string>
+      </property>
+      <property name="text">
+       <string>hPerm</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="hPerm"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="vPerm_2">
+      <property name="toolTip">
+       <string>Hydraulic conductivity (L/T) in vertical direction</string>
+      </property>
+      <property name="text">
+       <string>vPerm</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="vPerm"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="uBulk_2">
+      <property name="toolTip">
+       <string>Bulk modulus of water</string>
+      </property>
+      <property name="text">
+       <string>uBulk</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="uBulk"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="evoid_2">
+      <property name="toolTip">
+       <string>Void ratio of the material</string>
+      </property>
+      <property name="text">
+       <string>void</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="evoid"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QLabel" name="eSizeLabel">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>300</y>
+     <x>680</x>
+     <y>40</y>
      <width>141</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>Element size (Vertical)</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="eSize">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>40</y>
+     <width>41</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>

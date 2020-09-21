@@ -55,7 +55,7 @@
     <string>Poisson's ratio</string>
    </property>
   </widget>
-  <widget class="QLabel" name="rhoLabel">
+  <widget class="QLabel" name="rho_2">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -121,7 +121,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="uBulkLabel">
+  <widget class="QLabel" name="uBulk_2">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -134,7 +134,7 @@
     <string>uBulk</string>
    </property>
   </widget>
-  <widget class="QLabel" name="hPermLabel">
+  <widget class="QLabel" name="hPerm_2">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -147,7 +147,7 @@
     <string>hPerm</string>
    </property>
   </widget>
-  <widget class="QLabel" name="vPermLabel">
+  <widget class="QLabel" name="vPerm_2">
    <property name="geometry">
     <rect>
      <x>330</x>
@@ -160,7 +160,7 @@
     <string>vPerm</string>
    </property>
   </widget>
-  <widget class="QLabel" name="voidLabel">
+  <widget class="QLabel" name="evoid_2">
    <property name="geometry">
     <rect>
      <x>330</x>
@@ -305,7 +305,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Hydraulic properties of this layer (Keep defaults unless you know their meanings)</string>
+    <string> Hydraulic properties of this layer</string>
    </property>
   </widget>
  </widget>
