@@ -489,15 +489,14 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double frictionAng = mat["frictionAng"];
                     double refPress = mat["refPress"];
                     double pressDependCoe = mat["pressDependCoe"];
-                    double noYieldSurf = mat["noYieldSurf"];
+                    int noYieldSurf = mat["noYieldSurf"];
 
                     //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
                     //TODO: PM4Silt->PIMY
-                    //TODO: deal with noYieldSurf
                     theMat = new PressureIndependMultiYield(numElems + 1,nd,rho,refShearModul,refBulkModul,cohesi,peakShearStra,
-                                                            frictionAng, refPress,  pressDependCoe);
+                                                            frictionAng, refPress,  pressDependCoe, noYieldSurf);
                     s << "nDMaterial PressureIndependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<cohesi<<" "<<peakShearStra<<" "<<
-                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<endln;
+                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<endln;
                 }else if(!matType.compare("PDMY"))
                 {
 
@@ -525,19 +524,18 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double cs3 = mat["cs3"];
                     double pa = mat["pa"];
                     double c = mat["c"];
-                    double noYieldSurf = mat["noYieldSurf"];
+                    int noYieldSurf = mat["noYieldSurf"];
 
                     //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
                     //TODO: PM4Silt->PDMY
-                    //TODO: deal with noYieldSurf
                     double hv = 0.;
                     double pv = 1.;
 
                     theMat = new PressureDependMultiYield(numElems + 1,nd,rho,refShearModul,refBulkModul,frictionAng,peakShearStra,
-                                                          refPress,pressDependCoe,PTAng,contrac,dilat1,dilat2,liquefac1,liquefac2,liquefac3,20,0,
+                                                          refPress,pressDependCoe,PTAng,contrac,dilat1,dilat2,liquefac1,liquefac2,liquefac3,noYieldSurf,0,
                                                           e, cs1,cs2,cs3,pa,c);
                     s << "nDMaterial PressureDependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
-                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << "20"
+                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << noYieldSurf
                       <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<endln;
                 }else if(!matType.compare("PDMY02"))
                 {
@@ -568,16 +566,15 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double cs3 = mat["cs3"];
                     double pa = mat["pa"];
                     double c = mat["c"];
-                    double noYieldSurf = mat["noYieldSurf"];
+                    int noYieldSurf = mat["noYieldSurf"];
 
                     //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
                     //TODO: PM4Silt->PDMY02
-                    //TODO: deal with noYieldSurf
                     theMat = new PressureDependMultiYield02(numElems + 1,nd,rho,refShearModul,refBulkModul,frictionAng,
-                                                            peakShearStra, refPress,  pressDependCoe,PTAng,contrac1,contrac3,  dilat1,dilat3,20,0,
+                                                            peakShearStra, refPress,  pressDependCoe,PTAng,contrac1,contrac3,  dilat1,dilat3,noYieldSurf,0,
                                                             contrac2, dilat2,liquefac1,liquefac2,e,cs1,cs2,cs3,pa);
                     s << "nDMaterial PressureDependMultiYield02 "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
-                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" 20 "<<contrac2<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2
+                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" "<< noYieldSurf << " "<<contrac2<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2
                       <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<endln;
 
                 }
