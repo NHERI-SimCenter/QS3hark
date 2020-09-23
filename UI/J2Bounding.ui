@@ -253,7 +253,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Hydraulic properties of this layer (Keep defaults unless you know their meanings)</string>
+    <string> Hydraulic properties of this layer</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_34">

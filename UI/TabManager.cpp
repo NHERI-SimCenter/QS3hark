@@ -150,7 +150,7 @@ void TabManager::init(QTabWidget* theTab){
     palette->setColor(QPalette::Base,Qt::lightGray);
     palette->setColor(QPalette::Text,Qt::white);
     PM4SandWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
-
+    this->setUIToolTips(PM4SandWidget);
 
 
 
@@ -181,6 +181,7 @@ void TabManager::init(QTabWidget* theTab){
     */
     PM4SiltWidget->findChild<QLineEdit*>("Den")->setReadOnly(true);
     PM4SiltWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
+    this->setUIToolTips(PM4SiltWidget);
 
     QFile uiFilePIMY(":/UI/PIMY.ui");
     uiFilePIMY.open(QIODevice::ReadOnly);
@@ -207,6 +208,8 @@ void TabManager::init(QTabWidget* theTab){
     noYieldSurfLabelTmpPIMY->hide();
     PIMYWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PIMYWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    this->setUIToolTips(PIMYWidget);
+
 
     QFile uiFilePDMY(":/UI/PDMY.ui");
     uiFilePDMY.open(QIODevice::ReadOnly);
@@ -233,6 +236,7 @@ void TabManager::init(QTabWidget* theTab){
     noYieldSurfLabelTmpPDMY->hide();
     PDMYWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PDMYWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    this->setUIToolTips(PDMYWidget);
 
 
     QFile uiFilePDMY02(":/UI/PDMY02.ui");
@@ -260,6 +264,7 @@ void TabManager::init(QTabWidget* theTab){
     noYieldSurfLabelTmpPDMY02->hide();
     PDMY02Widget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PDMY02Widget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    this->setUIToolTips(PDMY02Widget);
 
 
     QFile uiFileManzariDafalias(":/UI/ManzariDafalias.ui");
@@ -283,6 +288,7 @@ void TabManager::init(QTabWidget* theTab){
     DrLabelTmpManzariDafalias->hide();
     ManzariDafaliasWidget->findChild<QLineEdit*>("Den")->setReadOnly(true);
     ManzariDafaliasWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
+    this->setUIToolTips(ManzariDafaliasWidget);
 
 
     QFile uiFileJ2Bounding(":/UI/J2Bounding.ui");
@@ -306,8 +312,7 @@ void TabManager::init(QTabWidget* theTab){
     DrLabelTmpJ2Bounding->hide();
     J2BoundingWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     J2BoundingWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
-
-
+    this->setUIToolTips(J2BoundingWidget);
 
 
     QFile uiFileElasticIsotropic(":/UI/ElasticIsotropic.ui");
@@ -327,7 +332,7 @@ void TabManager::init(QTabWidget* theTab){
     eSizeLabelTmp->hide();
     QLineEdit *rhoEdtTmp= ElasticIsotropicWidget->findChild<QLineEdit*>("rhoEdt");
     rhoEdtTmp->hide();
-    QLabel *rhoLabelTmp= ElasticIsotropicWidget->findChild<QLabel*>("rhoLabel");
+    QLabel *rhoLabelTmp= ElasticIsotropicWidget->findChild<QLabel*>("rho_2");
     rhoLabelTmp->hide();
 
     /*
@@ -353,16 +358,7 @@ void TabManager::init(QTabWidget* theTab){
     rho_dLabelTmp->hide();
 
     // adding tooltips
-    QLabel *ELabel= ElasticIsotropicWidget->findChild<QLabel*>("ELabel");
-    ELabel->setToolTip("kPa");
-    QLabel *vLabel= ElasticIsotropicWidget->findChild<QLabel*>("vLabel");
-    vLabel->setToolTip("Poisson's ratio");
-    QLabel *hPermLabel= ElasticIsotropicWidget->findChild<QLabel*>("hPermLabel");
-    hPermLabel->setToolTip("");
-    QLabel *vPermLabel= ElasticIsotropicWidget->findChild<QLabel*>("vPermLabel");
-    vPermLabel->setToolTip("");
-    QLabel *uBulkLabel= ElasticIsotropicWidget->findChild<QLabel*>("uBulkLabel");
-    uBulkLabel->setToolTip("kPa");
+    this->setUIToolTips(ElasticIsotropicWidget);
 
     // add addtional UI
     QFile uiFilePDMY03(":/UI/PDMY03.ui");
@@ -383,6 +379,8 @@ void TabManager::init(QTabWidget* theTab){
 
     PDMY03Widget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PDMY03Widget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    this->setUIToolTips(PDMY03Widget);
+
 
 
     QFile uiFilePM4Sand_random(":/UI/PM4Sand_random.ui");
@@ -411,6 +409,8 @@ void TabManager::init(QTabWidget* theTab){
 
     PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setReadOnly(true);
     PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
+    this->setUIToolTips(PM4SandRandomWidget);
+
 
 
     QFile uiFilePDMY03_random(":/UI/PDMY03_random.ui");
@@ -439,6 +439,8 @@ void TabManager::init(QTabWidget* theTab){
 
     PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    this->setUIToolTips(PDMY03RandomWidget);
+
 
     //reFreshGMTab();
     initGMTab();
@@ -448,7 +450,7 @@ void TabManager::init(QTabWidget* theTab){
     connect(tab,SIGNAL(tabBarClicked(int)), this, SLOT(onTabBarClicked(int)));
     connect(GMView,SIGNAL(loadFinished(bool)), this, SLOT(onGMLoadFinished(bool)));
 
-    setPM4SandToolTps();
+    // setPM4SandToolTps();
 
     writeGM();
 
@@ -498,6 +500,33 @@ void TabManager::setPM4SandToolTps()
     uBulkLabel->setToolTip("kPa");
 
 }
+
+
+void TabManager::setUIToolTips(QWidget *uiWidget)
+{
+
+    // adding tooltips
+    QLabel *tempLabel;
+    tempLabel = uiWidget->findChild<QLabel*>("rho_2");
+    tempLabel->setToolTip("Mg/m^3");
+
+    // tempLabel = uiWidget->findChild<QLabel*>("P_atm_2");
+    // tempLabel->setToolTip("Atmospheric pressure (kPa)");
+
+    tempLabel= uiWidget->findChild<QLabel*>("hPerm_2");
+    tempLabel->setToolTip("Hydraulic conductivity (L/T) in horizontal direction");
+
+    tempLabel= uiWidget->findChild<QLabel*>("vPerm_2");
+    tempLabel->setToolTip("Hydraulic conductivity (L/T) in vertical direction");
+
+    tempLabel= uiWidget->findChild<QLabel*>("uBulk_2");
+    tempLabel->setToolTip("Bulk modulus of water (kPa)");
+
+    tempLabel= uiWidget->findChild<QLabel*>("evoid_2");
+    tempLabel->setToolTip("Void ratio of the element");
+
+}
+
 
 void TabManager::onSecondaryBtnClicked(bool checked)
 {

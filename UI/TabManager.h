@@ -248,7 +248,7 @@ private:
 
     int currentD = 2; // 2 is 2D, 3 is 3D
     int simulationD = 2; // dim in previous simulation
-
+    void setUIToolTips(QWidget * UIwidget);
 
 };
 

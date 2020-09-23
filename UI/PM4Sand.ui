@@ -117,7 +117,7 @@
     <string>hpo</string>
    </property>
   </widget>
-  <widget class="QLabel" name="Den_2">
+  <widget class="QLabel" name="rho_2">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -610,6 +610,9 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Hydaulic conductivity</string>
+   </property>
    <property name="text">
     <string>vPerm</string>
    </property>
@@ -622,6 +625,9 @@
      <width>41</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>Bulk modulus of water (kPa)</string>
    </property>
    <property name="text">
     <string>uBulk</string>
@@ -743,6 +749,9 @@
      <width>31</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>Void ratio of material</string>
    </property>
    <property name="text">
     <string>void</string>
