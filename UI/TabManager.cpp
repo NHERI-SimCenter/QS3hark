@@ -614,6 +614,12 @@ void TabManager::hideConfigure()
     QLineEdit *VisC= FEMWidget->findChild<QLineEdit*>("VisC");
     VisC->hide();
 
+    QLineEdit *OpenSeesPath= FEMWidget->findChild<QLineEdit*>("openseesPath");
+    OpenSeesPath->hide();
+    QLabel *openseesLabel= FEMWidget->findChild<QLabel*>("openseesLabel");
+    openseesLabel->hide();
+    QPushButton *openseesButton= FEMWidget->findChild<QPushButton*>("openseesBtn");
+    openseesButton->hide();
 
 }
 
