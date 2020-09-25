@@ -194,6 +194,7 @@ public:
         editor->addItem("PDMY03");
         editor->addItem("PM4Sand_Random");
         editor->addItem("PDMY03_Random");
+        editor->addItem("Elastic_Random");
         return editor;
     }
 
