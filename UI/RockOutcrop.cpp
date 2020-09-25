@@ -1135,7 +1135,8 @@ void RockOutcrop::on_reBtn_clicked()
             std::istringstream iss(list.at(FEM-2).toString().toStdString());
             std::vector<std::string> pars((std::istream_iterator<std::string>(iss)),
                                           std::istream_iterator<std::string>());
-            double eSize = atof(pars[0].c_str());
+            // double eSize = atof(pars[0].c_str());
+            double eSize = list.at(ESIZE-2).toDouble();
             int id = i;
 
             int DrInd=0, hPermInd=0, vPermInd=0, uBulkInd=0, voidInd=0;
@@ -1169,8 +1170,10 @@ void RockOutcrop::on_reBtn_clicked()
             }else if(list.at(MATERIAL-2).toString()=="PDMY03" || list.at(MATERIAL-2).toString()=="PDMY03_Random")
             {//TODO: double check
                 DrInd = 1; hPermInd = 24; vPermInd = 25; uBulkInd = 26; voidInd = 27;
+            } else if (list.at(MATERIAL-2).toString()=="Elastic_Random") {
+                //TODO: double check
+                DrInd = 3; hPermInd = 4; vPermInd = 5; uBulkInd = 6; voidInd = 3;
             }
-
 
             if(!list.at(LAYERNAME-2).toString().toStdString().compare("Rock"))
             {
@@ -1793,6 +1796,21 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["Ly"] = atof(pars[31].c_str());
         mat["realization"] =atoi(pars[32].c_str());
         mat["concurrency"] =atoi(pars[33].c_str());
+    } else if (!matType.compare("Elastic_Random")) {
+        double density = atof(pars[0].c_str());
+        double E = atof(pars[1].c_str());
+        double poisson = atof(pars[2].c_str());
+
+        mat["E"] = E;
+        mat["poisson"] = poisson;
+        mat["density"] = density;
+
+        mat["mean"] = atof(pars[7].c_str());
+        mat["COV"] = atof(pars[8].c_str());
+        mat["Ly"] = atof(pars[9].c_str());
+        mat["realization"] =atoi(pars[10].c_str());
+        mat["concurrency"] =atoi(pars[11].c_str());
+        mat["Variable"] = pars[12].c_str();
     }
     return mat;
 }

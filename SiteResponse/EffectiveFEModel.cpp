@@ -606,6 +606,12 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     }
                     double nu = mat["nu"];
                     plasticPoissonVec.push_back(nu); // for dynamic analysis
+                } else if(!matType.compare("Elastic_Random")) {
+                    if (!m_runningStochastic)
+                    {
+                        s << "source material.tcl" << endln;
+                        m_runningStochastic = true;
+                    }
                 }
 
 
