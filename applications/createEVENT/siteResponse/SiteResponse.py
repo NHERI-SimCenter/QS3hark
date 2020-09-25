@@ -19,7 +19,7 @@ def main(args):
         data = json.load(json_file)
 
     for material in data["Events"][0]["materials"]:
-        if material["type"] == "PM4Sand_Random" or material["type"] == "PDMY03_Random":
+        if material["type"] == "PM4Sand_Random" or material["type"] == "PDMY03_Random" or material["type"] == "Elastic_Random":
             RFflag = True
             break
     if RFflag:

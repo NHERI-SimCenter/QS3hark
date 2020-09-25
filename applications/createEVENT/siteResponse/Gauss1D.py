@@ -1,8 +1,6 @@
 from cmath import pi, exp, sqrt
 import numpy as np
 import sys
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 class gauss1D:
 
@@ -75,20 +73,6 @@ class gauss1D:
                 self.f[pp, qq] = part1.sum() + part2.sum()
 
 
-def plotRandomField(self):
-        # create mesh for surface plot
-    x = np.linspace(0, self.Lx, self.Mx)
-    y = np.linspace(0, self.Ly, self.My)
-    xv, yv = np.meshgrid(x, y)
-
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.plot_surface(np.transpose(xv), np.transpose(yv), self.f)
-    plt.show(block=True)
-    temp1 = np.squeeze(yv.reshape((-1,1)))
-    temp2 = np.squeeze(self.f.reshape((-1,1)))
-    np.savetxt('random.out', np.transpose([temp1, temp2]), fmt='%1.3f')
-
 def printField(self):
     print(self.f)
 
@@ -101,7 +85,6 @@ if __name__ == "__main__":
     a.calculate()
     F = a.f.reshape((-1,1))
     Y = np.linspace(0, a.Ly, a.My)
-    plotRandomField(a)
 
 
 
