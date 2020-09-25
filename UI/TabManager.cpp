@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QLabel>
+#include <QComboBox>
 
 
 
@@ -360,7 +361,40 @@ void TabManager::init(QTabWidget* theTab){
     // adding tooltips
     this->setUIToolTips(ElasticIsotropicWidget);
 
-    // add addtional UI
+    // ---- add addtional UI -----
+    QFile uiFileElasticIsotropic_random(":/UI/ElasticIsotropic_random.ui");
+    uiFileElasticIsotropic_random.open(QIODevice::ReadOnly);
+    ElasticRandomWidget = uiLoader.load(&uiFileElasticIsotropic_random,this);
+    for (int i = 0; i < listElasticRandomFEM.size(); ++i) {
+        qDebug() <<  listElasticRandomFEM[i];
+        QString edtName = listElasticRandomFEM[i];
+        edtsElasticRandomFEM.push_back(ElasticRandomWidget->findChild<QLineEdit*>(edtName));
+    }
+    // connect edit signal with onDataEdited
+    for (int i = 0; i < edtsElasticRandomFEM.size(); ++i) {
+        connect(edtsElasticRandomFEM[i], SIGNAL(editingFinished()), this, SLOT(onDataEdited()));
+    }
+    eSizeEdtTmp= ElasticRandomWidget->findChild<QLineEdit*>("rho");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= ElasticRandomWidget->findChild<QLabel*>("rho2");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= ElasticRandomWidget->findChild<QLineEdit*>("realization");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= ElasticRandomWidget->findChild<QLabel*>("realization2");
+    eSizeLabelTmp->hide();
+    eSizeEdtTmp= ElasticRandomWidget->findChild<QLineEdit*>("processor");
+    eSizeEdtTmp->hide();
+    eSizeLabelTmp= ElasticRandomWidget->findChild<QLabel*>("processor2");
+    eSizeLabelTmp->hide();
+
+    QComboBox *varNameComboBox = ElasticRandomWidget->findChild<QComboBox*>("varName");
+    varNameComboBox->addItem("Vs");
+
+    // adding tooltips
+    this->setUIToolTips(ElasticRandomWidget);
+
+
+
     QFile uiFilePDMY03(":/UI/PDMY03.ui");
     uiFilePDMY03.open(QIODevice::ReadOnly);
     PDMY03Widget = uiLoader.load(&uiFilePDMY03,this);
@@ -507,8 +541,8 @@ void TabManager::setUIToolTips(QWidget *uiWidget)
 
     // adding tooltips
     QLabel *tempLabel;
-    tempLabel = uiWidget->findChild<QLabel*>("rho_2");
-    tempLabel->setToolTip("Mg/m^3");
+    // tempLabel = uiWidget->findChild<QLabel*>("rho_2");
+    // tempLabel->setToolTip("Mg/m^3");
 
     // tempLabel = uiWidget->findChild<QLabel*>("P_atm_2");
     // tempLabel->setToolTip("Atmospheric pressure (kPa)");
@@ -614,6 +648,12 @@ void TabManager::hideConfigure()
     QLineEdit *VisC= FEMWidget->findChild<QLineEdit*>("VisC");
     VisC->hide();
 
+    QLineEdit *OpenSeesPath= FEMWidget->findChild<QLineEdit*>("openseesPath");
+    OpenSeesPath->hide();
+    QLabel *openseesLabel= FEMWidget->findChild<QLabel*>("openseesLabel");
+    openseesLabel->hide();
+    QPushButton *openseesButton= FEMWidget->findChild<QPushButton*>("openseesBtn");
+    openseesButton->hide();
 
 }
 
@@ -2509,20 +2549,25 @@ void TabManager::onTableViewClicked(const QModelIndex &index){
         currentWidget = J2BoundingWidget;
     }
     else if (thisMatType=="PM4Sand_Random")
-        {
-            currentEdts = edtsPM4SandRandomFEM;
-            currentWidget = PM4SandRandomWidget;
-        }
+    {
+        currentEdts = edtsPM4SandRandomFEM;
+        currentWidget = PM4SandRandomWidget;
+    }
     else if (thisMatType=="PDMY03")
-        {
-            currentEdts = edtsPDMY03FEM;
-            currentWidget = PDMY03Widget;
-        }
+    {
+        currentEdts = edtsPDMY03FEM;
+        currentWidget = PDMY03Widget;
+    }
     else if (thisMatType=="PDMY03_Random")
-        {
-            currentEdts = edtsPDMY03RandomFEM;
-            currentWidget = PDMY03RandomWidget;
-        }
+    {
+        currentEdts = edtsPDMY03RandomFEM;
+        currentWidget = PDMY03RandomWidget;
+    }
+    else if (thisMatType=="Elastic_Random")
+    {
+        currentEdts = edtsElasticRandomFEM;
+        currentWidget = ElasticRandomWidget;
+    }
     else
         currentWidget = defaultWidget;
 
@@ -2703,22 +2748,53 @@ void TabManager::updateLayerTab(QJsonObject l,QJsonObject mat)
         evoid->setText(QString::number(evoidval,'g',16));
     }
     // add additional materials
-    else if(matType=="PM4Sand_Random")
-        {
-            for (int i = 0; i < listPM4SandRandomFEM.size(); ++i) {
-                QString edtName = listPM4SandRandomFEM[i];
-                if(!mat[edtName].isNull())
-                    edtsPM4SandRandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
-            }
-            QLineEdit *hPerm= PM4SandRandomWidget->findChild<QLineEdit*>("hPerm");
-            hPerm->setText(QString::number(hPermval,'g',16));
-            QLineEdit *vPerm= PM4SandRandomWidget->findChild<QLineEdit*>("vPerm");
-            vPerm->setText(QString::number(vPermval,'g',16));
-            QLineEdit *uBulk= PM4SandRandomWidget->findChild<QLineEdit*>("uBulk");
-            uBulk->setText(QString::number(uBulkval,'g',16));
-            QLineEdit *evoid= PM4SandRandomWidget->findChild<QLineEdit*>("evoid");
-            evoid->setText(QString::number(evoidval,'g',16));
+    else if(matType=="PM4Sand_Random") {
+        for (int i = 0; i < listPM4SandRandomFEM.size(); ++i) {
+            QString edtName = listPM4SandRandomFEM[i];
+            if(!mat[edtName].isNull())
+                edtsPM4SandRandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
         }
+        QLineEdit *hPerm= PM4SandRandomWidget->findChild<QLineEdit*>("hPerm");
+        hPerm->setText(QString::number(hPermval,'g',16));
+        QLineEdit *vPerm= PM4SandRandomWidget->findChild<QLineEdit*>("vPerm");
+        vPerm->setText(QString::number(vPermval,'g',16));
+        QLineEdit *uBulk= PM4SandRandomWidget->findChild<QLineEdit*>("uBulk");
+        uBulk->setText(QString::number(uBulkval,'g',16));
+        QLineEdit *evoid= PM4SandRandomWidget->findChild<QLineEdit*>("evoid");
+        evoid->setText(QString::number(evoidval,'g',16));
+    } else if(matType=="PDMY03_Random") {
+        for (int i = 0; i < listPDMY03RandomFEM.size(); ++i) {
+            QString edtName = listPDMY03RandomFEM[i];
+            if(!mat[edtName].isNull())
+                edtsPDMY03RandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
+        }
+        QLineEdit *hPerm= PDMY03RandomWidget->findChild<QLineEdit*>("hPerm");
+        hPerm->setText(QString::number(hPermval,'g',16));
+        QLineEdit *vPerm= PDMY03RandomWidget->findChild<QLineEdit*>("vPerm");
+        vPerm->setText(QString::number(vPermval,'g',16));
+        QLineEdit *uBulk= PDMY03RandomWidget->findChild<QLineEdit*>("uBulk");
+        uBulk->setText(QString::number(uBulkval,'g',16));
+        QLineEdit *evoid= PDMY03RandomWidget->findChild<QLineEdit*>("evoid");
+        evoid->setText(QString::number(evoidval,'g',16));
+    } else if(matType=="Elastic_Random") {
+        for (int i = 0; i < listElasticRandomFEM.size(); ++i) {
+            QString edtName = listElasticRandomFEM[i];
+            if(!mat[edtName].isNull())
+                edtsElasticRandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
+        }
+        if (mat["varName"] == "Vs") {
+            QComboBox* varName = ElasticRandomWidget->findChild<QComboBox*>("VarName");
+            varName->setCurrentIndex(0);
+        }
+        QLineEdit *hPerm= ElasticRandomWidget->findChild<QLineEdit*>("hPerm");
+        hPerm->setText(QString::number(hPermval,'g',16));
+        QLineEdit *vPerm= ElasticRandomWidget->findChild<QLineEdit*>("vPerm");
+        vPerm->setText(QString::number(vPermval,'g',16));
+        QLineEdit *uBulk= ElasticRandomWidget->findChild<QLineEdit*>("uBulk");
+        uBulk->setText(QString::number(uBulkval,'g',16));
+        QLineEdit *evoid= ElasticRandomWidget->findChild<QLineEdit*>("evoid");
+        evoid->setText(QString::number(evoidval,'g',16));
+    }
 
     // send the signal to update FEM cell
     onDataEdited();
@@ -2742,6 +2818,7 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
 
     // set values for the form
     QString thisFEmString;
+
     if (FEMStringList.size() == currentEdts.size())
     {
         for (int i = 0; i < FEMStringList.size(); ++i) {
@@ -2770,17 +2847,14 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
                     DenEdt->setText(densityFromTable);
                 }
 
-                double vsFromTable = tableModel->data(tableModel->index(index.row(), VS)).toDouble();
-                QLineEdit* vEdt = ElasticIsotropicWidget->findChild<QLineEdit*>("vEdt");
-                double v = vEdt->text().toDouble();
-                QLineEdit* EEdt = ElasticIsotropicWidget->findChild<QLineEdit*>("EEdt");
-                double E = 2.0 * densityFromTable.toDouble() * vsFromTable * vsFromTable * (1. + v);
-                EEdt->setText(QString::number(E,'g',16));
                 onDataEdited();// added
             }
-
-
-
+            double vsFromTable = tableModel->data(tableModel->index(index.row(), VS)).toDouble();
+            QLineEdit* vEdt = ElasticIsotropicWidget->findChild<QLineEdit*>("vEdt");
+            double v = vEdt->text().toDouble();
+            QLineEdit* EEdt = ElasticIsotropicWidget->findChild<QLineEdit*>("EEdt");
+            double E = 2.0 * densityFromTable.toDouble() * vsFromTable * vsFromTable * (1. + v);
+            EEdt->setText(QString::number(E,'g',16));
 
             QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
             QLineEdit* esizeEdt = ElasticIsotropicWidget->findChild<QLineEdit*>("eSize");
@@ -3200,15 +3274,27 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
                 }
             }
         }
-        // onDataEdited();
+               // onDataEdited();
 
-    } else
-    {
-        //qDebug() << "FEMStringList.size() not == edts.size() !";
+    } else if (thisMatType == "Elastic_Random") {
+        for (int i = 0; i < FEMStringList.size() - 1; ++i) {
+            currentEdts[i]->setText(FEMStringList.at(i));
+            qDebug() << FEMStringList.at(i);
+        }
+        double densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toDouble();
+        double vsFromTable = tableModel->data(tableModel->index(index.row(), VS)).toDouble();
+        QLineEdit* vEdt = ElasticRandomWidget->findChild<QLineEdit*>("vEdt");
+        double v = vEdt->text().toDouble();
+        QLineEdit* EEdt = ElasticRandomWidget->findChild<QLineEdit*>("EEdt");
+        double E = 2.0 * densityFromTable * vsFromTable * vsFromTable * (1. + v);
+        EEdt->setText(QString::number(E,'g',16));
+        QLineEdit* mean =ElasticRandomWidget->findChild<QLineEdit*>("mean");
+        QComboBox* varName = ElasticRandomWidget->findChild<QComboBox*>("varName");
+        if (varName->currentText() == "Vs") {
+            mean->setText(QString::number(vsFromTable));
+        }
+        // onDataEdited();// added
     }
-
-
-
 }
 
 void TabManager::onDataEdited()
@@ -3237,12 +3323,19 @@ void TabManager::onDataEdited()
         currentEdts = edtsPDMY03FEM;
     else if (thisMatType=="PDMY03_Random")
         currentEdts = edtsPDMY03RandomFEM;
+    else if (thisMatType=="Elastic_Random")
+        currentEdts = edtsElasticRandomFEM;
 
     // collect data in the form
     QString thisFEmString;
     for (int i = 0; i < currentEdts.size(); ++i) {
         thisFEmString += currentEdts[i]->text()+" ";
     }
+    if (thisMatType=="Elastic_Random") {
+        QComboBox* varName = ElasticRandomWidget->findChild<QComboBox*>("varName");
+        thisFEmString += varName->currentText();
+    }
+
     // update the model
     tableModel->setData(tableModel->index(currentRow, FEM), thisFEmString);
 
@@ -3304,7 +3397,11 @@ void TabManager::onDataEdited()
         QLineEdit* DenEdt = PDMY03RandomWidget->findChild<QLineEdit*>("rho");
         tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
     }
-
+    if (thisMatType=="Elastic_Random")
+    {
+        QLineEdit* DenEdt = ElasticRandomWidget->findChild<QLineEdit*>("rho");
+        tableModel->setData(tableModel->index(currentRow, DENSITY), DenEdt->text());
+    }
 
 }
 
@@ -3344,6 +3441,8 @@ void TabManager::checkDefaultFEM(QString thisMatType,const QModelIndex &index)
         numPars = 28;
     else if (thisMatType == "PDMY03_Random")
         numPars = 34;
+    else if (thisMatType == "Elastic_Random")
+        numPars = 13;
     else
         numPars =0;
     if (FEMStringList.size() != numPars)
@@ -3479,6 +3578,34 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
         // DR = 57%
         tableModel->setData(tableModel->index(currentRow, FEM), "2.0 "+nd+" "+density+" 7.37e4 19.68e4 30.3 0.1 101 0.5 25.3 0 0.012 3.0 0.4 9.0 0.0 0.3 3.0 -0.3 30 1.0 0.0 101 1.73"+" 1.0e-7 1.0e-7 2.2e6 0.46 " + "Dr 0.5 0.3 1.0 100 4");
     //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34"
+    } else if (thisMatType == "Elastic_Random") {
+        double rho = tableModel->data(tableModel->index(index.row(), DENSITY)).toDouble();
+        if (rho<1.0e-11 & rho>-1.0e-11) //
+        {
+            rho = 2.0; // set default Vs
+            tableModel->setData(tableModel->index(index.row(), DENSITY), QString::number(rho,'g',16));
+        }
+
+        double vs = tableModel->data(tableModel->index(index.row(), VS)).toDouble();
+        if (vs<1.0e-11 & vs>-1.0e-11) //
+        {
+            vs = 182.0; // set default Vs
+            tableModel->setData(tableModel->index(index.row(), VS), QString::number(vs));
+        }
+        double E = 2.0 * rho * vs * vs * (1. + .3);
+
+        double hPerm = 1.0e-7;
+        double vPerm = 1.0e-7;
+        double uBulk = 2.2e6;
+        double evoid = 0.5;
+        QString defaultElasMat = QString::number(rho);
+        defaultElasMat += " "+QString::number(E)+" 0.3";
+        defaultElasMat += " "+QString::number(evoid);
+        defaultElasMat += " "+QString::number(hPerm);
+        defaultElasMat += " "+QString::number(vPerm);
+        defaultElasMat += " "+QString::number(uBulk);
+        defaultElasMat += " "+QString::number(vs) + " 0.1 1.0 100 4 " + "Vs";
+        tableModel->setData(tableModel->index(currentRow, FEM), defaultElasMat);
     }
 }
 

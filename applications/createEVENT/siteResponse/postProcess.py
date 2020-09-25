@@ -38,6 +38,8 @@ def postProcess(evtName):
     with open(evtName, "w") as outfile:
         json.dump(dataToWrite, outfile, indent=4)
 
+    return 0
+
 
 if __name__ == "__main__":
     postProcess("EVENT.json")

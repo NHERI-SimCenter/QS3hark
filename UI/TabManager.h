@@ -135,6 +135,7 @@ private:
     QWidget* PM4SandRandomWidget;
     QWidget* PDMY03Widget;
     QWidget* PDMY03RandomWidget;
+    QWidget* ElasticRandomWidget;
 
     QWebEngineView *quickstart;
     QWebEngineView *GMView;
@@ -191,6 +192,8 @@ private:
            "noYieldSurf", "liquefac1", "liquefac2", "pa", "s0",
            "hPerm","vPerm","uBulk","evoid", "varName", "mean", "cov", "Ly", "realization", "processor"};
 
+    QList<QString> listElasticRandomFEM = {"rho", "EEdt", "vEdt", "evoid","hPerm","vPerm","uBulk", "mean", "cov", "Ly", "realization", "processor"};
+
     QVector<QLineEdit*> edtsFEM;
     QVector<QLineEdit*> edtsElasticIsotropicFEM;
     QVector<QLineEdit*> edtsPM4SandFEM;
@@ -204,6 +207,7 @@ private:
     QVector<QLineEdit*> edtsPM4SandRandomFEM;
     QVector<QLineEdit*> edtsPDMY03FEM;
     QVector<QLineEdit*> edtsPDMY03RandomFEM;
+    QVector<QLineEdit*> edtsElasticRandomFEM;
 
     QLineEdit* slopex1=0;
     QLineEdit* slopex2=0;

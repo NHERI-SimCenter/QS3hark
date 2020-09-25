@@ -123,7 +123,7 @@ public:
         QString matTypeTmp;
         for (int i=0;i<this->rowCount() ;++i){
             matTypeTmp = data(createIndex(i, MATERIAL)).toString();//commentednotsure
-            if(matTypeTmp == "PM4Sand" || matTypeTmp == "PM4Silt")
+            if(matTypeTmp == "PM4Sand" || matTypeTmp == "PM4Silt" || matTypeTmp == "PM4Sand_Random" || matTypeTmp == "PDMY03_Random")
             {
                 layerContaining2D = i+1;
                 break;

@@ -26,14 +26,14 @@ win32: {
 INCLUDEPATH += FEM \
             += SiteResponse
 
-LIBS += "The path to the file lapack.lib"
-LIBS += "The path to the file blas.lib"
-LIBS += "The path to the file libifcoremt.lib"
-LIBS += "The path to the file libirc.lib"
-LIBS += "The path to the file ifconsol.lib"
-LIBS += "The path to the file libifport.lib"
-LIBS += "The path to the file libmmt.lib"
-LIBS += "The path to the file svml_dispmt.lib"
+# -LIBS += "The path to the file lapack.lib"
+# -LIBS += "The path to the file blas.lib"
+# -LIBS += "The path to the file libifcoremt.lib"
+# -LIBS += "The path to the file libirc.lib"
+# -LIBS += "The path to the file ifconsol.lib"
+# -LIBS += "The path to the file libifport.lib"
+# -LIBS += "The path to the file libmmt.lib"
+# -LIBS += "The path to the file svml_dispmt.lib"
 # You must append your lapack include path if it is not in a standard place.
 LIBS += -L"$$_PRO_FILE_PWD_/lib"
 }
@@ -211,6 +211,7 @@ SOURCES += $$PWD/UI/RockOutcrop.cpp \
     $$PWD/FEM/PressureDependMultiYield02.cpp \
     $$PWD/FEM/PressureDependMultiYield.cpp \
     $$PWD/FEM/PressureIndependMultiYield.cpp \
+    $$PWD/FEM/PressureDependMultiYield03.cpp \
     $$PWD/SiteResponse/EffectiveFEModel.cpp \
     $$PWD/SiteResponse/Mesher.cpp \
     $$PWD/SiteResponse/soillayer.cpp \
@@ -419,6 +420,7 @@ HEADERS  += $$PWD/UI/RockOutcrop.h \
     $$PWD/FEM/PressureDependMultiYield02.h \
     $$PWD/FEM/PressureDependMultiYield.h \
     $$PWD/FEM/PressureIndependMultiYield.h \
+    $$PWD/FEM/PressureDependMultiYield03.h \
     $$PWD/SiteResponse/Mesher.h \
     $$PWD/SiteResponse/EffectiveFEModel.h \
     $$PWD/SiteResponse/soillayer.h \

@@ -73,6 +73,7 @@ public:
     ~SiteResponseModel();
 
     int   buildEffectiveStressModel2D(bool doAnalysis);
+    int   buildEffectiveStressModel2DInternal(bool doAnalysis);
     int   buildEffectiveStressModel3D(bool doAnalysis);
     int   runEffectiveStressModel2D();
     int   runEffectiveStressModel3D();
