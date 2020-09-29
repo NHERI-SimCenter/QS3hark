@@ -955,6 +955,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
         // write acceleration output to current workDir for EE-UQ
         s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
     } else {
+        s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
         s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
     }
     s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<endln;
