@@ -378,8 +378,9 @@ void RockOutcrop::onConfigTabUpdated()
 
 
 
-bool  RockOutcrop::copyFiles(QString &destDir)
+bool RockOutcrop::copyFiles(QString &destDir)
 {
+    theTabManager->writeGM();
     this->on_runBtn_clicked(); // link EE-UQ run button with analyze
     QString fileName = "EVENT.json";
     if (m_runningStochastic) {
@@ -388,11 +389,16 @@ bool  RockOutcrop::copyFiles(QString &destDir)
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
         fileName = "Rock-x.vel";  // input motion
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
-        theTabManager->writeSurfaceMotion();
         fileName = "EVENT.json";
-        QFile::copy(evtjFileName, destDir + "/" + fileName);
-    } else {
+        theTabManager->writeSurfaceMotion();
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+    } else {
+        fileName = "model.tcl"; // SRT model template
+        QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        fileName = "Rock-x.vel";  // input motion
+        QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        // theTabManager->writeSurfaceMotion();
+        // QFile::copy(evtjFileName, destDir + "/" + fileName);
     }
     return true;
 }
@@ -400,15 +406,69 @@ bool  RockOutcrop::copyFiles(QString &destDir)
 
 void RockOutcrop::loadFromJson()
 {
-
-
     QString in;
     QFile inputFile(srtFileName);
     if(inputFile.open(QFile::ReadOnly)) {
         //inputFile.open(QIODevice::ReadOnly | QIODevice::Text);
         in = inputFile.readAll();
         inputFile.close();
-    }else{
+        QJsonDocument indoc = QJsonDocument::fromJson(in.toUtf8());
+        QJsonObject inobj = indoc.object();
+
+        QJsonObject basicSettings = inobj["basicSettings"].toObject();
+        QString groundMotion = basicSettings["groundMotion"].toString();
+        if(groundMotion=="") groundMotion = "Input the path of a ground motion file. ";
+        theTabManager->updateGMPath(groundMotion);
+        QString OpenSeesPath = basicSettings["OpenSeesPath"].toString();
+        if(OpenSeesPath=="") OpenSeesPath = "Input the full path of OpenSees excutable. ";
+        theTabManager->updateOpenSeesPath(OpenSeesPath);
+        QString slopex1 = QString::number(basicSettings["slopex1"].toDouble(), 'g', 16);
+        QString slopex2 = QString::number(basicSettings["slopex2"].toDouble(), 'g', 16);
+
+
+        QJsonArray soilLayers = inobj["soilProfile"].toObject()["soilLayers"].toArray();
+        QJsonArray materials = inobj["materials"].toArray();
+        ui->totalLayerLineEdit->setText(QString::number(soilLayers.size()));
+        for (int i=soilLayers.size()-1; i>=0; i--)
+        {
+            QJsonObject l = soilLayers[i].toObject();
+            QString name = l["name"].toString();
+            QString color = l["color"].toString();
+            int id = l["id"].toInt();
+            QJsonObject mat = materials[i].toObject();
+            QString material = materials[i].toObject()["type"].toString();
+            double Dr = l["Dr"].toDouble();
+            double density = l["density"].toDouble();
+            double eSize = l["eSize"].toDouble();
+            double hPerm = l["hPerm"].toDouble();
+            double vPerm = l["vPerm"].toDouble();
+            double thickness = l["thickness"].toDouble();
+            double vs = l["vs"].toDouble();
+
+            if (i==soilLayers.size()-1)// Rock
+            {
+                QList<QVariant> valueListRock;
+                valueListRock << "Rock" << "-" << density << vs << DefaultEType << "-";
+                ui->tableView->insertAt(valueListRock,0);
+            }else{
+                QList<QVariant> valueList;
+                if (color=="")
+                    color = QColor::fromRgb(QRandomGenerator::global()->generate()).name();
+                valueList << name << thickness << density << vs << material << eSize << color;
+                //ui->tableView->insertAtSilent(valueList,0);
+                ui->tableView->insertAt(valueList,0);
+
+            }
+            theTabManager->updateLayerTab(l,mat);
+        }
+
+        ui->gwtEdit->setText(QString::number(basicSettings["groundWaterTable"].toDouble()));
+
+        ui->totalLayerLineEdit->setText(QString::number(soilLayers.size()));
+
+        theTabManager->updateConfigureTabFromOutside(slopex1, slopex2);
+
+    } else {
         // if no input file provided add a default layer
         if(ui->tableView->m_sqlModel->rowCount()<1)
         {
@@ -417,91 +477,18 @@ void RockOutcrop::loadFromJson()
             ui->tableView->insertAt(valueListRock,0);
             ui->tableView->setTotalHeight(0);
             ui->totalHeight->setText("0");
-            ui->totalLayerLineEdit->setText("1");
-
 
             QList<QVariant> valueList;
             valueList << "Layer 1" << DefaultThickness << DefaultDensity << DefaultVs << DefaultEType << DefaultESize << "#64B5F6";
             ui->tableView->insertAt(valueList,0);
             ui->totalHeight->setText(QString::number(DefaultThickness));
             ui->totalLayerLineEdit->setText("2");
-
+        } else {
+            ui->totalLayerLineEdit->setText(QString::number(ui->tableView->m_sqlModel->rowCount()));
         }
     }
-
-    QJsonDocument indoc = QJsonDocument::fromJson(in.toUtf8());
-    QJsonObject inobj = indoc.object();
-
-
-
-
-    QJsonObject basicSettings = inobj["basicSettings"].toObject();
-    QString groundMotion = basicSettings["groundMotion"].toString();
-    if(groundMotion=="") groundMotion = "Input the path of a ground motion file. ";
-    theTabManager->updateGMPath(groundMotion);
-    QString OpenSeesPath = basicSettings["OpenSeesPath"].toString();
-    if(OpenSeesPath=="") OpenSeesPath = "Input the full path of OpenSees excutable. ";
-    theTabManager->updateOpenSeesPath(OpenSeesPath);
-    QString slopex1 = QString::number(basicSettings["slopex1"].toDouble(), 'g', 16);
-    QString slopex2 = QString::number(basicSettings["slopex2"].toDouble(), 'g', 16);
-
-
-    QJsonArray soilLayers = inobj["soilProfile"].toObject()["soilLayers"].toArray();
-    QJsonArray materials = inobj["materials"].toArray();
-    for (int i=soilLayers.size()-1; i>=0; i--)
-    {
-        QJsonObject l = soilLayers[i].toObject();
-        QString name = l["name"].toString();
-        QString color = l["color"].toString();
-        int id = l["id"].toInt();
-        QJsonObject mat = materials[i].toObject();
-        QString material = materials[i].toObject()["type"].toString();
-        double Dr = l["Dr"].toDouble();
-        double density = l["density"].toDouble();
-        double eSize = l["eSize"].toDouble();
-        double hPerm = l["hPerm"].toDouble();
-        double vPerm = l["vPerm"].toDouble();
-        double thickness = l["thickness"].toDouble();
-        double vs = l["vs"].toDouble();
-
-        if (i==soilLayers.size()-1)// Rock
-        {
-            QList<QVariant> valueListRock;
-            valueListRock << "Rock" << "-" << density << vs << DefaultEType << "-";
-            ui->tableView->insertAt(valueListRock,0);
-        }else{
-            QList<QVariant> valueList;
-            if (color=="")
-                color = QColor::fromRgb(QRandomGenerator::global()->generate()).name();
-            valueList << name << thickness << density << vs << material << eSize << color;
-            //ui->tableView->insertAtSilent(valueList,0);
-            ui->tableView->insertAt(valueList,0);
-
-        }
-
-
-
-        theTabManager->updateLayerTab(l,mat);
-
-    }
-
-
-
-
-
-
-
-    ui->gwtEdit->setText(QString::number(basicSettings["groundWaterTable"].toDouble()));
-
-    ui->totalLayerLineEdit->setText(QString::number(soilLayers.size()));
-
-    theTabManager->updateConfigureTabFromOutside(slopex1, slopex2);
-
 
     ui->reBtn->click();
-
-
-
 }
 
 
@@ -1378,8 +1365,8 @@ void RockOutcrop::on_runBtn_clicked()
             {
                 openseesProcess->start(openseesPathVariant.toString(),QStringList()<<tclName);
                 // Let EE-UQ wait before running UQ engine
-                openseesProcess->waitForFinished();
-                openseesProcess->close();
+                // openseesProcess->waitForFinished();
+                // openseesProcess->close();
             } else {
                 // call python to create files for dakota, need external python script to create inputs for dakota
 
@@ -1461,7 +1448,7 @@ void RockOutcrop::onInternalFEAInvoked()
 void RockOutcrop::onOpenSeesFinished()
 {
 
-    //writeSurfaceMotion();
+    // writeSurfaceMotion();
     QString str_err = openseesProcess->readAllStandardError();
 
     if(openseesErrCount==1)
@@ -1485,7 +1472,7 @@ void RockOutcrop::onOpenSeesFinished()
             theTabManager->getTab()->setCurrentIndex(2);
             resultsTab->setCurrentIndex(1);
 
-            QMessageBox::information(this,tr("OpenSees Information"), "Analysis is done.", tr("I know."));
+            // QMessageBox::information(this,tr("OpenSees Information"), "Analysis is done.", tr("I know."));
 
 
 
