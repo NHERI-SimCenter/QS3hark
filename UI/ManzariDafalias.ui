@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>660</width>
+    <width>698</width>
     <height>324</height>
    </rect>
   </property>
@@ -22,7 +22,11 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="h0"/>
+    <widget class="QLineEdit" name="h0">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="6" column="2">
     <widget class="QLabel" name="cz_2">
@@ -32,7 +36,11 @@
     </widget>
    </item>
    <item row="4" column="9">
-    <widget class="QLineEdit" name="m"/>
+    <widget class="QLineEdit" name="m">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="9" column="4">
     <widget class="QLabel" name="uBulk_2">
@@ -42,20 +50,35 @@
     </widget>
    </item>
    <item row="9" column="5">
-    <widget class="QLineEdit" name="uBulk"/>
+    <widget class="QLineEdit" name="uBulk">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="9">
-    <widget class="QLineEdit" name="nd"/>
+    <widget class="QLineEdit" name="nd">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="6" column="9">
     <widget class="QLineEdit" name="K0">
      <property name="whatsThis">
       <string>At-rest coefficient of lateral earch pressure for initial stress</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
    <item row="4" column="7">
-    <widget class="QLineEdit" name="P_atm"/>
+    <widget class="QLineEdit" name="P_atm">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="4">
     <widget class="QLabel" name="nb_2">
@@ -72,7 +95,11 @@
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="QLineEdit" name="hPerm"/>
+    <widget class="QLineEdit" name="hPerm">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="lambda_c_2">
@@ -93,10 +120,17 @@
      <property name="text">
       <string>K0 (Intial stress state)</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
    <item row="1" column="11">
-    <widget class="QLineEdit" name="eSize"/>
+    <widget class="QLineEdit" name="eSize">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="0" column="0" colspan="6">
     <widget class="QLabel" name="label_34">
@@ -113,19 +147,39 @@
     </widget>
    </item>
    <item row="9" column="3">
-    <widget class="QLineEdit" name="vPerm"/>
+    <widget class="QLineEdit" name="vPerm">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="3">
-    <widget class="QLineEdit" name="e0"/>
+    <widget class="QLineEdit" name="e0">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="5">
-    <widget class="QLineEdit" name="ksi"/>
+    <widget class="QLineEdit" name="ksi">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="7">
-    <widget class="QLineEdit" name="Mc"/>
+    <widget class="QLineEdit" name="Mc">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="7">
-    <widget class="QLineEdit" name="A0"/>
+    <widget class="QLineEdit" name="A0">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="6">
     <widget class="QLabel" name="P_atm_2">
@@ -170,13 +224,25 @@
     </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QLineEdit" name="nu"/>
+    <widget class="QLineEdit" name="nu">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="lambda_c"/>
+    <widget class="QLineEdit" name="lambda_c">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="9" column="7">
-    <widget class="QLineEdit" name="evoid"/>
+    <widget class="QLineEdit" name="evoid">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="9" column="8">
     <widget class="QLabel" name="Dr_2">
@@ -193,10 +259,18 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="G0"/>
+    <widget class="QLineEdit" name="G0">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="9">
-    <widget class="QLineEdit" name="c"/>
+    <widget class="QLineEdit" name="c">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="6">
     <widget class="QLabel" name="A0_2">
@@ -206,7 +280,11 @@
     </widget>
    </item>
    <item row="5" column="5">
-    <widget class="QLineEdit" name="nb"/>
+    <widget class="QLineEdit" name="nb">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="6" column="0">
     <widget class="QLabel" name="z_max_2">
@@ -223,7 +301,11 @@
     </widget>
    </item>
    <item row="5" column="3">
-    <widget class="QLineEdit" name="ch"/>
+    <widget class="QLineEdit" name="ch">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="8">
     <widget class="QLabel" name="nd_2">
@@ -233,7 +315,11 @@
     </widget>
    </item>
    <item row="9" column="9">
-    <widget class="QLineEdit" name="Dr"/>
+    <widget class="QLineEdit" name="Dr">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="6">
     <widget class="QLabel" name="Mc_2">
@@ -243,7 +329,11 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QLineEdit" name="z_max"/>
+    <widget class="QLineEdit" name="z_max">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="h0_2">
@@ -260,7 +350,11 @@
     </widget>
    </item>
    <item row="6" column="5">
-    <widget class="QLineEdit" name="Den"/>
+    <widget class="QLineEdit" name="Den">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="9" column="6">
     <widget class="QLabel" name="evoid_2">
@@ -277,10 +371,18 @@
     </widget>
    </item>
    <item row="1" column="5">
-    <widget class="QLineEdit" name="e_init"/>
+    <widget class="QLineEdit" name="e_init">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="6" column="3">
-    <widget class="QLineEdit" name="cz"/>
+    <widget class="QLineEdit" name="cz">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="G0_2">

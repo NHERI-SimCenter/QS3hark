@@ -1718,12 +1718,12 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["p_sedo"] = atof(pars[24].c_str());
         mat["K0"] = atof(pars[29].c_str());
 
-        mat["Variable"] = pars[30].c_str();
-        mat["mean"] = atof(pars[31].c_str());
-        mat["COV"] = atof(pars[32].c_str());
-        mat["Ly"] = atof(pars[33].c_str());
-        mat["realization"] =atoi(pars[34].c_str());
-        mat["concurrency"] =atoi(pars[35].c_str());
+        mat["mean"] = atof(pars[30].c_str());
+        mat["COV"] = atof(pars[31].c_str());
+        mat["Ly"] = atof(pars[32].c_str());
+        mat["realization"] =atoi(pars[33].c_str());
+        mat["concurrency"] =atoi(pars[34].c_str());
+        mat["Variable"] = pars[35].c_str();
     }
     else if (!matType.compare("PDMY03"))
     {
@@ -1777,12 +1777,13 @@ json RockOutcrop::createMaterial(int tag, std::string matType, std::string param
         mat["pa"] = atof(pars[22].c_str());
         mat["s0"] = atof(pars[23].c_str());
 
-        mat["Variable"] = pars[28].c_str();
-        mat["mean"] = atof(pars[29].c_str());
-        mat["COV"] = atof(pars[30].c_str());
-        mat["Ly"] = atof(pars[31].c_str());
-        mat["realization"] =atoi(pars[32].c_str());
-        mat["concurrency"] =atoi(pars[33].c_str());
+        mat["mean"] = atof(pars[28].c_str());
+        mat["COV"] = atof(pars[29].c_str());
+        mat["Ly"] = atof(pars[30].c_str());
+        mat["realization"] =atoi(pars[31].c_str());
+        mat["concurrency"] =atoi(pars[32].c_str());
+        mat["Variable"] = pars[33].c_str();
+
     } else if (!matType.compare("Elastic_Random")) {
         double density = atof(pars[0].c_str());
         double E = atof(pars[1].c_str());

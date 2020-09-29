@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>660</width>
+    <width>926</width>
     <height>324</height>
    </rect>
   </property>
@@ -22,7 +22,11 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="PTAng"/>
+    <widget class="QLineEdit" name="PTAng">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="2">
     <widget class="QLabel" name="liquefac2_2">
@@ -32,10 +36,18 @@
     </widget>
    </item>
    <item row="3" column="7">
-    <widget class="QLineEdit" name="dilat2"/>
+    <widget class="QLineEdit" name="dilat2">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="2" column="7">
-    <widget class="QLineEdit" name="pressDependCoe"/>
+    <widget class="QLineEdit" name="pressDependCoe">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="8" column="6">
     <widget class="QLabel" name="evoid_2">
@@ -45,7 +57,11 @@
     </widget>
    </item>
    <item row="8" column="7">
-    <widget class="QLineEdit" name="evoid"/>
+    <widget class="QLineEdit" name="evoid">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="3" column="4">
     <widget class="QLabel" name="dilat1_2">
@@ -55,10 +71,18 @@
     </widget>
    </item>
    <item row="8" column="5">
-    <widget class="QLineEdit" name="uBulk"/>
+    <widget class="QLineEdit" name="uBulk">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="7">
-    <widget class="QLineEdit" name="e"/>
+    <widget class="QLineEdit" name="e">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="4">
     <widget class="QLabel" name="cs3_2">
@@ -82,19 +106,39 @@
     </widget>
    </item>
    <item row="5" column="3">
-    <widget class="QLineEdit" name="cs2"/>
+    <widget class="QLineEdit" name="cs2">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="5">
-    <widget class="QLineEdit" name="refShearModul"/>
+    <widget class="QLineEdit" name="refShearModul">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="8" column="3">
-    <widget class="QLineEdit" name="vPerm"/>
+    <widget class="QLineEdit" name="vPerm">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="2" column="5">
-    <widget class="QLineEdit" name="refPress"/>
+    <widget class="QLineEdit" name="refPress">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="7">
-    <widget class="QLineEdit" name="pa"/>
+    <widget class="QLineEdit" name="pa">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="3" column="6">
     <widget class="QLabel" name="dilat2_2">
@@ -111,7 +155,11 @@
     </widget>
    </item>
    <item row="5" column="11">
-    <widget class="QLineEdit" name="noYieldSurf"/>
+    <widget class="QLineEdit" name="noYieldSurf">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="nd_2">
@@ -121,7 +169,11 @@
     </widget>
    </item>
    <item row="5" column="5">
-    <widget class="QLineEdit" name="cs3"/>
+    <widget class="QLineEdit" name="cs3">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="2">
     <widget class="QLabel" name="cs2_2">
@@ -138,7 +190,11 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="frictionAng"/>
+    <widget class="QLineEdit" name="frictionAng">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="4">
     <widget class="QLabel" name="refShearModul_2">
@@ -148,10 +204,18 @@
     </widget>
    </item>
    <item row="2" column="3">
-    <widget class="QLineEdit" name="peakShearStra"/>
+    <widget class="QLineEdit" name="peakShearStra">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="9">
-    <widget class="QLineEdit" name="eSize"/>
+    <widget class="QLineEdit" name="eSize">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="9" column="5">
     <spacer name="verticalSpacer">
@@ -195,7 +259,11 @@
     </widget>
    </item>
    <item row="1" column="7">
-    <widget class="QLineEdit" name="refBulkModul"/>
+    <widget class="QLineEdit" name="refBulkModul">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="frictionAng_2">
@@ -226,16 +294,32 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="cs1"/>
+    <widget class="QLineEdit" name="cs1">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="liquefac1"/>
+    <widget class="QLineEdit" name="liquefac1">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="3" column="3">
-    <widget class="QLineEdit" name="contrac"/>
+    <widget class="QLineEdit" name="contrac">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="nd"/>
+    <widget class="QLineEdit" name="nd">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="hPerm_2">
@@ -259,10 +343,18 @@
     </widget>
    </item>
    <item row="4" column="5">
-    <widget class="QLineEdit" name="liquefac3"/>
+    <widget class="QLineEdit" name="liquefac3">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QLineEdit" name="rho"/>
+    <widget class="QLineEdit" name="rho">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="2" column="6">
     <widget class="QLabel" name="pressDependCoe_2">
@@ -272,7 +364,11 @@
     </widget>
    </item>
    <item row="3" column="5">
-    <widget class="QLineEdit" name="dilat1"/>
+    <widget class="QLineEdit" name="dilat1">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="PTAng_2">
@@ -303,7 +399,11 @@
     </widget>
    </item>
    <item row="4" column="3">
-    <widget class="QLineEdit" name="liquefac2"/>
+    <widget class="QLineEdit" name="liquefac2">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="6">
     <widget class="QLabel" name="pa_2">
@@ -320,13 +420,25 @@
     </widget>
    </item>
    <item row="5" column="9">
-    <widget class="QLineEdit" name="c"/>
+    <widget class="QLineEdit" name="c">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="8" column="9">
-    <widget class="QLineEdit" name="Dr"/>
+    <widget class="QLineEdit" name="Dr">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QLineEdit" name="hPerm"/>
+    <widget class="QLineEdit" name="hPerm">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="5" column="12">
     <spacer name="horizontalSpacer">

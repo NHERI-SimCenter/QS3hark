@@ -443,6 +443,8 @@ void TabManager::init(QTabWidget* theTab){
 
     PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setReadOnly(true);
     PM4SandRandomWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
+    varNameComboBox = PM4SandRandomWidget->findChild<QComboBox*>("varName");
+    varNameComboBox->addItem("Dr");
     this->setUIToolTips(PM4SandRandomWidget);
 
 
@@ -473,6 +475,8 @@ void TabManager::init(QTabWidget* theTab){
 
     PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setReadOnly(true);
     PDMY03RandomWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
+    varNameComboBox = PDMY03RandomWidget->findChild<QComboBox*>("varName");
+    varNameComboBox->addItem("Dr");
     this->setUIToolTips(PDMY03RandomWidget);
 
 
@@ -2754,6 +2758,10 @@ void TabManager::updateLayerTab(QJsonObject l,QJsonObject mat)
             if(!mat[edtName].isNull())
                 edtsPM4SandRandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
         }
+        if (mat["varName"] == "Dr") {
+            QComboBox* varName = PM4SandRandomWidget->findChild<QComboBox*>("VarName");
+            varName->setCurrentIndex(0);
+        }
         QLineEdit *hPerm= PM4SandRandomWidget->findChild<QLineEdit*>("hPerm");
         hPerm->setText(QString::number(hPermval,'g',16));
         QLineEdit *vPerm= PM4SandRandomWidget->findChild<QLineEdit*>("vPerm");
@@ -2767,6 +2775,10 @@ void TabManager::updateLayerTab(QJsonObject l,QJsonObject mat)
             QString edtName = listPDMY03RandomFEM[i];
             if(!mat[edtName].isNull())
                 edtsPDMY03RandomFEM[i]->setText(QString::number(mat[edtName].toDouble(),'g',16));
+        }
+        if (mat["varName"] == "Dr") {
+            QComboBox* varName = PDMY03RandomWidget->findChild<QComboBox*>("VarName");
+            varName->setCurrentIndex(0);
         }
         QLineEdit *hPerm= PDMY03RandomWidget->findChild<QLineEdit*>("hPerm");
         hPerm->setText(QString::number(hPermval,'g',16));
@@ -3156,46 +3168,6 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
                 }
             }
         }
-        // add additonal materials
-        if (thisMatType == "PM4Sand_Random")
-        {
-            QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
-
-            QLineEdit* DenEdt = PM4SandRandomWidget->findChild<QLineEdit*>("Den");
-            QString densityFromForm = DenEdt->text();
-
-            if(densityFromTable != densityFromForm)
-            {
-                //qDebug() << "Den here is different from the above table. ";
-                if (densityFromTable == "")
-                {
-                    tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
-                    DenEdt->setText(densityFromForm);
-                }
-                else
-                {
-                    DenEdt->setText(densityFromTable);
-                }
-                onDataEdited();
-            }
-
-            QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
-            QLineEdit* esizeEdt = PM4SandRandomWidget->findChild<QLineEdit*>("eSize");
-            QString esizeFromForm = esizeEdt->text();
-            if(esizeFromTable != esizeFromForm)
-            {
-                //qDebug() << "esize here is different from the above table. ";
-                if (esizeFromTable == "")
-                {
-                    tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
-                }
-                else
-                {
-                    esizeEdt->setText(esizeFromTable);
-                    onDataEdited();
-                }
-            }
-        }
         if (thisMatType == "PDMY03")
         {
             QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
@@ -3235,51 +3207,9 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
                 }
             }
         }
-        if (thisMatType == "PDMY03_Random")
-        {
-            QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
-
-            QLineEdit* DenEdt = PDMY03RandomWidget->findChild<QLineEdit*>("rho");
-            QString densityFromForm = DenEdt->text();
-
-            if(densityFromTable != densityFromForm)
-            {
-                //qDebug() << "Den here is different from the above table. ";
-                if (densityFromTable == "")
-                {
-                    tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
-                    DenEdt->setText(densityFromForm);
-                }
-                else
-                {
-                    DenEdt->setText(densityFromTable);
-                }
-                onDataEdited();
-            }
-
-            QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
-            QLineEdit* esizeEdt = PDMY03RandomWidget->findChild<QLineEdit*>("eSize");
-            QString esizeFromForm = esizeEdt->text();
-            if(esizeFromTable != esizeFromForm)
-            {
-                //qDebug() << "esize here is different from the above table. ";
-                if (esizeFromTable == "")
-                {
-                    tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
-                }
-                else
-                {
-                    esizeEdt->setText(esizeFromTable);
-                    onDataEdited();
-                }
-            }
-        }
-               // onDataEdited();
-
     } else if (thisMatType == "Elastic_Random") {
         for (int i = 0; i < FEMStringList.size() - 1; ++i) {
             currentEdts[i]->setText(FEMStringList.at(i));
-            qDebug() << FEMStringList.at(i);
         }
         double densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toDouble();
         double vsFromTable = tableModel->data(tableModel->index(index.row(), VS)).toDouble();
@@ -3294,7 +3224,98 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
             mean->setText(QString::number(vsFromTable));
         }
         // onDataEdited();// added
+    } else if (thisMatType == "PDMY03_Random") {
+        for (int i = 0; i < FEMStringList.size() - 1; ++i) {
+            currentEdts[i]->setText(FEMStringList.at(i));
+        }
+
+        QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+
+        QLineEdit* DenEdt = PDMY03RandomWidget->findChild<QLineEdit*>("rho");
+        QString densityFromForm = DenEdt->text();
+
+        if(densityFromTable != densityFromForm)
+        {
+            //qDebug() << "Den here is different from the above table. ";
+            if (densityFromTable == "")
+            {
+                tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
+                DenEdt->setText(densityFromForm);
+            }
+            else
+            {
+                DenEdt->setText(densityFromTable);
+            }
+            onDataEdited();
+        }
+
+        QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
+        QLineEdit* esizeEdt = PDMY03RandomWidget->findChild<QLineEdit*>("eSize");
+        QString esizeFromForm = esizeEdt->text();
+        if(esizeFromTable != esizeFromForm)
+        {
+            //qDebug() << "esize here is different from the above table. ";
+            if (esizeFromTable == "")
+            {
+                tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
+            }
+            else
+            {
+                esizeEdt->setText(esizeFromTable);
+                onDataEdited();
+            }
+        }
+    } else if (thisMatType == "PM4Sand_Random") {
+        for (int i = 0; i < FEMStringList.size() - 1; ++i) {
+            currentEdts[i]->setText(FEMStringList.at(i));
+        }
+
+        QLineEdit* mean =PM4SandRandomWidget->findChild<QLineEdit*>("mean");
+        QComboBox* varName = PM4SandRandomWidget->findChild<QComboBox*>("varName");
+        if (varName->currentText() == "Dr") {
+            QLineEdit* Dr =PM4SandRandomWidget->findChild<QLineEdit*>("Dr");
+            Dr->setText(mean->text());
+        }
+
+        QString densityFromTable = tableModel->data(tableModel->index(index.row(), DENSITY)).toString();
+
+        QLineEdit* DenEdt = PM4SandRandomWidget->findChild<QLineEdit*>("Den");
+        QString densityFromForm = DenEdt->text();
+
+        if(densityFromTable != densityFromForm)
+        {
+            //qDebug() << "Den here is different from the above table. ";
+            if (densityFromTable == "")
+            {
+                tableModel->setData(tableModel->index(index.row(), DENSITY), densityFromForm);
+                DenEdt->setText(densityFromForm);
+            }
+            else
+            {
+                DenEdt->setText(densityFromTable);
+            }
+            onDataEdited();
+        }
+
+        QString esizeFromTable = tableModel->data(tableModel->index(index.row(), ESIZE)).toString();
+        QLineEdit* esizeEdt = PM4SandRandomWidget->findChild<QLineEdit*>("eSize");
+        QString esizeFromForm = esizeEdt->text();
+        if(esizeFromTable != esizeFromForm)
+        {
+            //qDebug() << "esize here is different from the above table. ";
+            if (esizeFromTable == "")
+            {
+                tableModel->setData(tableModel->index(index.row(), ESIZE), esizeFromForm);
+            }
+            else
+            {
+                esizeEdt->setText(esizeFromTable);
+                onDataEdited();
+            }
+        }
     }
+            // onDataEdited();
+
 }
 
 void TabManager::onDataEdited()
@@ -3333,6 +3354,12 @@ void TabManager::onDataEdited()
     }
     if (thisMatType=="Elastic_Random") {
         QComboBox* varName = ElasticRandomWidget->findChild<QComboBox*>("varName");
+        thisFEmString += varName->currentText();
+    } else if (thisMatType=="PM4Sand_Random") {
+        QComboBox* varName = PM4SandRandomWidget->findChild<QComboBox*>("varName");
+        thisFEmString += varName->currentText();
+    } else if (thisMatType=="PDMY03_Random") {
+        QComboBox* varName = PDMY03RandomWidget->findChild<QComboBox*>("varName");
         thisFEmString += varName->currentText();
     }
 
@@ -3556,7 +3583,7 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
         if (density=="")
             density = "2.0";
 
-        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 500.0 0.45 "+ density +" 101.3 -1. 0.8 0.5 0.5 0.1 -1. -1. 250 -1. 33.0 0.3 2.0 -1. -1. 10. 1.5 0.01 -1. -1. 1.0e-7 1.0e-7 2.2e6 0.46 0.5 "+ "Dr 0.5 0.3 1.0 100 4");
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 0.47 500.0 0.45 "+ density +" 101.3 -1. 0.8 0.5 0.5 0.1 -1. -1. 250 -1. 33.0 0.3 2.0 -1. -1. 10. 1.5 0.01 -1. -1. 1.0e-7 1.0e-7 2.2e6 0.46 0.5 "+ "0.5 0.3 1.0 100 4 Dr");
         //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36"
     }
     else if (thisMatType == "PDMY03")
@@ -3576,7 +3603,7 @@ void TabManager::setDefaultFEM(QString thisMatType,const QModelIndex &index)
             density = "2.0";
         QString nd = "2";
         // DR = 57%
-        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 "+nd+" "+density+" 7.37e4 19.68e4 30.3 0.1 101 0.5 25.3 0 0.012 3.0 0.4 9.0 0.0 0.3 3.0 -0.3 30 1.0 0.0 101 1.73"+" 1.0e-7 1.0e-7 2.2e6 0.46 " + "Dr 0.5 0.3 1.0 100 4");
+        tableModel->setData(tableModel->index(currentRow, FEM), "2.0 "+nd+" "+density+" 7.37e4 19.68e4 30.3 0.1 101 0.5 25.3 0 0.012 3.0 0.4 9.0 0.0 0.3 3.0 -0.3 30 1.0 0.0 101 1.73"+" 1.0e-7 1.0e-7 2.2e6 0.46 " + "0.5 0.3 1.0 100 4 Dr");
     //  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34"
     } else if (thisMatType == "Elastic_Random") {
         double rho = tableModel->data(tableModel->index(index.row(), DENSITY)).toDouble();

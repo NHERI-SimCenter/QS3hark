@@ -144,7 +144,7 @@ private:
     QWidget* currentWidget;
     QVector<QLineEdit*> currentEdts;
 
-    QList<QString> listFEMtab = {"eSizeH", "eSizeV", "RockVs", "RockDen", "DashpotCoeff", "VisC", "GMPath", "openseesPath"  };
+    QList<QString> listFEMtab = {"eSizeH", "eSizeV", "RockVs", "RockDen", "DashpotCoeff", "VisC", "GMPath", "openseesPath"};
     int GMPathPos = 6;
     int OpenSeesPathPos = 7;
 
@@ -180,7 +180,7 @@ private:
                                       "P_atm", "h0", "emax", "emin", "nb", "nd", "Ado",
                                       "z_max", "cz", "ce", "phic", "nu", "cgd", "cdr",
                                       "ckaf", "Q", "R", "m", "Fsed_min", "p_sedo",
-                                        "hPerm","vPerm","uBulk","evoid", "K0", "varName", "mean", "cov", "Ly", "realization", "processor"};
+                                        "hPerm","vPerm","uBulk","evoid", "K0", "mean", "cov", "Ly", "realization", "processor"};
 
     QList<QString> listPDMY03FEM = {"eSize", "nd", "rho", "refShearModul", "refBulkModul", "frictionAng", "peakShearStra",
          "refPress", "pressDependCoe", "PTAng", "mType", "ca","cb", "cc", "cd", "ce", "da", "db", "dc",
@@ -190,7 +190,7 @@ private:
     QList<QString> listPDMY03RandomFEM = {"eSize", "nd", "rho", "refShearModul", "refBulkModul", "frictionAng", "peakShearStra",
          "refPress", "pressDependCoe", "PTAng", "mType", "ca","cb", "cc", "cd", "ce", "da", "db", "dc",
            "noYieldSurf", "liquefac1", "liquefac2", "pa", "s0",
-           "hPerm","vPerm","uBulk","evoid", "varName", "mean", "cov", "Ly", "realization", "processor"};
+           "hPerm","vPerm","uBulk","evoid", "mean", "cov", "Ly", "realization", "processor"};
 
     QList<QString> listElasticRandomFEM = {"rho", "EEdt", "vEdt", "evoid","hPerm","vPerm","uBulk", "mean", "cov", "Ly", "realization", "processor"};
 

@@ -39,7 +39,7 @@
       <string>Corelation length in vertical direction</string>
      </property>
      <property name="text">
-      <string>Corelation Length</string>
+      <string>Corelation Length (m)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
