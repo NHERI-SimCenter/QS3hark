@@ -1259,7 +1259,7 @@ int RockOutcrop::checkDimension()
         int layerContaining2DOnlyModel = ui->tableView->m_sqlModel->has2DOnlyModel();
         if (layerContaining2DOnlyModel>0)
         {
-            dimMsg = "Layer "+ QString::number(layerContaining2DOnlyModel)+" contains material which can only be used in 2D simulation.";
+            dimMsg = "Layer "+ QString::number(layerContaining2DOnlyModel)+" contains material which can only be used in 2D simulation. Change material or choose a different motion with one component.";
             return -1;
         }
         return 3; // 3D column
