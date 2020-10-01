@@ -585,9 +585,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double pa = mat["pa"];
                     double S0 = mat["s0"];
 
-                    s << "nDMaterial PressureDependMultiYield03 "<<numElems + 1 << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
+                    s << "nDMaterial PressureDependMultiYield03 "<< numElems + 1 << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
                          refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<<liqParam1<<" "<<liqParam2<<" "<<noYieldSurf<<" "<<pa<<" "<<S0<<endln;
+                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<endln;
                 } else if(!matType.compare("PDMY03_Random")) {
                     if (!m_runningStochastic)
                     {
@@ -2772,8 +2772,9 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     // ------------------------------------------
     // 0. Define some limits
     // ------------------------------------------
-    double minESizeH = 0.001;
-    double minESizeV = 0.001;
+    // minimum 0.5 kPa
+    double minESizeH = 0.05;
+    double minESizeV = 0.05;
     double colThickness = 1.0;// thickness of 2D ele
     double g = -9.81;
 
@@ -3184,7 +3185,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                                                         contraction_e, dilation_a, dilation_b, dilation_c, noYieldSurf, 0, liqParam1, liqParam2, pa, S0);
                 s << "nDMaterial PressureDependMultiYield03 "<< matTag << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
                      refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<<liqParam1<<" "<<liqParam2<<" "<<noYieldSurf<<" "<<pa<<" "<<S0<<endln;
+                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<endln;
             }
             OPS_addNDMaterial(theMat);
             if (PRINTDEBUG) opserr << "Material " << matType.c_str() << ", tag = " << matTag << endln;
@@ -4078,7 +4079,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
         theRecorder = new NodeRecorder(dofToRecord, &nodesToRecord, 0, "disp", *theDomain, *theOutputStream, motionDT, true, NULL);
         theDomain->addRecorder(*theRecorder);
     }
-
+    s << "file mkdir out_tcl" << endln;
     double recDT = motionDT;
     s << "set recDT " << recDT << endln;
     s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<endln;// 1 2
@@ -4166,6 +4167,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  disp\""<<endln;
     s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  vel\""<<endln;
     s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<endln;
+    s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<endln;   // this is for postProcess.py
     s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 4 vel\""<<endln;
 
 
