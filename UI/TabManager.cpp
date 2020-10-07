@@ -366,7 +366,6 @@ void TabManager::init(QTabWidget* theTab){
     uiFileElasticIsotropic_random.open(QIODevice::ReadOnly);
     ElasticRandomWidget = uiLoader.load(&uiFileElasticIsotropic_random,this);
     for (int i = 0; i < listElasticRandomFEM.size(); ++i) {
-        qDebug() <<  listElasticRandomFEM[i];
         QString edtName = listElasticRandomFEM[i];
         edtsElasticRandomFEM.push_back(ElasticRandomWidget->findChild<QLineEdit*>(edtName));
     }
