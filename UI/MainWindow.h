@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 class RockOutcrop;
+class SimCenterPreferences;
 
 class MainWindow : public QMainWindow
 {
@@ -27,6 +28,8 @@ private slots:
     void version();
     void copyright();
     void cite();
+    void preferences();
+
 
 signals:
 
@@ -44,6 +47,7 @@ private:
     QMenu *editMenu;
 
     QString currentFile;
+    SimCenterPreferences *thePreferences;
 
     /*
     QMenu *selectSubMenu;

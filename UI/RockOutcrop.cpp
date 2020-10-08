@@ -380,6 +380,7 @@ void RockOutcrop::onConfigTabUpdated()
 
 bool RockOutcrop::copyFiles(QString &destDir)
 {
+    int simDim = this->checkDimension();
     theTabManager->writeGM();
     this->on_runBtn_clicked(); // link EE-UQ run button with analyze
     QString fileName = "EVENT.json";
@@ -389,6 +390,10 @@ bool RockOutcrop::copyFiles(QString &destDir)
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
         fileName = "Rock-x.vel";  // input motion
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        if (simDim == 3) {
+            fileName = "Rock-y.vel";  // input motion
+            QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        }
         fileName = "EVENT.json";
         theTabManager->writeSurfaceMotion();
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
@@ -397,6 +402,10 @@ bool RockOutcrop::copyFiles(QString &destDir)
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
         fileName = "Rock-x.vel";  // input motion
         QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        if (simDim == 3) {
+            fileName = "Rock-y.vel";  // input motion
+            QFile::copy(analysisDir + "/" + fileName, destDir + "/" + fileName);
+        }
         // theTabManager->writeSurfaceMotion();
         // QFile::copy(evtjFileName, destDir + "/" + fileName);
     }

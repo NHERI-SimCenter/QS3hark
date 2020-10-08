@@ -24,6 +24,7 @@
 #include "soillayer.h"
 #include "outcropMotion.h"
 
+#ifndef NOINTERNALFEM
 #include "DirectIntegrationAnalysis.h"
 
 #include "AnalysisModel.h"
@@ -56,6 +57,7 @@
 #include "Recorder.h"
 #include "UniaxialMaterial.h"
 #include "ElementStateParameter.h"
+#endif
 
 #define MAX_FREQUENCY 50.0
 #define NODES_PER_WAVELENGTH 10
@@ -63,6 +65,7 @@
 class SiteResponseModel {
 
 public:
+
     SiteResponseModel();
     SiteResponseModel(SiteLayering, std::string, OutcropMotion*, OutcropMotion*);
     SiteResponseModel(SiteLayering, std::string, OutcropMotion*);
@@ -72,17 +75,21 @@ public:
     SiteResponseModel(std::string , OutcropMotion *, OutcropMotion *);
     ~SiteResponseModel();
 
+
     int   buildEffectiveStressModel2D(bool doAnalysis);
     int   buildEffectiveStressModel2DInternal(bool doAnalysis);
     int   buildEffectiveStressModel3D(bool doAnalysis);
+    int   buildEffectiveStressModel3DInternal(bool doAnalysis);
     int   runEffectiveStressModel2D();
     int   runEffectiveStressModel3D();
     void  setOutputDir(std::string outDir) { theOutputDir = outDir; }
     void setConfigFile(std::string configFile) { theConfigFile = configFile; }
     void  setTclOutputDir(std::string outDir) { theTclOutputDir = outDir; }
     void  setAnalysisDir(std::string anaDir) { theAnalysisDir = anaDir; }
+#ifndef NOINTERNALFEM
     int subStepAnalyze(double dT, int subStep, DirectIntegrationAnalysis* theTransientAnalysis);
-
+    int trueRun();
+#endif
 
     std::function<bool(double)> m_callbackFunction;
     //double pi = 3.1415926535897;
@@ -91,7 +98,6 @@ public:
     bool callback = false;
     void setCallback(bool cal) {callback = cal;}
     void setForward(bool f) {forward = f;}
-    int trueRun();
     bool m_runningStochastic = false;
 
 
@@ -107,7 +113,7 @@ private:
     std::string     theAnalysisDir;
     bool forward = true;
     bool m_doAnalysis = false;
-
+#ifndef NOINTERNALFEM
     // 2D solver
     std::vector<double> dt;
     AnalysisModel *theModel;
@@ -125,7 +131,7 @@ private:
     double m_dT;
     int m_nSteps;
     int m_remStep;
-
+#endif
 
 };
 

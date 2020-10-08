@@ -11,6 +11,8 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <SimCenterPreferences.h>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -87,13 +89,13 @@ void MainWindow::createActions() {
     connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
     fileMenu->addAction(saveAsAction);
 
-    /*
+
     thePreferences = SimCenterPreferences::getInstance(this);
     QAction *preferenceAction = new QAction(tr("&Preferences"), this);
     preferenceAction->setStatusTip(tr("Set application preferences"));
     connect(preferenceAction, &QAction::triggered, this, &MainWindow::preferences);
     fileMenu->addAction(preferenceAction);
-    */
+
 
     // strangely, this does not appear in menu (at least on a mac)!! ..
     // does Qt not allow as in tool menu by default?
@@ -371,4 +373,9 @@ void MainWindow::copyright()
   layout->addItem(theSpacer, layout->rowCount(),0,1,layout->columnCount());
   msgBox.exec();
 
+}
+
+void MainWindow::preferences()
+{
+  thePreferences->show();
 }
