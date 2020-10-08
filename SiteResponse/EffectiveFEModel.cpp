@@ -21,6 +21,7 @@
 #include "Vector.h"
 #include "Matrix.h"
 
+#ifndef NOINTERNALFEM
 #include "Node.h"
 #include "Element.h"
 #include "NDMaterial.h"
@@ -66,6 +67,7 @@
 #include "PressureIndependMultiYield.h"
 #include "PressureDependMultiYield03.h"
 #include "ManzariDafalias.h"
+#endif
 
 #include "Information.h"
 #include <vector>
@@ -95,6 +97,7 @@ SiteResponseModel::SiteResponseModel() : theModelType("2D"),
     theMotionZ(0),
     theOutputDir(".")
 {
+
 }
 
 SiteResponseModel::SiteResponseModel(SiteLayering layering, std::string modelType, OutcropMotion *motionX, OutcropMotion *motionY) : SRM_layering(layering),
@@ -196,7 +199,6 @@ SiteResponseModel::~SiteResponseModel()
         delete theDomain;
     theDomain = NULL;
 }
-
 
 int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 {
@@ -667,8 +669,6 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     s << "# ------------------------------------------ \n \n";
 
     s << "# 2.1 Apply fixities at base              \n\n";
-    int sizeTheSPtoRemove = 2 ; // for 3D2D it's 8, for 3D1D it's 4;
-    ID theSPtoRemove(sizeTheSPtoRemove); // these fixities should be removed later on if compliant base is used
 
     s << "fix 1 1 1 0" << endln;
     s << "fix 2 1 1 0" << endln << endln;
@@ -696,17 +696,6 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     s << "# ------------------------------------------ \n \n";
 
     // update material stage to consider elastic behavior
-
-    // record last node's results
-    ID nodesToRecord(1);
-    nodesToRecord(0) = numNodes;
-
-    int dimDofToRecord = 3;// For 3D it's 4
-    ID dofToRecord(dimDofToRecord);
-    dofToRecord(0) = 0;
-    dofToRecord(1) = 1;
-    dofToRecord(2) = 2;
-
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
         s << "updateMaterialStage -material "<< theEleTag <<" -stage 0" << endln ;
     }
@@ -1036,14 +1025,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     ns.close();
     es.close();
 
-
-    m_dT = dT;
-    m_nSteps = nSteps;
-    m_remStep = remStep;
-
-
-    //return 100;
-    return trueRun();
+    return 100;
 }
 
 
@@ -2562,7 +2544,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    return trueRun();
 //}
 
-
+#ifndef NOINTERNALFEM
 int SiteResponseModel::trueRun()
 {
     bool doAnalysis = m_doAnalysis;
@@ -2721,7 +2703,7 @@ int SiteResponseModel::trueRun()
     return 100;
 
 }
-
+#endif
 
 int SiteResponseModel::subStepAnalyze(double dT, int subStep, DirectIntegrationAnalysis* theTransientAnalysis)
 {
@@ -3550,10 +3532,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     es.close();
     esmat3D.close();
 
-    m_dT = dT;
-    m_nSteps = nSteps;
-    m_remStep = remStep;
-    return trueRun();
+    return 100;
 }
 
 // create model for internal FEM

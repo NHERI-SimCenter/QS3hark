@@ -6,7 +6,7 @@
 
 QT       += core gui quick qml webenginewidgets uitools webengine webchannel
 
-CONFIG += c++11
+CONFIG += c++11 NOINTERNALFEM
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,17 +23,23 @@ win32 {
 
 
 SOURCES += $$PWD/main.cpp \
-           $$PWD/UI/MainWindow.cpp \
+           $$PWD/UI/MainWindow.cpp
 
 HEADERS  += $$PWD/UI/MainWindow.h
 
-#include(./SimCenterCommon/Common/Common.pri)
+include(../SimCenterCommon/Common/Common.pri)
 include($$PWD/ConanHelper.pri)
 include(./QS3hark.pri)
 
-win32{
-    LIBS -= -llapacke.dll.lib -llapack.dll.lib -lblas.dll.lib -lcblas.dll.lib
-    LIBS += -llapacke.dll -llapack.dll -lblas.dll -lcblas.dll
+
+NOINTERNALFEM {
+ # No need to include lapack and fortran libs
+}
+else {
+    win32{
+        LIBS -= -llapacke.dll.lib -llapack.dll.lib -lblas.dll.lib -lcblas.dll.lib
+        LIBS += -llapacke.dll -llapack.dll -lblas.dll -lcblas.dll
+        }
 }
 
 # Notes:
