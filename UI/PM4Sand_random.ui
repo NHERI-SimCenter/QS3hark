@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
-    <height>354</height>
+    <width>1004</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -530,7 +530,7 @@
       <string>Corelation length in vertical direction</string>
      </property>
      <property name="text">
-      <string>Corelation Length (m)</string>
+      <string>Correlation Length (m)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
