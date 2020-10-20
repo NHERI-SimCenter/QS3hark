@@ -285,8 +285,12 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     std::map<int, std::string> eleTypeDict;
 
     s << "model BasicBuilder -ndm 2 -ndf 3  \n\n";
+    s << "set nodesInfo [open nodesInfo.dat w]" << endln;
     s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
+    s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << endln;
     s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+    s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << endln;
+
     ns << numNodes + 1 << " 0.0 " << yCoord << endln;
     ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
     numNodes += 2;
@@ -355,7 +359,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 yCoord += t ;
 
                 s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
+                s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << endln;
                 s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+                s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << endln;
                 ns << numNodes + 1 << " 0.0 " << yCoord << endln;
                 ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
 
@@ -661,8 +667,8 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     }
     catch (std::exception& e){std::cerr << "Standard exception: " << e.what() << std::endl;return false;}
     catch(std::string str){std::cerr << str << std::endl;return false;}
+    s <<"close $nodesInfo\n";
     s << "\n\n";
-
 
     s << "# ------------------------------------------ \n";
     s << "# 2. Apply boundary conditions.              \n";
