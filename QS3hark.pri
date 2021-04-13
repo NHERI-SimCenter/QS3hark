@@ -358,14 +358,14 @@ NOINTERNALFEM {
         INCLUDEPATH += FEM \
                     += SiteResponse
 
-        LIBS += "Path to lapack.lib"
-        LIBS += "Path to blas.lib"
-        LIBS += "Path to libifcoremt.lib"
-        LIBS += "Path to libirc.lib"
-        LIBS += "Path to ifconsol.lib"
-        LIBS += "Path to libifport.lib"
-        LIBS += "Path to libmmt.lib"
-        LIBS += "Path to svml_dispmt.lib"
+        #LIBS += "Path to lapack.lib"
+        #LIBS += "Path to blas.lib"
+        #LIBS += "Path to libifcoremt.lib"
+        #LIBS += "Path to libirc.lib"
+        #LIBS += "Path to ifconsol.lib"
+        #LIBS += "Path to libifport.lib"
+        #LIBS += "Path to libmmt.lib"
+        #LIBS += "Path to svml_dispmt.lib"
         # You must append your lapack include path if it is not in a standard place.
         LIBS += -L"$$_PRO_FILE_PWD_/lib"
     }
