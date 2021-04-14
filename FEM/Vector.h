@@ -31,11 +31,11 @@
 #ifndef Vector_h
 #define Vector_h 
 
-#include <OPS_Globals.h>
+//#include <OPS_Globals.h>
 
 #define VECTOR_VERY_LARGE_VALUE 1.0e200
 
-class Matrix; 
+//class Matrix;
 class Message;
 class SystemOfEqn;
 class ID;
@@ -61,8 +61,8 @@ class Vector
     int Normalize(void);
     
     int addVector(double factThis, const Vector &other, double factOther);
-    int addMatrixVector(double factThis, const Matrix &m, const Vector &v, double factOther); 
-    int addMatrixTransposeVector(double factThis, const Matrix &m, const Vector &v, double factOther);
+//    int addMatrixVector(double factThis, const Matrix &m, const Vector &v, double factOther);
+//    int addMatrixTransposeVector(double factThis, const Matrix &m, const Vector &v, double factOther);
 
     
     // overloaded operators
@@ -89,7 +89,7 @@ class Vector
     Vector operator+(const Vector &V) const;
     Vector operator-(const Vector &V) const;
     double operator^(const Vector &V) const;
-    Vector operator/(const Matrix &M) const;
+//    Vector operator/(const Matrix &M) const;
 
     int operator==(const Vector &V) const;
     int operator==(double) const;
@@ -97,13 +97,13 @@ class Vector
     int operator!=(double) const;
 
     //operator added by Manish @ UB
-    Matrix operator%(const Vector &V) const;
+  //  Matrix operator%(const Vector &V) const;
 
     // methods added by Remo
     int  Assemble(const Vector &V, int init_row, double fact = 1.0);
     int  Extract (const Vector &V, int init_row, double fact = 1.0); 
   
-    friend OPS_Stream &operator<<(OPS_Stream &s, const Vector &V);
+    //friend OPS_Stream &operator<<(OPS_Stream &s, const Vector &V);
     // friend istream &operator>>(istream &s, Vector &V);    
     friend Vector operator*(double a, const Vector &V);
     

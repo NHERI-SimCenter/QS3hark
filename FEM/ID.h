@@ -37,7 +37,7 @@
 #ifndef ID_h
 #define ID_h
 
-#include <OPS_Globals.h>
+//#include <OPS_Globals.h>
 
 class ID
 {
@@ -75,7 +75,7 @@ class ID
     int removeValue(int value);
     int unique(void);
 
-    friend OPS_Stream &operator<<(OPS_Stream &s, const ID &V);
+    //friend OPS_Stream &operator<<(OPS_Stream &s, const ID &V);
     //    friend istream &operator>>(istream &s, ID &V);    
 
     friend class UDP_Socket;
@@ -104,7 +104,7 @@ ID::operator()(int x)
 #ifdef _G3DEBUG
   // check if it is inside range [0,sz-1]
   if (x < 0 || x >= sz) {
-    opserr << "ID::(loc) - loc " << x << " outside range 0 - " <<  sz-1 << endln;
+    std::cerr << "ID::(loc) - loc " << x << " outside range 0 - " <<  sz-1 << endln;
     return ID_NOT_VALID_ENTRY;
   }
 #endif
@@ -119,7 +119,7 @@ ID::operator()(int x) const
 #ifdef _G3DEBUG
   // check if it is inside range [0,sz-1]
   if (x < 0 || x >= sz) {
-    opserr << "ID::(loc) - loc " << x << " outside range 0 - " <<  sz-1 << endln;
+    std::cerr << "ID::(loc) - loc " << x << " outside range 0 - " <<  sz-1 << endln;
     return ID_NOT_VALID_ENTRY;
   }
 #endif

@@ -76,12 +76,7 @@ class PathTimeSeries : public TimeSeries
     double getPeakFactor ();
     double getTimeIncr (double pseudoTime);
 
-    // methods for output
-    int sendSelf(int commitTag, Channel &theChannel);
-    int recvSelf(int commitTag, Channel &theChannel, 
-		 FEM_ObjectBroker &theBroker);
-
-    void Print(OPS_Stream &s, int flag =0);    
+    //void Print(OPS_Stream &s, int flag =0);
     
   protected:
     
@@ -92,7 +87,6 @@ class PathTimeSeries : public TimeSeries
     double cFactor;       // additional factor on the returned load factor
     int dbTag1, dbTag2;   // additional database tags needed for vector objects
     int lastSendCommitTag;
-    Channel *lastChannel;
     bool useLast;
 };
 

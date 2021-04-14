@@ -54,8 +54,10 @@ TaggedObject::setTag(int newTag)
     theTag = newTag;
 }
 
+/*
 OPS_Stream &operator<<(OPS_Stream &s, TaggedObject &m)
 {
     m.Print(s);
     return s;
 }
+*/

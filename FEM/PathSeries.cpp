@@ -33,7 +33,6 @@
 
 #include <PathSeries.h>
 #include <Vector.h>
-#include <Channel.h>
 #include <math.h>
 
 #include <fstream>
@@ -43,186 +42,13 @@ using std::ifstream;
 using std::ios;
 
 #include <PathTimeSeries.h>
-#include <elementAPI.h>
 #include <string>
+#include <iostream>
 
-void* OPS_PathSeries()
-{
-    if(OPS_GetNumRemainingInputArgs() < 1) {
-	opserr<<"insufficient arguments: PathSeries\n";
-	return 0;
-    }
 
-    // get tag
-    int tag =0;
-    int numData = 1;
-    if(OPS_GetIntInput(&numData,&tag) < 0) return 0;
-
-    // get other inputs
-    double factor = 1.0, dt = 1.0;
-    const char* timefile = 0, *valfile=0;
-    Vector values, times;
-
-    // check inputs
-    TimeSeries* theSeries = 0;
-    numData = OPS_GetNumRemainingInputArgs();
-    if(numData < 1) return 0;
-    std::string type = OPS_GetString();
-    if(type == "-dt") {
-	numData = OPS_GetNumRemainingInputArgs();
-	// get dt
-	if(numData < 1) {
-	    opserr<<"dt is not specified\n";
-	    return 0;
-	}
-	numData = 1;
-	if(OPS_GetDoubleInput(&numData,&dt) < 0) return 0;
-	
-	// get values
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData < 1) {
-	    opserr<<"data points are not specified\n";
-	    return 0;
-	}
-
-	// get data type
-	type = OPS_GetString();
-	if(type == "-values") {
-	    
-	    // value list
-	    numData = OPS_GetNumRemainingInputArgs();
-	    if(numData < 1) {
-		opserr<<"number of values is not specified\n";
-		return 0;
-	    }
-	    // get number of values
-	    numData = 1;
-	    int nval;
-	    if(OPS_GetIntInput(&numData,&nval) < 0) return 0;
-	    
-	    // get value list
-	    numData = OPS_GetNumRemainingInputArgs();
-	    if(numData < nval) {
-		opserr<<nval<<" data points are required\n";
-		return 0;
-	    }
-	    values.resize(nval);
-	    if(OPS_GetDoubleInput(&nval,&values(0)) < 0) return 0;
-	    
-	} else if(type == "-filePath") {
-	    // value file
-	    numData = OPS_GetNumRemainingInputArgs();
-	    if(numData <= 0) {
-		opserr<<"file path is not specified\n";
-		return 0;
-	    }
-	    valfile = OPS_GetString();
-	}
-
-	// get factor
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData > 1) {
-	    if(std::string(OPS_GetString()) == "-factor") {
-		numData = 1;
-		if(OPS_GetDoubleInput(&numData,&factor) < 0) return 0;
-	    }
-	}
-
-	// path serise
-	if(type == "-values") {
-	    theSeries = new PathSeries(tag,values,dt,factor);
-	} else if(type == "-filePath") {
-	    theSeries = new PathSeries(tag,valfile,dt,factor);
-	}
-
-    } else if(type == "-time") {
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData <= 0) {
-	    opserr<<"number of time points is not specified\n";
-	    return 0;
-	}
-	
-	// get number time points
-	int ntime;
-	numData = 1;
-	if(OPS_GetIntInput(&numData,&ntime) < 0) return 0;
-	    
-	// get time ponts
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData < ntime) {
-	    opserr<<ntime<<" number of time points are required\n";
-	    return 0;
-	}
-	times.resize(ntime);
-	if(OPS_GetDoubleInput(&ntime,&times(0)) < 0) return 0;
-
-	// get values
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData < 1) {
-	    opserr<<"number of values is not specified\n";
-	    return 0;
-	}
-	numData = 1;
-	int nval;
-	if(OPS_GetIntInput(&numData,&nval) < 0) return 0;
-
-	// get value list
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData < nval) {
-	    opserr<<nval<<" number of values are required\n";
-	    return 0;
-	}
-	values.resize(nval);
-	if(OPS_GetDoubleInput(&nval,&values(0)) < 0) return 0;
-
-	// get factor
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData > 1) {
-	    if(std::string(OPS_GetString()) == "-factor") {
-		numData = 1;
-		if(OPS_GetDoubleInput(&numData,&factor) < 0) return 0;
-	    }
-	}
-
-	// path time
-	theSeries = new PathTimeSeries(tag,values,times,factor);
-	    
-    } else if(type == "-fileTime") {
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData < 2) {
-	    opserr<<"fileTime and filePath are not specified\n";
-	    return 0;
-	}
-	timefile = OPS_GetString();
-	valfile = OPS_GetString();
-	
-	// get factor
-	numData = OPS_GetNumRemainingInputArgs();
-	if(numData > 1) {
-	    if(std::string(OPS_GetString()) == "-factor") {
-		numData = 1;
-		if(OPS_GetDoubleInput(&numData,&factor) < 0) return 0;
-	    }
-	}
-	theSeries = new PathTimeSeries(tag,timefile,valfile,factor);
-    }
-
-    if(theSeries == 0) {
-	opserr<<"choice of options for PathSeries is invalid\n";
-	return 0;
-    }
-
-    // if(OPS_addTimeSeries(theSeries) == false) {
-    // 	opserr<<"WARNING: failed to add TimeSeries\n";
-    // 	delete theSeries;
-    // 	return 0;
-    // }
-    
-    return theSeries;
-}
 
 PathSeries::PathSeries()	
-  :TimeSeries(TSERIES_TAG_PathSeries),
+  :TimeSeries(0),
    thePath(0), pathTimeIncr(0.0), cFactor(0.0), otherDbTag(0), lastSendCommitTag(-1)
 {
   // does nothing
@@ -235,7 +61,7 @@ PathSeries::PathSeries(int tag,
 		       bool last,
                bool prependZero,
                double tStart)
-  :TimeSeries(tag, TSERIES_TAG_PathSeries),
+  :TimeSeries(tag, 0),
    thePath(0), pathTimeIncr(theTimeIncr), cFactor(theFactor),
    otherDbTag(0), lastSendCommitTag(-1), useLast(last), startTime(tStart)
 {
@@ -250,8 +76,8 @@ PathSeries::PathSeries(int tag,
 
   // ensure we did not run out of memory
   if (thePath == 0 || thePath->Size() == 0) {
-    opserr << "PathSeries::PathSeries() - ran out of memory constructing";
-    opserr << " a Vector of size: " <<  theLoadPath.Size() << endln;
+    std::cerr << "PathSeries::PathSeries() - ran out of memory constructing";
+    std::cerr << " a Vector of size: " <<  theLoadPath.Size() << "\n";
     if (thePath != 0)
       delete thePath; 
     thePath = 0;
@@ -265,7 +91,7 @@ PathSeries::PathSeries(int tag,
 		       bool last,
                bool prependZero,
                double tStart)
-  :TimeSeries(tag, TSERIES_TAG_PathSeries),
+  :TimeSeries(tag, 0),
    thePath(0), pathTimeIncr(theTimeIncr), cFactor(theFactor),
    otherDbTag(0), lastSendCommitTag(-1), useLast(last), startTime(tStart)
 {
@@ -277,8 +103,8 @@ PathSeries::PathSeries(int tag,
   theFile.open(fileName);
 
   if (theFile.bad() || !theFile.is_open()) {
-    opserr << "WARNING - PathSeries::PathSeries()";
-    opserr << " - could not open file " << fileName << endln;
+    std::cerr << "WARNING - PathSeries::PathSeries()";
+    std::cerr << " - could not open file " << fileName << "\n";
   } else {
     while (theFile >> dataPoint)
       numDataPoints++;
@@ -296,8 +122,8 @@ PathSeries::PathSeries(int tag,
     ifstream theFile1;
     theFile1.open(fileName, ios::in);
     if (theFile1.bad() || !theFile1.is_open()) {
-      opserr << "WARNING - PathSeries::PathSeries()";
-      opserr << " - could not open file " << fileName << endln;
+      std::cerr << "WARNING - PathSeries::PathSeries()";
+      std::cerr << " - could not open file " << fileName << "\n";
     } else {
 
       // now create the vector
@@ -305,8 +131,8 @@ PathSeries::PathSeries(int tag,
 
       // ensure we did not run out of memory
       if (thePath == 0 || thePath->Size() == 0) {
-	opserr << "PathSeries::PathSeries() - ran out of memory constructing";
-	opserr << " a Vector of size: " << numDataPoints << endln;
+    std::cerr << "PathSeries::PathSeries() - ran out of memory constructing";
+    std::cerr << " a Vector of size: " << numDataPoints << "\n";
 
 	if (thePath != 0)
 	  delete thePath;
@@ -372,7 +198,7 @@ PathSeries::getDuration()
 {
   if (thePath == 0)
   {
-    opserr << "WARNING -- PathSeries::getDuration() on empty Vector" << endln;
+    std::cerr << "WARNING -- PathSeries::getDuration() on empty Vector" << "\n";
 	return 0.0;
   }
   return (startTime + thePath->Size()*pathTimeIncr);
@@ -383,7 +209,7 @@ PathSeries::getPeakFactor()
 {
   if (thePath == 0)
   {
-    opserr << "WARNING -- PathSeries::getPeakFactor() on empty Vector" << endln;
+    std::cerr << "WARNING -- PathSeries::getPeakFactor() on empty Vector" << "\n";
 	return 0.0;
   }
 
@@ -399,118 +225,4 @@ PathSeries::getPeakFactor()
   }
   
   return (peak*cFactor);
-}
-
-int
-PathSeries::sendSelf(int commitTag, Channel &theChannel)
-{
-  int dbTag = this->getDbTag();
-
-  Vector data(7);
-  data(0) = cFactor;
-  data(1) = pathTimeIncr;
-  data(2) = -1;
-  
-  if (thePath != 0) {
-    int size = thePath->Size();
-    data(2) = size;
-    if (otherDbTag == 0)
-      otherDbTag = theChannel.getDbTag();
-    data(3) = otherDbTag;
-  }
-
-  if ((lastSendCommitTag == -1) && (theChannel.isDatastore() == 1)) {
-    lastSendCommitTag = commitTag;
-  }
-
-  data(4) = lastSendCommitTag;
-
-  if (useLast == true)
-    data(5) = 1;
-  else
-    data(5) = 0;
-
-  data(6) = startTime;
-
-  int result = theChannel.sendVector(dbTag, commitTag, data);
-  if (result < 0) {
-    opserr << "PathSeries::sendSelf() - channel failed to send data\n";
-    return result;
-  }
-
-  // we only send the vector data if this is the first time it is sent to the database
-  // or the channel is for sending the data to a remote process
-
-  if ((lastSendCommitTag == commitTag) || (theChannel.isDatastore() == 0)) {
-    if (thePath != 0) {
-      result = theChannel.sendVector(otherDbTag, commitTag, *thePath);
-      if (result < 0) {
-	opserr << "PathSeries::sendSelf() - ";
-	opserr << "channel failed to send tha Path Vector\n";
-	return result;  
-      }
-    }
-  }
-
-  return 0;
-}
-
-int 
-PathSeries::recvSelf(int commitTag, Channel &theChannel, 
-		       FEM_ObjectBroker &theBroker)
-{
-  int dbTag = this->getDbTag();
-
-  Vector data(7);
-  int result = theChannel.recvVector(dbTag, commitTag, data);
-  if (result < 0) {
-    opserr << "PathSeries::sendSelf() - channel failed to receive data\n";
-    cFactor = 1.0;
-    return result;
-  }
-
-  cFactor = data(0);
-  pathTimeIncr = data(1);
-  int size = data(2);
-  otherDbTag = data(3);
-  lastSendCommitTag = data(4);
-
-  if (data(5) == 1)
-    useLast = true;
-  else
-    useLast = false;
-
-  startTime = data(6);
-  
-  // get the path vector, only receive it once as it can't change
-  if (thePath == 0 && size > 0) {
-    thePath = new Vector(size);
-    if (thePath == 0 || thePath->Size() == 0) {
-      opserr << "PathSeries::recvSelf() - ran out of memory";
-      opserr << " a Vector of size: " <<  size << endln;  
-      if (thePath != 0)
-	delete thePath;
-      thePath = 0;
-      return -1;
-    }
-
-    result = theChannel.recvVector(otherDbTag, lastSendCommitTag, *thePath);    
-    if (result < 0) {
-      opserr << "PathSeries::recvSelf() - ";
-      opserr << "channel failed to receive tha Path Vector\n";
-      return result;  
-    }
-  }
-
-  return 0;    
-}
-
-void
-PathSeries::Print(OPS_Stream &s, int flag)
-{
-    //s << "Path Time Series: constant factor: " << cFactor;
-    //s << "  time Incr: " << pathTimeIncr << endln;
-    if (flag == 1 && thePath != 0)
-      //s << " specified path: " << *thePath;
-	  s << *thePath;
 }

@@ -39,12 +39,11 @@
 #ifndef GroundMotion_h
 #define GroundMotion_h
 
-#include <MovableObject.h>
 #include <TimeSeries.h>
 #include <TimeSeriesIntegrator.h>
 #include <Vector.h>
 
-class GroundMotion : public MovableObject
+class GroundMotion
 {
   public:
     GroundMotion(TimeSeries *dispSeries, 
@@ -70,18 +69,7 @@ class GroundMotion : public MovableObject
     void setIntegrator(TimeSeriesIntegrator *integrator);
     TimeSeries *integrate(TimeSeries *theSeries, double delta = 0.01); 
 
-    int sendSelf(int commitTag, Channel &theChannel);
-    int recvSelf(int commitTag, Channel &theChannel, 
-		 FEM_ObjectBroker &theBroker);    
-    
     const TimeSeries *getAccelSeries(void) const {return theAccelSeries;}
-	
-    // AddingSensitivity:BEGIN //////////////////////////////////////////
-    virtual double getAccelSensitivity(double time);
-    virtual int setParameter(const char **argv, int argc, Parameter &param);
-    //    virtual int updateParameter(int parameterID, Information &info);
-    // virtual int activateParameter(int parameterID);
-    // AddingSensitivity:END ///////////////////////////////////////////
 
   protected:
 

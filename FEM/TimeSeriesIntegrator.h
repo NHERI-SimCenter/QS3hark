@@ -36,12 +36,11 @@
 #ifndef TimeSeriesIntegrator_h
 #define TimeSeriesIntegrator_h
 
-#include <MovableObject.h>
 #include <TimeSeries.h>
 
 class TimeSeries;
 
-class TimeSeriesIntegrator : public MovableObject
+class TimeSeriesIntegrator
 {
   public:
     TimeSeriesIntegrator(int classTag);

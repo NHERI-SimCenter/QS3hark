@@ -32,7 +32,7 @@
 // What: "@(#) Vector.C, revA"
 
 #include "Vector.h"
-#include "Matrix.h"
+//#include "Matrix.h"
 #include "ID.h"
 #include <iostream>
 using std::nothrow;
@@ -58,7 +58,7 @@ Vector::Vector(int size)
 {
 #ifdef _G3DEBUG
   if (sz < 0) {
-    opserr << "Vector::Vector(int) - size " << size << " specified < 0\n";
+    std::cerr << "Vector::Vector(int) - size " << size << " specified < 0\n";
     sz = 1;
   }
 #endif
@@ -69,7 +69,7 @@ Vector::Vector(int size)
     theData = new (nothrow) double [size];
 
     if (theData == 0) {
-      opserr << "Vector::Vector(int) - out of memory creating vector of size " << size << endln;
+      std::cerr << "Vector::Vector(int) - out of memory creating vector of size " << size << "\n";
       sz = 0; // set this should fatal error handler not kill process!!
     }
     
@@ -87,7 +87,7 @@ Vector::Vector(double *data, int size)
 {
 #ifdef _G3DEBUG
   if (sz <= 0) {
-    opserr << "Vector::Vector(double *, size) - size " << size << " specified <= 0\n";
+    std::cerr << "Vector::Vector(double *, size) - size " << size << " specified <= 0\n";
     sz = 0;
   }
 #endif
@@ -103,7 +103,7 @@ Vector::Vector(const Vector &other)
 {
 #ifdef _G3DEBUG
   if (sz < 0) {
-    opserr << "Vector::Vector(int) - size " << sz << " specified <= 0\n";
+    std::cerr << "Vector::Vector(int) - size " << sz << " specified <= 0\n";
     sz = 1;
   }
 #endif
@@ -112,7 +112,7 @@ Vector::Vector(const Vector &other)
   theData = new (nothrow) double [other.sz];    
   
   if (theData == 0) {
-    opserr << "Vector::Vector(int) - out of memory creating vector of size " << sz << endln;
+    std::cerr << "Vector::Vector(int) - out of memory creating vector of size " << sz << "\n";
   }
 
   // copy the component data
@@ -141,7 +141,7 @@ Vector::setData(double *newData, int size){
   fromFree = 1;
 
   if (sz <= 0) {
-    opserr << " Vector::Vector(double *, size) - size specified: " << size << " <= 0\n";
+    std::cerr << " Vector::Vector(double *, size) - size specified: " << size << " <= 0\n";
     sz = 0;
   }
 
@@ -155,7 +155,7 @@ Vector::resize(int newSize){
 
   // first check that newSize is valid
   if (newSize < 0) {
-    opserr << "Vector::resize) - size specified " << newSize << " <= 0\n";
+    std::cerr << "Vector::resize) - size specified " << newSize << " <= 0\n";
     return -1;
   } 
   
@@ -172,7 +172,7 @@ Vector::resize(int newSize){
     // theData = (double *)malloc(newSize*sizeof(double));    
     theData = new (nothrow) double[newSize];
     if (theData == 0) {
-      opserr << "Vector::resize() - out of memory for size " << newSize << endln;
+      std::cerr << "Vector::resize() - out of memory for size " << newSize << "\n";
       sz = 0;
       return -2;
     }
@@ -209,9 +209,9 @@ Vector::Assemble(const Vector &V, const ID &l, double fact )
     else {
       result = -1;
       if (pos < sz)
-	opserr << "Vector::Assemble() " << pos << " out of range [1, " << sz-1 << "]\n";
+    std::cerr << "Vector::Assemble() " << pos << " out of range [1, " << sz-1 << "]\n";
       else
-	opserr << "Vector::Assemble() " << pos << " out of range [1, "<< V.Size()-1 << "]\n";
+    std::cerr << "Vector::Assemble() " << pos << " out of range [1, "<< V.Size()-1 << "]\n";
     }
   }
   return result;
@@ -247,7 +247,7 @@ Vector::addVector(double thisFact, const Vector &other, double otherFact )
 #ifdef _G3DEBUG
   if (sz != other.sz) {
     // else sizes are incompatable, do nothing but warning
-    opserr <<  "WARNING Vector::addVector() - incompatable Vector sizes\n";
+    std::cerr <<  "WARNING Vector::addVector() - incompatable Vector sizes\n";
     return -1;
   }
 #endif
@@ -311,281 +311,7 @@ Vector::addVector(double thisFact, const Vector &other, double otherFact )
   return 0;
 }
 	    
-	
-int
-Vector::addMatrixVector(double thisFact, const Matrix &m, const Vector &v, double otherFact )
-{
-  // see if quick return
-  if (thisFact == 1.0 && otherFact == 0.0)
-    return 0;
 
-  // check the sizes are compatable
-#ifdef _G3DEBUG
-  // check the sizes are compatable
-  if ((sz != m.noRows()) && (m.noCols() != v.sz)) {
-    // otherwise incompatable sizes
-    opserr << "Vector::addMatrixVector() - incompatable sizes\n";
-    return -1;    
-  }
-#endif
-
-  if (thisFact == 1.0) {
-
-    // want: this += m * v * otherFact
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    } 
-    else if (otherFact == -1.0) { // no point doing multiplication if otherFact = -1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] -= *matrixDataPtr++ * otherData;
-      }
-    } 
-    else { // have to do the multiplication
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++ * otherFact;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    }
-  }
-
-  else if (thisFact == 0.0) {
-    
-    // want: this = m * v * otherFact
-    for (int i=0; i<sz; i++)
-      theData[i] = 0.0;
-
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    } 
-    else if (otherFact == -1.0) { // no point doing multiplication if otherFact = -1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] -= *matrixDataPtr++ * otherData;
-      }
-    } else {
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++ * otherFact;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    }
-  }
-
-  else {
-
-    // want: this = this * thisFact + m * v * otherFact
-    for (int i=0; i<sz; i++)
-      theData[i] *= thisFact;
-
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    } else if (otherFact == -1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++;
-	for (int j=0; j<sz; j++)
-	  theData[j] -= *matrixDataPtr++ * otherData;
-      }
-    } else {
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtr = v.theData;
-      for (int i=0; i<otherSize; i++) {
-	double otherData = *otherDataPtr++ * otherFact;
-	for (int j=0; j<sz; j++)
-	  theData[j] += *matrixDataPtr++ * otherData;
-      }
-    }
-  }
-  
-  // successfull
-  return 0;
-}
-
-
-
-int
-Vector::addMatrixTransposeVector(double thisFact, 
-				 const Matrix &m, 
-				 const Vector &v, 
-				 double otherFact )
-{
-  // see if quick return
-  if (otherFact == 0.0 && thisFact == 1.0)
-    return 0;
-
-#ifdef _G3DEBUG
-  // check the sizes are compatable
-  if ((sz != m.noRows()) && (m.noRows() != v.sz)) {
-    // otherwise incompatable sizes
-    opserr << "Vector::addMatrixTransposeVector() - incompatable sizes\n";
-    return -1;    
-  }
-#endif
-
-  if (thisFact == 1.0) {
-
-    // want: this += m^t * v * otherFact
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] += sum;
-      }
-    } else if (otherFact == -1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] -= sum;
-      }
-    } else {
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] += sum * otherFact;
-      }
-    }
-  }
-
-  else if (thisFact == 0.0) {
-
-    // want: this = m^t * v * otherFact
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] = sum;
-      }
-    } else if (otherFact == -1.0) { // no point doing multiplication if otherFact = -1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] = -sum;
-      }
-    } else {
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	theData[i] = sum * otherFact;
-      }
-    }
-  } 
-
-  else {
-
-    // want: this = this * thisFact + m^t * v * otherFact
-    if (otherFact == 1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	double value = theData[i] * thisFact + sum;
-	theData[i] = value;
-      }
-    } else if (otherFact == -1.0) { // no point doing multiplication if otherFact = 1.0
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	double value = theData[i] * thisFact - sum;
-	theData[i] = value;
-      }
-    } else {
-      int otherSize = v.sz;
-      double *matrixDataPtr = m.data;
-      double *otherDataPtrA = v.theData;
-      for (int i=0; i<sz; i++) {
-	double *otherDataPtr = otherDataPtrA;
-	double sum = 0.0;
-	for (int j=0; j<otherSize; j++)
-	  sum += *matrixDataPtr++ * *otherDataPtr++;
-	double value = theData[i] * thisFact + sum * otherFact;
-	theData[i] = value;
-      }
-    }
-}
-
-  return 0;
-}
-	
-	
 
 
 
@@ -630,7 +356,7 @@ Vector::operator[](int x)
 #ifdef _G3DEBUG
   // check if it is inside range [0,sz-1]
   if (x < 0) {
-    opserr << "Vector::() - x " << x << " outside range 0 - << " << sz-1 << endln;
+    std::cerr << "Vector::() - x " << x << " outside range 0 - << " << sz-1 << "\n";
     return VECTOR_NOT_VALID_ENTRY;
   }
 #endif
@@ -658,7 +384,7 @@ double Vector::operator[](int x) const
 #ifdef _G3DEBUG
   // check if it is inside range [0,sz-1]
   if (x < 0 || x >= sz) {
-    opserr << "Vector::() - x " << x << " outside range 0 - " <<  sz-1 << endln;
+    std::cerr << "Vector::() - x " << x << " outside range 0 - " <<  sz-1 << "\n";
     return VECTOR_NOT_VALID_ENTRY;
   }
 #endif
@@ -680,7 +406,7 @@ Vector::operator()(const ID &rows) const
 
   // check if obtained VEctor of correct size
   if (result.Size() != rows.Size()) {
-    opserr << "Vector::()(ID) - new Vector could not be constructed\n";
+    std::cerr << "Vector::()(ID) - new Vector could not be constructed\n";
     return result;
   }
 
@@ -689,7 +415,7 @@ Vector::operator()(const ID &rows) const
   for (int i=0; i<rows.Size(); i++) {
     pos = rows(i);
     if (pos <0 || pos >= sz) {
-      opserr << "Vector::()(ID) - invalid location " << pos << " outside range [0, " << sz-1 << "]\n";
+      std::cerr << "Vector::()(ID) - invalid location " << pos << " outside range [0, " << sz-1 << "]\n";
     } else
       result(i) = (*this)(pos);
   }
@@ -713,14 +439,14 @@ Vector::operator=(const Vector &V)
 #ifdef _G3DEBUG
     // check size compatability, if different warning
     if (sz != V.sz) 
-      opserr << "Vector::operator=() - vectors of differing sizes\n");
+      std::cerr << "Vector::operator=() - vectors of differing sizes\n");
 #endif
 	  */
 
       if (sz != V.sz)  {
 
 #ifdef _G3DEBUG
-	  opserr << "Vector::operator=() - vectors of differing sizes\n";
+      std::cerr << "Vector::operator=() - vectors of differing sizes\n";
 #endif
 
 	  // Check that we are not deleting an empty Vector
@@ -809,7 +535,7 @@ Vector::operator+(double fact) const
 {
   Vector result(*this);
   if (result.Size() != sz) 
-    opserr << "Vector::operator+(double) - ran out of memory for new Vector\n";
+    std::cerr << "Vector::operator+(double) - ran out of memory for new Vector\n";
 
   result += fact;
   return result;
@@ -826,7 +552,7 @@ Vector::operator-(double fact) const
 {
     Vector result(*this);
     if (result.Size() != sz) 
-      opserr << "Vector::operator-(double) - ran out of memory for new Vector\n";
+      std::cerr << "Vector::operator-(double) - ran out of memory for new Vector\n";
 
     result -= fact;
     return result;
@@ -843,7 +569,7 @@ Vector::operator*(double fact) const
 {
     Vector result(*this);
     if (result.Size() != sz) 
-      opserr << "Vector::operator*(double) - ran out of memory for new Vector\n";
+      std::cerr << "Vector::operator*(double) - ran out of memory for new Vector\n";
 
     result *= fact;
     return result;
@@ -858,11 +584,11 @@ Vector
 Vector::operator/(double fact) const
 {
     if (fact == 0.0) 
-      opserr << "Vector::operator/(double fact) - divide-by-zero error coming\n";
+      std::cerr << "Vector::operator/(double fact) - divide-by-zero error coming\n";
 
     Vector result(*this);
     if (result.Size() != sz) 
-      opserr << "Vector::operator/(double) - ran out of memory for new Vector\n";
+      std::cerr << "Vector::operator/(double) - ran out of memory for new Vector\n";
 
     result /= fact;
     return result;
@@ -879,7 +605,7 @@ Vector::operator+=(const Vector &other)
 {
 #ifdef _G3DEBUG
   if (sz != other.sz) {
-    opserr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << other.sz << endln;
+    std::cerr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << other.sz << "\n";
     return *this;
   }    
 #endif
@@ -900,7 +626,7 @@ Vector::operator-=(const Vector &other)
 {
 #ifdef _G3DEBUG
   if (sz != other.sz) {
-    opserr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << other.sz << endln;
+    std::cerr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << other.sz << "\n";
     return *this;
   }
 #endif
@@ -921,7 +647,7 @@ Vector::operator+(const Vector &b) const
 {
 #ifdef _G3DEBUG
   if (sz != b.sz) {
-    opserr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << b.sz << endln;
+    std::cerr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << b.sz << "\n";
     return *this;
   }
 #endif
@@ -930,7 +656,7 @@ Vector::operator+(const Vector &b) const
 
     // check new Vector of correct size
   if (result.Size() != sz) {
-    opserr << "Vector::operator-(Vector): new Vector not of correct size \n";
+    std::cerr << "Vector::operator-(Vector): new Vector not of correct size \n";
     return result;
   }
   result += b;
@@ -947,7 +673,7 @@ Vector::operator-(const Vector &b) const
 {
 #ifdef _G3DEBUG
   if (sz != b.sz) {
-    opserr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << b.sz << endln;
+    std::cerr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << b.sz << "\n";
     return *this;
   }
 #endif
@@ -956,7 +682,7 @@ Vector::operator-(const Vector &b) const
 
   // check new Vector of correct size
   if (result.Size() != sz) {
-    opserr << "Vector::operator-(Vector): new Vector not of correct size \n";
+    std::cerr << "Vector::operator-(Vector): new Vector not of correct size \n";
     return result;
   }
 
@@ -973,7 +699,7 @@ Vector::operator^(const Vector &V) const
 {
 #ifdef _G3DEBUG
   if (sz != V.sz) {
-    opserr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << V.sz << endln;
+    std::cerr << "WARNING Vector::operator+=(Vector):Vectors not of same sizes: " << sz << " != " << V.sz << "\n";
     return 0.0;
   }
 #endif
@@ -988,24 +714,7 @@ Vector::operator^(const Vector &V) const
 }
 
 
-// Vector operator/(const Matrix &M) const;    
-//	Method to return inv(M)*this
 
-Vector
-Vector::operator/(const Matrix &M) const
-{
-  Vector res(M.noRows());
-    
-  if (M.noRows() != M.noCols()) { // if not square do least squares solution
-    Matrix A(M^M);
-    A.Solve(*this, res);    
-  }
-  else {
-    M.Solve(*this, res);
-  }
-  return res;
-}
-    
 	
 // Vector operator==(const Vector &V):
 //	The == operator checks the two vectors are of the same size if VECTOR_CHECK is defined.
@@ -1075,19 +784,14 @@ Vector::operator!=(double value) const
 
 // friend OPS_Stream &operator<<(OPS_Stream &s, const Vector &V)
 //	A function is defined to allow user to print the vectors using OPS_Streams.
-
+/*
 OPS_Stream &operator<<(OPS_Stream &s, const Vector &V)
 {
-  /*
-  for (int i=0; i<V.Size(); i++) 
-      s << V(i) << " ";
 
-  return s << endln;
-  */
   return s.write(V.theData, V.sz);
 
 }
-
+*/
 // friend istream &operator>>(istream &s, Vector &V)
 //	A function is defined to allow user to input the data into a Vector which has already
 //	been constructed with data, i.e. Vector(int) or Vector(const Vector &) constructors.
@@ -1123,8 +827,8 @@ Vector::Assemble(const Vector &V, int init_pos, double fact)
   }
   else 
   {
-     opserr << "WARNING: Vector::Assemble(const Vector &V, int init_pos, double fact): ";
-     opserr << "position outside bounds \n";
+     std::cerr << "WARNING: Vector::Assemble(const Vector &V, int init_pos, double fact): ";
+     std::cerr << "position outside bounds \n";
      res = -1;
   }
 
@@ -1145,32 +849,10 @@ Vector::Extract(const Vector &V, int init_pos, double fact)
   }
   else 
   {
-     opserr << "WARNING: Vector::Assemble(const Vector &V, int init_pos, double fact): ";
-     opserr << "position outside bounds \n";
+     std::cerr << "WARNING: Vector::Assemble(const Vector &V, int init_pos, double fact): ";
+     std::cerr << "position outside bounds \n";
      res = -1;
   }
 
   return res;
-}
-
-Matrix Vector::operator%(const Vector &V) const
-{
-  // if sizes are compatable add
-#ifdef _G3DEBUG
-  if (sz != V.sz) {
-    // else sizes are incompatable, do nothing but warning
-    opserr <<  "WARNING Vector::tensor multiplication operator % - incompatable Vector sizes\n";
-    return -1;
-  }
-#endif
-  
-  //we want result=a*b'
-  
-  Matrix result(sz,sz);
-  for (int i=0; i<sz; i++)
-    for (int j=0; j<sz; j++)
-      result(i,j)=theData[i]*V.theData[j];
-  
-  return result;
-  
 }

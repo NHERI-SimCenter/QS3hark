@@ -37,8 +37,8 @@
 
 #include <TrapezoidalTimeSeriesIntegrator.h>
 #include <Vector.h>
-#include <Channel.h>
 #include <PathSeries.h>
+#include <iostream>
 
 void* OPS_TrapezoidalTimeSeriesIntegrator()
 {
@@ -46,7 +46,7 @@ void* OPS_TrapezoidalTimeSeriesIntegrator()
 }
 
 TrapezoidalTimeSeriesIntegrator::TrapezoidalTimeSeriesIntegrator() 
-  :TimeSeriesIntegrator(TIMESERIES_INTEGRATOR_TAG_Trapezoidal)
+  :TimeSeriesIntegrator(0)
 {
 
 }
@@ -61,14 +61,14 @@ TrapezoidalTimeSeriesIntegrator::integrate(TimeSeries *theSeries, double delta)
 {	
   // Check for zero time step, before dividing to get number of steps
   if (delta <= 0.0) {
-    opserr << "TrapezoidalTimeSeriesIntegrator::integrate() Attempting to integrate time step" <<
+    std::cerr << "TrapezoidalTimeSeriesIntegrator::integrate() Attempting to integrate time step" <<
       delta << "<= 0\n";
     return 0;
    }
 
   // check a TimeSeries object was passed
   if (theSeries == 0) {
-    opserr << "TrapezoidalTimeSeriesIntegrator::integrate() - - no TimeSeries passed\n";
+    std::cerr << "TrapezoidalTimeSeriesIntegrator::integrate() - - no TimeSeries passed\n";
     return 0;
   }
 
@@ -79,8 +79,8 @@ TrapezoidalTimeSeriesIntegrator::integrate(TimeSeries *theSeries, double delta)
 
   // Check that the Vector was allocated properly
   if (theIntegratedValues == 0 || theIntegratedValues->Size() == 0) {
-    opserr << "TrapezoidalTimeSeriesIntegrator::integrate() Ran out of memory allocating Vector of size " <<
-      numSteps << endln;
+    std::cerr << "TrapezoidalTimeSeriesIntegrator::integrate() Ran out of memory allocating Vector of size " <<
+      numSteps << "\n";
 
     if (theIntegratedValues != 0)
       delete theIntegratedValues;
@@ -124,30 +124,10 @@ TrapezoidalTimeSeriesIntegrator::integrate(TimeSeries *theSeries, double delta)
   PathSeries *returnSeries = new PathSeries (0, *theIntegratedValues, delta, true);
 
   if (returnSeries == 0) {
-    opserr << "TrapezoidalTimeSeriesIntegrator::integrate() Ran out of memory creating PathSeries\n";
+    std::cerr << "TrapezoidalTimeSeriesIntegrator::integrate() Ran out of memory creating PathSeries\n";
 
     return 0;
    }
 
   return returnSeries;
-}
-
-int
-TrapezoidalTimeSeriesIntegrator::sendSelf(int commitTag, Channel &theChannel)
-{
-  return 0;
-}
-
-int
-TrapezoidalTimeSeriesIntegrator::recvSelf(int commitTag, Channel &theChannel, 
-		           FEM_ObjectBroker &theBroker)
-{
-  return 0;
-}
-
-void
-TrapezoidalTimeSeriesIntegrator::Print(OPS_Stream &s, int flag)
-{
-   // Need to implement, return for now
-   return;
 }

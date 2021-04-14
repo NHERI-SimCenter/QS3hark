@@ -37,12 +37,12 @@
 // What: "@(#) TimeSeries.h, revA"
 
 #include <TaggedObject.h>
-#include <MovableObject.h>
-#include <OPS_Globals.h>
-#include <Information.h>
+
+//#include <OPS_Globals.h>
+//#include <Information.h>
 
 
-class TimeSeries : public TaggedObject, public MovableObject
+class TimeSeries : public TaggedObject
 {
   public:
     TimeSeries(int tag, int classTag);
@@ -57,30 +57,18 @@ class TimeSeries : public TaggedObject, public MovableObject
     virtual double getPeakFactor () = 0;
 
     virtual double getTimeIncr (double pseudoTime) = 0;
-    // This is defined to be the time increment from the argument
-    // 'pseudoTime' to the NEXT point in the time series path
-    // THIS MAY CHANGE -- MAY BE BETTER TO GET THE TIME INCREMENT
-    // FROM THE PREVIOUS POINT IN THE PATH UP TO 'pseudoTime', WILL
-    // DECIDE ONCE GroundMotionIntegrator IS IMPLEMENTED
 
-    virtual void Print(OPS_Stream &s, int flag = 0) = 0;        
-
-    // AddingSensitivity:BEGIN //////////////////////////////////////////
-    virtual double getFactorSensitivity(double pseudoTime) {return 0.0;}
-    virtual int setParameter(const char **argv, int argc, Parameter &param) {return 0;}
-    virtual int updateParameter(int parameterID, Information &info) {return 0;}
-    virtual int activateParameter(int parameterID) {return 0;}
-    // AddingSensitivity:BEGIN //////////////////////////////////////////
 
   protected:
 
   private:
 };
 
-
+/*
 extern void OPS_clearAllTimeSeries(void);
 extern bool OPS_addTimeSeries(TimeSeries *newComponent);
 extern TimeSeries *OPS_getTimeSeries(int tag);
 extern bool OPS_removeTimeSeries(int tag);
+*/
 
 #endif

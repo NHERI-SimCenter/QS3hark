@@ -38,9 +38,9 @@
 //
 // What: "@(#) TaggedObject.h, revA"
 
-#include <OPS_Stream.h>
+//#include <OPS_Stream.h>
 
-class Domain;
+//class Domain;
 
 class TaggedObject 
 {
@@ -50,8 +50,8 @@ class TaggedObject
 
     inline int getTag(void) const;
 
-    virtual void Print(OPS_Stream &s, int flag =0) =0;       
-    friend OPS_Stream &operator<<(OPS_Stream &s, TaggedObject &m);        
+  //  virtual void Print(OPS_Stream &s, int flag =0) =0;
+   // friend OPS_Stream &operator<<(OPS_Stream &s, TaggedObject &m);
 
   protected:
     void setTag(int newTag);  // CAUTION: this is a dangerous method to call

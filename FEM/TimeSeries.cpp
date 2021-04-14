@@ -36,10 +36,10 @@
 
 #include <TimeSeries.h>
 #include <TaggedObject.h>
-#include <MapOfTaggedObjects.h>
+//#include <MapOfTaggedObjects.h>
 
-static MapOfTaggedObjects theTimeSeriesObjects;
-
+//static MapOfTaggedObjects theTimeSeriesObjects;
+/*
 bool OPS_addTimeSeries(TimeSeries *newComponent) {
   return theTimeSeriesObjects.addComponent(newComponent);
 }
@@ -52,7 +52,7 @@ TimeSeries *OPS_getTimeSeries(int tag) {
 
   TaggedObject *theResult = theTimeSeriesObjects.getComponentPtr(tag);
   if (theResult == 0) {
-    opserr << "TimeSeries *getTimeSeries(int tag) - none found with tag: " << tag << endln;
+    std::cerr << "TimeSeries *getTimeSeries(int tag) - none found with tag: " << tag << endln;
     return 0;
   }
   TimeSeries *theSeries = (TimeSeries *)theResult;
@@ -63,16 +63,16 @@ TimeSeries *OPS_getTimeSeries(int tag) {
 void OPS_clearAllTimeSeries(void) {
   theTimeSeriesObjects.clearAll();
 }
-    
+  */
 
 TimeSeries::TimeSeries(int tag, int classTag)
-  :TaggedObject(tag), MovableObject(classTag)
+  :TaggedObject(tag)
 {
 
 }
 
 TimeSeries::TimeSeries(int classTag)
-  :TaggedObject(0), MovableObject(classTag)
+  :TaggedObject(0)
 {
 
 }

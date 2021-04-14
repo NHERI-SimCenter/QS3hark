@@ -59,7 +59,7 @@ ID::ID(int size)
 
 #ifdef _G3DEBUG
   if (sz < 0) {
-    opserr << "ID::ID(int) - size " << size << " specified <= 0\n";
+    std::cerr << "ID::ID(int) - size " << size << " specified <= 0\n";
     sz = 0;
     arraySize = 0;
   }
@@ -70,7 +70,7 @@ ID::ID(int size)
   if (size > 0) {
     data = new (nothrow) int[size]; 
     if (data == 0) {
-      opserr << "ID::ID(int): ran out of memory with size " << size << endln;
+      std::cerr << "ID::ID(int): ran out of memory with size " << size << "\n";
       exit(-1);
     }
     
@@ -89,18 +89,18 @@ ID::ID(int size, int arraySz)
 {
 #ifdef _G3DEBUG
   if (sz < 0) {
-    opserr << "ID::ID(size, arraySize) - size " << size << " specified < 0\n";
+    std::cerr << "ID::ID(size, arraySize) - size " << size << " specified < 0\n";
     sz = 0;
   }
   if (arraySz <= 0) {
-    opserr << "ID::ID(size, arraySize) - arraySize " << arraySz << " specified < 0\n";
+    std::cerr << "ID::ID(size, arraySize) - arraySize " << arraySz << " specified < 0\n";
     if (sz != 0) 
       arraySz = sz;
     else
       arraySz = 1;
   }
   if (arraySz < sz) {
-    opserr << "ID::ID(size, arraySize) - arraySize " << arraySz  << " specified < " << size << endln;
+    std::cerr << "ID::ID(size, arraySize) - arraySize " << arraySz  << " specified < " << size << "\n";
     arraySz = sz;
   }
 #endif    
@@ -109,7 +109,7 @@ ID::ID(int size, int arraySz)
   //  data = (int *)malloc(arraySize*sizeof(int));
   data = new (nothrow) int[arraySize];
   if (data == 0) {
-    opserr << "ID::ID(int, int): ran out of memory with arraySize: " << arraySize << endln;
+    std::cerr << "ID::ID(int, int): ran out of memory with arraySize: " << arraySize << "\n";
     exit(-1);
   }
 
@@ -131,7 +131,7 @@ ID::ID(int *d, int size, bool cleanIt)
     if (arraySize != 0) {
       data = (int *)malloc(arraySize*sizeof(int));
       if (data == 0) {
-	opserr << "ID::ID(int, int): ran out of memory with arraySize " << arraySize << endln;
+    std::cerr << "ID::ID(int, int): ran out of memory with arraySize " << arraySize << "\n";
 	exit(-1);
       }
     }
@@ -155,7 +155,7 @@ ID::ID(const ID &other)
   //  data = (int *)malloc(arraySize*sizeof(int));
   data = new (nothrow) int[arraySize]; 
   if (data == 0) {
-    opserr << "ID::ID(ID): ran out of memory with arraySize " << arraySize << endln,
+    std::cerr << "ID::ID(ID): ran out of memory with arraySize " << arraySize << "\n",
     exit(-1);
   }
   
@@ -192,7 +192,7 @@ ID::setData(int *newData, int size, bool cleanIt){
     fromFree = 0;
 
   if (sz <= 0) {
-    opserr << "ID::ID(int *, size) - size " << size << " specified <= 0\n";
+    std::cerr << "ID::ID(int *, size) - size " << size << " specified <= 0\n";
     sz = 0;
   }
 
@@ -296,7 +296,7 @@ ID::operator[](int x)
 #ifdef _G3DEBUG
   // check if it is inside range [0,sz-1]
   if (x < 0) {
-    opserr << "ID::[] - location " << x << " < 0\n";
+    std::cerr << "ID::[] - location " << x << " < 0\n";
     return ID_NOT_VALID_ENTRY;
   }
 #endif
@@ -352,7 +352,7 @@ ID::operator[](int x)
     }
     else {
       // we could not allocate more mem .. leave the current size
-      opserr << "ID::[]): ran out of memory with arraySize " << arraySize << endln;
+      std::cerr << "ID::[]): ran out of memory with arraySize " << arraySize << "\n";
       return ID_NOT_VALID_ENTRY;
     }
   }
@@ -367,7 +367,7 @@ ID::resize(int newSize){
 
   // first check that newSize is valid
   if (newSize <= 0) {
-    opserr << "ID::resize() - size specified " << newSize << " <= 0\n";
+    std::cerr << "ID::resize() - size specified " << newSize << " <= 0\n";
     return -1;
   } 
   
@@ -407,7 +407,7 @@ ID::resize(int newSize){
       arraySize = newSize;
 
     } else {
-      opserr << "ID::resize() - out of memory creating ID of size " << newSize << "\n";
+      std::cerr << "ID::resize() - out of memory creating ID of size " << newSize << "\n";
       return -1;      
     }
   }
@@ -441,8 +441,8 @@ ID::operator=(const ID &V)
 		data = new (nothrow) int[arraySize];
 		// check we got the memory requested
 		if (data == 0) {
-		    opserr << "WARNING ID::=(ID) - ran out of memory ";
-		    opserr << "for new array of size" << arraySize << endln;
+            std::cerr << "WARNING ID::=(ID) - ran out of memory ";
+            std::cerr << "for new array of size" << arraySize << "\n";
 		    sz = 0;
 		    arraySize = 0;
 		}
@@ -549,14 +549,6 @@ ID::operator<(const ID &V) const
 // friend OPS_Stream &operator<<(OPS_Stream &s, const ID &V)
 //	A function is defined to allow user to print the IDs using OPS_Streams.
 
-OPS_Stream &operator<<(OPS_Stream &s, const ID &V)
-{
-    for (int i=0; i<V.Size(); i++) 
-    {
-	s << V(i) << " ";
-    }
-    return s << endln;
-}
 
 // friend istream &operator>>(istream &s, ID &V)
 //	A function is defined to allow user to input the data into a ID which has already

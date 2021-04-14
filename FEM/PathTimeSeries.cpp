@@ -37,8 +37,8 @@
 
 #include <PathTimeSeries.h>
 #include <Vector.h>
-#include <Channel.h>
 #include <math.h>
+#include <iostream>
 
 #include <fstream>
 using std::ifstream;
@@ -47,7 +47,7 @@ using std::ifstream;
 using std::ios;
 
 PathTimeSeries::PathTimeSeries()	
-  :TimeSeries(TSERIES_TAG_PathTimeSeries),
+  :TimeSeries(0),
    thePath(0), time(0), currentTimeLoc(0), cFactor(0.0),
    dbTag1(0), dbTag2(0), lastSendCommitTag(-1)
 {
@@ -59,15 +59,15 @@ PathTimeSeries::PathTimeSeries(int tag,
 			       const Vector &theTimePath, 
 			       double theFactor,
 			       bool last)
-  :TimeSeries(tag, TSERIES_TAG_PathTimeSeries),
+  :TimeSeries(tag, 0),
    thePath(0), time(0), currentTimeLoc(0), cFactor(theFactor),
-   dbTag1(0), dbTag2(0), lastSendCommitTag(-1), lastChannel(0),
+   dbTag1(0), dbTag2(0), lastSendCommitTag(-1),
    useLast(last)
 {
   // check vectors are of same size
   if (theLoadPath.Size() != theTimePath.Size()) {
-    opserr << "WARNING PathTimeSeries::PathTimeSeries() - vector containing data ";
-    opserr << "points for path and time are not of the same size\n";
+    std::cerr << "WARNING PathTimeSeries::PathTimeSeries() - vector containing data ";
+    std::cerr << "points for path and time are not of the same size\n";
   } else {
 
     // create copies of the vectors
@@ -78,7 +78,7 @@ PathTimeSeries::PathTimeSeries(int tag,
     if (thePath == 0 || thePath->Size() == 0 ||
 	time == 0 || time->Size() == 0) {
       
-      opserr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
+      std::cerr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
       if (thePath != 0)
 	delete thePath;
       if (time != 0)
@@ -94,9 +94,9 @@ PathTimeSeries::PathTimeSeries(int tag,
 			       const char *fileTimeName, 
 			       double theFactor,
 			       bool last)
-  :TimeSeries(tag, TSERIES_TAG_PathTimeSeries),
+  :TimeSeries(tag, 0),
    thePath(0), time(0), currentTimeLoc(0), cFactor(theFactor),
-   dbTag1(0), dbTag2(0), lastSendCommitTag(-1), lastChannel(0),
+   dbTag1(0), dbTag2(0), lastSendCommitTag(-1),
    useLast(last)
 {
   // determine the number of data points
@@ -108,8 +108,8 @@ PathTimeSeries::PathTimeSeries(int tag,
   // first open and go through file containing path
   theFile.open(filePathName, ios::in);
   if (theFile.bad() || !theFile.is_open()) {
-    opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-    opserr << " - could not open file " << filePathName << endln;
+    std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+    std::cerr << " - could not open file " << filePathName << "\n";
   } else {
     while (theFile >> dataPoint)
       numDataPoints1++;
@@ -120,8 +120,8 @@ PathTimeSeries::PathTimeSeries(int tag,
   ifstream theFile1;
   theFile1.open(fileTimeName, ios::in);
   if (theFile1.bad() || !theFile1.is_open()) {
-    opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-    opserr << " - could not open file " << fileTimeName << endln;
+    std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+    std::cerr << " - could not open file " << fileTimeName << "\n";
   } else {
     while (theFile1 >> dataPoint)
       numDataPoints2++;
@@ -130,8 +130,8 @@ PathTimeSeries::PathTimeSeries(int tag,
 
   // check number of data entries in both are the same
   if (numDataPoints1 != numDataPoints2) {
-    opserr << "WARNING PathTimeSeries::PathTimeSeries() - files containing data ";
-    opserr << "points for path and time do not contain same number of points\n";
+    std::cerr << "WARNING PathTimeSeries::PathTimeSeries() - files containing data ";
+    std::cerr << "points for path and time do not contain same number of points\n";
   } else {
 
 
@@ -146,7 +146,7 @@ PathTimeSeries::PathTimeSeries(int tag,
       if (thePath == 0 || thePath->Size() == 0 ||
 	  time == 0 || time->Size() == 0) {
 	  
-        opserr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
+        std::cerr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
 	if (thePath != 0)
 	  delete thePath;
 	if (time != 0)
@@ -159,8 +159,8 @@ PathTimeSeries::PathTimeSeries(int tag,
       ifstream theFile2;
       theFile2.open(filePathName, ios::in);
       if (theFile2.bad() || !theFile2.is_open()) {
-	opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-	opserr << " - could not open file " << filePathName << endln;
+    std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+    std::cerr << " - could not open file " << filePathName << "\n";
 	delete thePath;
 	delete time;
 	thePath = 0;
@@ -179,8 +179,8 @@ PathTimeSeries::PathTimeSeries(int tag,
 	ifstream theFile3;
 	theFile3.open(fileTimeName, ios::in);
 	if (theFile3.bad() || !theFile3.is_open()) {
-	  opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-	  opserr << " - could not open file " << fileTimeName << endln;
+      std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+      std::cerr << " - could not open file " << fileTimeName << "\n";
 	  delete thePath;
 	  delete time;
 	  thePath = 0;
@@ -202,9 +202,9 @@ PathTimeSeries::PathTimeSeries(int tag,
 			       const char *fileName, 
 			       double theFactor,
 			       bool last)
-  :TimeSeries(tag, TSERIES_TAG_PathTimeSeries),
+  :TimeSeries(tag, 0),
    thePath(0), time(0), currentTimeLoc(0), cFactor(theFactor),
-   dbTag1(0), dbTag2(0), lastChannel(0), useLast(last)
+   dbTag1(0), dbTag2(0), useLast(last)
 {
   // determine the number of data points
   int numDataPoints = 0;
@@ -214,8 +214,8 @@ PathTimeSeries::PathTimeSeries(int tag,
   // first open and go through file counting entries
   theFile.open(fileName, ios::in);
   if (theFile.bad() || !theFile.is_open()) {
-    opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-    opserr << " - could not open file " << fileName << endln;
+    std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+    std::cerr << " - could not open file " << fileName << "\n";
   }
   else {
     while (theFile >> dataPoint) {
@@ -225,8 +225,8 @@ PathTimeSeries::PathTimeSeries(int tag,
   }
 
   if ((numDataPoints % 2) != 0) {
-    opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-    opserr << " - num data entries in file NOT EVEN! " << fileName << endln;
+    std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+    std::cerr << " - num data entries in file NOT EVEN! " << fileName << "\n";
     numDataPoints--;
   }
 
@@ -243,7 +243,7 @@ PathTimeSeries::PathTimeSeries(int tag,
     // ensure did not run out of memory creating copies
     if (thePath == 0 || thePath->Size() == 0 || time == 0 || time->Size() == 0) {
       
-      opserr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
+      std::cerr << "WARNING PathTimeSeries::PathTimeSeries() - out of memory\n ";
       if (thePath != 0)
 	delete thePath;
       if (time != 0)
@@ -257,8 +257,8 @@ PathTimeSeries::PathTimeSeries(int tag,
     theFile1.open(fileName, ios::in);
     if (theFile1.bad() || !theFile1.is_open()) {
       
-      opserr << "WARNING - PathTimeSeries::PathTimeSeries()";
-      opserr << " - could not open file " << fileName << endln;
+      std::cerr << "WARNING - PathTimeSeries::PathTimeSeries()";
+      std::cerr << " - could not open file " << fileName << "\n";
       delete thePath;
       delete time;
       thePath = 0;
@@ -366,7 +366,7 @@ PathTimeSeries::getDuration()
 {
   if (thePath == 0)
   {
-    opserr << "WARNING -- PathTimeSeries::getDuration() on empty Vector" << endln;
+    std::cerr << "WARNING -- PathTimeSeries::getDuration() on empty Vector" << "\n";
 	return 0.0;
   }
 
@@ -379,7 +379,7 @@ PathTimeSeries::getPeakFactor()
 {
   if (thePath == 0)
   {
-    opserr << "WARNING -- PathTimeSeries::getPeakFactor() on empty Vector" << endln;
+    std::cerr << "WARNING -- PathTimeSeries::getPeakFactor() on empty Vector" << "\n";
 	return 0.0;
   }
 
@@ -395,134 +395,4 @@ PathTimeSeries::getPeakFactor()
   }
   
   return (peak*cFactor);
-}
-
-int
-PathTimeSeries::sendSelf(int commitTag, Channel &theChannel)
-{
-  int dbTag = this->getDbTag();
-  Vector data(6);
-  data(0) = cFactor;
-  data(1) = -1;
-  
-  if (thePath != 0) {
-    int size = thePath->Size();
-    data(1) = size;
-    if (dbTag1 == 0) {
-      dbTag1 = theChannel.getDbTag();
-      dbTag2 = theChannel.getDbTag();
-    }
-    data(2) = dbTag1;
-    data(3) = dbTag2;
-  }
-
-  if ((lastSendCommitTag == -1) && (theChannel.isDatastore() == 1)) {
-    lastSendCommitTag = commitTag;
-  }
-
-  data(4) = lastSendCommitTag;
-  
-  if (useLast == true)
-    data(5) = 1;
-  else
-    data(5) = 0;
-
-  int result = theChannel.sendVector(dbTag,commitTag, data);
-  if (result < 0) {
-    opserr << "PathTimeSeries::sendSelf() - channel failed to send data\n";
-    return result;
-  }
-
-  // we only send the vector data if this is the first time it is sent to the database
-  // or the channel is for sending the data to a remote process
-
-  if (lastChannel != &theChannel || (lastSendCommitTag == commitTag) || (theChannel.isDatastore() == 0)) {  
-
-    lastChannel = &theChannel;
-
-    if (thePath != 0) {
-      result = theChannel.sendVector(dbTag1, commitTag, *thePath);
-      if (result < 0) {
-	opserr << "PathTimeSeries::sendSelf() - ";
-	opserr << "channel failed to send tha Path Vector\n";
-	return result;  
-      }
-    }
-    if (time != 0) {
-      result = theChannel.sendVector(dbTag2, commitTag, *time);
-      if (result < 0) {
-	opserr << "PathTimeSeries::sendSelf() - ";
-	opserr << "channel failed to send tha Path Vector\n";
-	return result;  
-      }
-    }
-    return 0;
-  }
-  return 0;
-}
-
-int 
-PathTimeSeries::recvSelf(int commitTag, Channel &theChannel, 
-		       FEM_ObjectBroker &theBroker)
-{
-  int dbTag = this->getDbTag();
-  Vector data(6);
-  int result = theChannel.recvVector(dbTag,commitTag, data);
-  if (result < 0) {
-    opserr << "PathTimeSeries::sendSelf() - channel failed to receive data\n";
-    cFactor = 1.0;
-    return result;
-  }
-  cFactor = data(0);
-  int size = data(1);
-  lastSendCommitTag = data(4);
-
-  if (data(5) == 1)
-    useLast = true;
-  else
-    useLast = false;
-
-  // get the data cvector, only receive them once as they cannot change
-  if (thePath == 0 && size > 0) {
-    dbTag1 = data(2);
-    dbTag2 = data(3);
-    thePath = new Vector(size);
-    time = new Vector(size);
-    if (thePath == 0 || time == 0 ||
-	thePath->Size() == 0 || time->Size() == 0) {
-
-      opserr << "PathTimeSeries::recvSelf() - ran out of memory";
-      opserr << " a Vector of size: " <<  size << endln;  
-      if (thePath != 0)
-	delete thePath;
-      if (time != 0)
-	delete time;
-      thePath = 0;
-      time = 0;
-      return -1;
-    }
-    result = theChannel.recvVector(dbTag1, lastSendCommitTag, *thePath);    
-    if (result < 0) {
-      opserr << "PathTimeSeries::recvSelf() - ";
-      opserr << "channel failed to receive tha Path Vector\n";
-      return result;  
-    }
-    result = theChannel.recvVector(dbTag2, lastSendCommitTag, *time);    
-    if (result < 0) {
-      opserr << "PathTimeSeries::recvSelf() - ";
-      opserr << "channel failed to receive tha time Vector\n";
-      return result;  
-    }
-  }
-  return 0;    
-}
-
-void
-PathTimeSeries::Print(OPS_Stream &s, int flag)
-{
-    s << "Path Time Series: constant factor: " << cFactor;
-    if (flag == 1 && thePath != 0) {
-      s << " specified path: " << *thePath;
-      s << " specified time: " << *time;
-    }
 }

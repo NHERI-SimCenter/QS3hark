@@ -39,7 +39,7 @@
 class TaggedObject;
 class TaggedObjectIter;
 
-#include <OPS_Globals.h>
+//#include <OPS_Globals.h>
 
 class TaggedObjectStorage 
 {
@@ -60,7 +60,7 @@ class TaggedObjectStorage
     virtual  TaggedObjectStorage *getEmptyCopy(void) =0;
     virtual  void clearAll(bool invokeDestructors = true) =0;
     
-    virtual  void Print(OPS_Stream &s, int flag =0) =0;
+    //virtual  void Print(OPS_Stream &s, int flag =0) =0;
     
   protected:    
     
