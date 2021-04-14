@@ -31,13 +31,14 @@ TabManager::TabManager(BonzaTableView *tableViewIn, ElementModel *emodel,QWidget
 void TabManager::onTabBarClicked(int tabinx)
 {
 
+    /*
     if(tabinx==2 && !GMViewLoaded)
     {
         GMView->reload();
         GMViewLoaded = true;
         tab->setCurrentIndex(tabinx);
     }
-
+    */
 
     //emit onTabBarClickedFinished();
     //elementModel->reSetActive();
@@ -71,7 +72,7 @@ void TabManager::init(QTabWidget* theTab){
     uiFEMFile.open(QIODevice::ReadOnly);
     FEMWidget = uiLoader.load(&uiFEMFile,this);
     hideConfigure();
-    tab->addTab(FEMWidget,"Configure");
+    tab->addTab(FEMWidget,"Rock Motion");
 
     initFEMTab();
     connect(FEMWidget->findChild<QPushButton*>("GMBtn"), SIGNAL(clicked()), this, SLOT(onGMBtnClicked()));
@@ -95,7 +96,7 @@ void TabManager::init(QTabWidget* theTab){
     defaultWidget = uiLoader.load(&uiFile,this);
     tab->addTab(defaultWidget,"Layer properties");
 
-
+    /* removing response
     // load ground motion view from html
     GMView = new QWebEngineView(this);
     //GMView->load(QUrl("file:////Users/simcenter/Codes/SimCenter/SiteResponseTool/resources/ui/GroundMotion/index.html"));
@@ -111,7 +112,7 @@ void TabManager::init(QTabWidget* theTab){
     //GMView->reload();
 
     tab->addTab(GMView,"Response");
-
+    removing response  */
 
 
 
@@ -485,7 +486,7 @@ void TabManager::init(QTabWidget* theTab){
 
     //connect(elementModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onElementDataChanged(QModelIndex,QModelIndex)));
     connect(tab,SIGNAL(tabBarClicked(int)), this, SLOT(onTabBarClicked(int)));
-    connect(GMView,SIGNAL(loadFinished(bool)), this, SLOT(onGMLoadFinished(bool)));
+    //connect(GMView,SIGNAL(loadFinished(bool)), this, SLOT(onGMLoadFinished(bool)));
 
     // setPM4SandToolTps();
 
@@ -702,8 +703,6 @@ void TabManager::onConfigTabEdtFinished()
 void TabManager::writeGM()
 {
 
-
-
     /*
      * Get rock motion from file
      */
@@ -724,7 +723,6 @@ void TabManager::writeGM()
         file.close();
     }
     */
-
 
 
     QString newGmPathStr = FEMWidget->findChild<QLineEdit*>("GMPath")->text();
@@ -1031,7 +1029,7 @@ void TabManager::reFreshGMTab()
     updateStressStrainHtml();
     updateRupwpHtml();
 
-    GMView->reload();
+    //GMView->reload();
     //GMView->show();
 
 }
@@ -1068,7 +1066,7 @@ void TabManager::initGMTab()
     if(!file7.exists())
         QFile::copy(stressHtmlNameTmp, stressHtmlName);
 
-    GMView->reload();
+    //GMView->reload();
 }
 
 void TabManager::updateVelHtml()
@@ -2580,7 +2578,7 @@ void TabManager::onTableViewClicked(const QModelIndex &index){
     //tab->insertTab(0,FEMWidget,"Quickstart");
     //tab->insertTab(1,FEMWidget,"Configure");
     tab->insertTab(1,currentWidget,"Layer properties");
-    tab->insertTab(2,GMView,"Response");
+   // tab->insertTab(2,GMView,"Response");
     //tab->insertTab(3,quickstart,"Chat");
     tab->setCurrentIndex(1);
 

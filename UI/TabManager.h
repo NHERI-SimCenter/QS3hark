@@ -65,10 +65,10 @@ public:
     void updateStrainHtml();
     void updateStressHtml();
     void updateStressStrainHtml();
-    void reFreshGMView(){GMView->show();}
+  //    void reFreshGMView(){GMView->show();}
     void setPM4SandToolTps();
     void updatePostProcessor(PostProcessor *postProcessort);
-    void setGMViewLoaded(){GMViewLoaded = true;}
+  //    void setGMViewLoaded(){GMViewLoaded = true;}
     QVector<QVector<double>> getElemResVec(QString);
     QCheckBox *dimCheckBox;
 
@@ -138,7 +138,7 @@ private:
     QWidget* ElasticRandomWidget;
 
     QWebEngineView *quickstart;
-    QWebEngineView *GMView;
+  //    QWebEngineView *GMView;
     QString GMPathStr;
 
     QWidget* currentWidget;
@@ -243,7 +243,7 @@ private:
     QString femFilename = QDir(analysisDir).filePath("configure.dat");
     QString srtFileName = QDir(analysisDir).filePath("SRT.json");
 
-    bool GMViewLoaded = false;
+  //    bool GMViewLoaded = false;
 
     int maxStepToShow = 300;
     int overStep = 1;

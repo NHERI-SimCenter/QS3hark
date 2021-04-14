@@ -19,7 +19,7 @@
 #include "EffectiveFEModel.h"
 
 #include "Vector.h"
-#include "Matrix.h"
+//#include "Matrix.h"
 
 #ifndef NOINTERNALFEM
 #include "Node.h"
@@ -69,7 +69,7 @@
 #include "ManzariDafalias.h"
 #endif
 
-#include "Information.h"
+//#include "Information.h"
 #include <vector>
 #include <map>
 
@@ -107,10 +107,10 @@ SiteResponseModel::SiteResponseModel(SiteLayering layering, std::string modelTyp
     theOutputDir(".")
 {
     if (theMotionX->isInitialized() || theMotionZ->isInitialized())
-        theDomain = new Domain();
+       ;// theDomain = new Domain();
     else
     {
-        opserr << "No motion is specified." << endln;
+        std::cerr << "No motion is specified." << "\n";
         exit(-1);
     }
 }
@@ -121,10 +121,10 @@ SiteResponseModel::SiteResponseModel(SiteLayering layering, std::string modelTyp
     theOutputDir(".")
 {
     if (theMotionX->isInitialized())
-        theDomain = new Domain();
+       ;// theDomain = new Domain();
     else
     {
-        opserr << "No motion is specified." << endln;
+        std::cerr << "No motion is specified." << "\n";
         exit(-1);
     }
 }
@@ -135,12 +135,12 @@ SiteResponseModel::SiteResponseModel(std::string modelType, OutcropMotion *motio
 {
     if (theMotionX->isInitialized())
     {
-        theDomain = new Domain();
+       // theDomain = new Domain();
         m_callbackFunction = callbackFunction;
     }
     else
     {
-        opserr << "No motion is specified. Program exited." << endln;
+        std::cerr << "No motion is specified. Program exited." << "\n";
         exit(-1);
     }
 }
@@ -152,12 +152,12 @@ SiteResponseModel::SiteResponseModel(std::string modelType, OutcropMotion *motio
 {
     if (theMotionX->isInitialized() && theMotionX->isInitialized())
     {
-        theDomain = new Domain();
+        //theDomain = new Domain();
         m_callbackFunction = callbackFunction;
     }
     else
     {
-        opserr << "No motion is specified. Program exited." << endln;
+        std::cerr << "No motion is specified. Program exited." << "\n";
         exit(-1);
     }
 }
@@ -168,11 +168,11 @@ SiteResponseModel::SiteResponseModel(std::string modelType, OutcropMotion *motio
 {
     if (theMotionX->isInitialized())
     {
-        theDomain = new Domain();
+      ; // theDomain = new Domain();
     }
     else
     {
-        opserr << "No motion is specified. Program exited." << endln;
+        std::cerr << "No motion is specified. Program exited." << "\n";
         exit(-1);
     }
 }
@@ -184,20 +184,22 @@ SiteResponseModel::SiteResponseModel(std::string modelType, OutcropMotion *motio
 {
     if (theMotionX->isInitialized() && theMotionX->isInitialized())
     {
-        theDomain = new Domain();
+       ; //theDomain = new Domain();
     }
     else
     {
-        opserr << "No motion is specified. Program exited." << endln;
+        std::cerr << "No motion is specified. Program exited." << "\n";
         exit(-1);
     }
 }
 
 SiteResponseModel::~SiteResponseModel()
 {
+    /*
     if (theDomain != NULL)
         delete theDomain;
     theDomain = NULL;
+    */
 }
 
 int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
@@ -228,10 +230,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     json SRT;
     i >> SRT;
 
-    ofstream s (theAnalysisDir + "/model.tcl", std::ofstream::out);//TODO: may not work on windows
+    std::ofstream s (theAnalysisDir + "/model.tcl", std::ofstream::out);//TODO: may not work on windows
     s.precision(16);
-    ofstream ns (theTclOutputDir+"/nodesInfo.dat", std::ofstream::out);
-    ofstream es (theTclOutputDir+"/elementInfo.dat", std::ofstream::out);
+    std::ofstream ns (theTclOutputDir+"/nodesInfo.dat", std::ofstream::out);
+    std::ofstream es (theTclOutputDir+"/elementInfo.dat", std::ofstream::out);
     s << "# #########################################################" << "\n\n";
     s << "wipe \n\n";
 
@@ -285,14 +287,14 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     std::map<int, std::string> eleTypeDict;
 
     s << "model BasicBuilder -ndm 2 -ndf 3  \n\n";
-    s << "set nodesInfo [open nodesInfo.dat w]" << endln;
-    s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
-    s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << endln;
-    s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
-    s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << endln;
+    s << "set nodesInfo [open nodesInfo.dat w]" << "\n";
+    s << "node " << numNodes + 1 << " 0.0 " << yCoord << "\n";
+    s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << "\n";
+    s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
+    s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << "\n";
 
-    ns << numNodes + 1 << " 0.0 " << yCoord << endln;
-    ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+    ns << numNodes + 1 << " 0.0 " << yCoord << "\n";
+    ns << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
     numNodes += 2;
 
     s << std::scientific << std::setprecision(14);
@@ -353,17 +355,17 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
             int numEleThisLayer = static_cast<int> (std::round(thickness / eSizeV));
             numEleThisLayer = std::max(1,numEleThisLayer);
             double t = thickness / numEleThisLayer;
-            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << endln;
+            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << "\n";
             for (int i=1; i<=numEleThisLayer;i++)
             {
                 yCoord += t ;
 
-                s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
-                s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << endln;
-                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
-                s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << endln;
-                ns << numNodes + 1 << " 0.0 " << yCoord << endln;
-                ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+                s << "node " << numNodes + 1 << " 0.0 " << yCoord << "\n";
+                s << "puts $nodesInfo \""<< numNodes + 1 << " 0.0 " << yCoord << "\"" << "\n";
+                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
+                s << "puts $nodesInfo \"" << numNodes + 2 << " " << sElemX << " " << yCoord << "\"" << "\n";
+                ns << numNodes + 1 << " 0.0 " << yCoord << "\n";
+                ns << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
 
                 double alpha = 1.0e-8;
                 // Define one material for each element
@@ -373,7 +375,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double density = mat["density"];
                     double poisson = mat["poisson"];
                     plasticPoissonVec.push_back(poisson);
-                    s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<endln;
+                    s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<"\n";
                     rho_d = Gs / (1 + evoid);
                     rho_s = rho_d *(1.0+evoid/Gs);
 
@@ -411,7 +413,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     rho_s = rho_d *(1.0+evoid/Gs);
                     s << "nDMaterial PM4Sand " << numElems + 1<< " " << thisDr<< " " <<Go<< " " <<hpo<< " " <<thisDen<< " " <<P_atm<< " " <<h0<< " "<<emax<< " "<<emin<< " " <<
                          nb<< " " <<nd<< " " <<Ado<< " " <<z_max<< " " <<cz<< " " <<ce<< " " <<phic<< " " <<(K0 / (1.0 + K0))<< " " <<cgd<< " " <<cdr<< " " <<ckaf<< " " <<
-                         Q<< " " <<R<< " " <<m<< " " <<Fsed_min<< " " <<p_sedo << endln;
+                         Q<< " " <<R<< " " <<m<< " " <<Fsed_min<< " " <<p_sedo << "\n";
                 } else if (!matType.compare("PM4Silt")) {
                     double thisDr = mat["Dr"];
                     double S_u = mat["S_u"];
@@ -446,7 +448,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     s << "nDMaterial PM4Silt " << numElems + 1<< " " << S_u<< " " <<Su_Rat<< " " <<G_o<< " " <<h_po<< " " <<thisDen<< " "
                       <<Su_factor<< " " <<P_atm<< " " <<(K0 / (1.0 + K0))<< " " <<nG<< " " <<h0<< " " <<eInit<< " " <<lambda<< " " <<phicv<< " "
                      <<nb_wet<< " " <<nb_dry<< " " <<nd<< " " <<Ado<< " " <<ru_max<< " " <<z_max<< " " <<cz<< " " <<ce<< " " <<cgd
-                    << " " <<ckaf<< " " <<m_m<< " " <<CG_consol << endln;
+                    << " " <<ckaf<< " " <<m_m<< " " <<CG_consol << "\n";
                 } else if (!matType.compare("PIMY")) {
                     double thisDr = mat["Dr"];
                     int nd = 2;//mat["nd"];
@@ -463,7 +465,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     int noYieldSurf = mat["noYieldSurf"];
 
                     s << "nDMaterial PressureIndependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<cohesi<<" "<<peakShearStra<<" "<<
-                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<endln;
+                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<"\n";
                 } else if(!matType.compare("PDMY")) {
                     double thisDr = mat["Dr"];
                     int nd = 2;//mat["nd"];
@@ -493,7 +495,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
                     s << "nDMaterial PressureDependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
                          refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << noYieldSurf
-                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<endln;
+                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<"\n";
                 } else if(!matType.compare("PDMY02")) {
                     double thisDr = mat["Dr"];
                     double nd = 2;// mat["nd"];
@@ -524,7 +526,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     int noYieldSurf = mat["noYieldSurf"];
                     s << "nDMaterial PressureDependMultiYield02 "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
                          refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" "<< noYieldSurf << " "<<contrac2<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2
-                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<endln;
+                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<"\n";
 
                 } else if(!matType.compare("ManzariDafalias")) {
                     double Dr = mat["Dr"];
@@ -551,7 +553,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double K0 = mat["K0"];
 
                     s << "nDMaterial ManzariDafalias " << numElems + 1<< " " << G0<< " " <<(K0 / (1+K0))<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " "
-                      <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << endln;
+                      <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << "\n";
                 } else if(!matType.compare("J2Bounding")) {
                     double Dr = mat["Dr"];
                     double G = mat["G"];
@@ -565,7 +567,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                     double beta = mat["beta"];
                     double h0 = 0.0;
                     s << "nDMaterial J2CyclicBoundingSurface " << numElems + 1<< " " << G<< " " <<K<< " "
-                      <<su<< " " <<rho<< " " <<h<< " " <<m<< " " << h0 << " " <<k_in<< " " <<beta << endln;
+                      <<su<< " " <<rho<< " " <<h<< " " <<m<< " " << h0 << " " <<k_in<< " " <<beta << "\n";
                 } else if(!matType.compare("PDMY03")) {
                     double nd = 2;// mat["nd"];
                     double massDen = mat["rho"];
@@ -595,11 +597,11 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
                     s << "nDMaterial PressureDependMultiYield03 "<< numElems + 1 << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
                          refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<endln;
+                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<"\n";
                 } else if(!matType.compare("PDMY03_Random")) {
                     if (!m_runningStochastic)
                     {
-                        s << "source material.tcl" << endln;
+                        s << "source material.tcl" << "\n";
                         m_runningStochastic = true;
                     }
 
@@ -609,7 +611,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 } else if(!matType.compare("PM4Sand_Random")) {
                     if (!m_runningStochastic)
                     {
-                        s << "source material.tcl" << endln;
+                        s << "source material.tcl" << "\n";
                         m_runningStochastic = true;
                     }
                     double nu = mat["nu"];
@@ -617,7 +619,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 } else if(!matType.compare("Elastic_Random")) {
                     if (!m_runningStochastic)
                     {
-                        s << "source material.tcl" << endln;
+                        s << "source material.tcl" << "\n";
                         m_runningStochastic = true;
                     }
                 }
@@ -632,16 +634,16 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 {
                     b1 = -1.0 * g * sin(slopex1*pi/180.);
                     b2 = g * cos(slopex1*pi/180.);
-                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << endln;
+                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << "\n";
                 }
                 else
                 {
                     b1 = 1.0 * g * sin((180-slopex1)*pi/180.);
                     b2 = g * cos((180-slopex1)*pi/180.);
-                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << endln;
+                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << "\n";
                 }
                 es << numElems + 1<<" " <<numNodes - 1 <<" "<<numNodes<<" "<< numNodes + 2<<" "<< numNodes + 1<<" "
-                   << numElems + 1 << endln;
+                   << numElems + 1 << "\n";
 
                 hPermVec.push_back(hPerm);
                 vPermVec.push_back(vPerm);
@@ -676,14 +678,14 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     s << "# 2.1 Apply fixities at base              \n\n";
 
-    s << "fix 1 1 1 0" << endln;
-    s << "fix 2 1 1 0" << endln << endln;
+    s << "fix 1 1 1 0" << "\n";
+    s << "fix 2 1 1 0" << "\n" << "\n";
 
     s << "# 2.2 Apply periodic boundary conditions    \n\n";
     // Confirmed for 2D:
     for (int nodeCount = 2; nodeCount < numNodes; nodeCount += 2)
     {
-        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2" << endln;
+        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2" << "\n";
     }
     s << "\n\n";
 
@@ -692,7 +694,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     s << "# 2.3 Apply pore pressure boundaries for nodes above water table. \n\n";
     for (int i = 0; i < dryNodes.size(); i++)
     {
-        s << "fix " << dryNodes[i] << " 0 0 1" << endln;
+        s << "fix " << dryNodes[i] << " 0 0 1" << "\n";
     }
     s << "\n\n";
 
@@ -703,35 +705,35 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     // update material stage to consider elastic behavior
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
-        s << "updateMaterialStage -material "<< theEleTag <<" -stage 0" << endln ;
+        s << "updateMaterialStage -material "<< theEleTag <<" -stage 0" << "\n" ;
     }
-    s << endln;
+    s << "\n";
 
     s << "# 3.1 elastic gravity analysis (transient) \n\n";
 
     double gamma = 0.8333;// 5./6.;
     double beta = 0.4444;//4./9.;
 
-    s << "constraints Transformation" << endln;
-    s << "test NormDispIncr 1.0e-4 35 1" << endln;
-    s << "algorithm   Newton" << endln;
-    s << "numberer RCM" << endln;
-    s << "system SparseGeneral" << endln;//BandGeneral
-    s << "set gamma " << gamma << endln;
-    s << "set beta " << beta << endln;
-    s << "integrator  Newmark $gamma $beta" << endln;
-    s << "analysis Transient" << endln << endln;
+    s << "constraints Transformation" << "\n";
+    s << "test NormDispIncr 1.0e-4 35 1" << "\n";
+    s << "algorithm   Newton" << "\n";
+    s << "numberer RCM" << "\n";
+    s << "system SparseGeneral" << "\n";//BandGeneral
+    s << "set gamma " << gamma << "\n";
+    s << "set beta " << beta << "\n";
+    s << "integrator  Newmark $gamma $beta" << "\n";
+    s << "analysis Transient" << "\n" << "\n";
 
-    s << "set startT  [clock seconds]" << endln;
-    s << "analyze     10 1.0" << endln;
-    s << "puts \"Finished with elastic gravity analysis...\"" << endln << endln;
+    s << "set startT  [clock seconds]" << "\n";
+    s << "analyze     10 1.0" << "\n";
+    s << "puts \"Finished with elastic gravity analysis...\"" << "\n" << "\n";
 
-    s << "# 3.2 plastic gravity analysis (transient)" << endln << endln;
+    s << "# 3.2 plastic gravity analysis (transient)" << "\n" << "\n";
 
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
-        s << "updateMaterialStage -material "<< theEleTag <<" -stage 1" << endln ;
+        s << "updateMaterialStage -material "<< theEleTag <<" -stage 1" << "\n" ;
     }
-    s << endln;
+    s << "\n";
 
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
         // add parameters: FirstCall for plastic gravity analysis
@@ -739,10 +741,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 || !eleTypeDict[theEleTag].compare("PM4Silt")
                 || !eleTypeDict[theEleTag].compare("PM4Sand_Random"))
         {
-            s << "setParameter -value 0 -ele "<< theEleTag <<" FirstCall "<< theEleTag << endln;
+            s << "setParameter -value 0 -ele "<< theEleTag <<" FirstCall "<< theEleTag << "\n";
         }
     }
-    s << endln;
+    s << "\n";
 
     // add parameters: poissonRatio for plastic gravity analysis
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
@@ -752,27 +754,27 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
                 || !eleTypeDict[theEleTag].compare("PM4Silt")
                 || !eleTypeDict[theEleTag].compare("PM4Sand_Random"))
         {
-            s << "setParameter -value " << plasticPoissonVec[theEleTag - 1] << " -ele "<< theEleTag <<" poissonRatio "<< matNumDict[theEleTag] << endln;
+            s << "setParameter -value " << plasticPoissonVec[theEleTag - 1] << " -ele "<< theEleTag <<" poissonRatio "<< matNumDict[theEleTag] << "\n";
         }
     }
-    s << endln;
+    s << "\n";
 
-    s << "analyze     10 1.0" << endln;
-    s << "puts \"Finished with plastic gravity analysis...\"" << endln << endln;
+    s << "analyze     10 1.0" << "\n";
+    s << "puts \"Finished with plastic gravity analysis...\"" << "\n" << "\n";
 
 
 
-    s << "# 3.3 Update element permeability for post gravity analysis"<< endln << endln;
+    s << "# 3.3 Update element permeability for post gravity analysis"<< "\n" << "\n";
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
         // convert from hydraulic conductivity to dynamic permeability
         double thishPerm = -hPermVec[theEleTag-1]/g;
         double thisvPerm = -vPermVec[theEleTag-1]/g;
 
-        s << "setParameter -value "<< std::setprecision(6) << thishPerm<<" -ele "<< theEleTag<<" hPerm "<<endln;
-        s << "setParameter -value "<< std::setprecision(6) << thisvPerm<<" -ele "<< theEleTag<<" vPerm "<<endln;
+        s << "setParameter -value "<< std::setprecision(6) << thishPerm<<" -ele "<< theEleTag<<" hPerm "<<"\n";
+        s << "setParameter -value "<< std::setprecision(6) << thisvPerm<<" -ele "<< theEleTag<<" vPerm "<<"\n";
 
     }
-    s << endln << endln << endln;
+    s << "\n" << "\n" << "\n";
 
     s << "# ------------------------------------------------------------\n";
     s << "# 4. Add the compliant base                                   \n";
@@ -784,31 +786,31 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     double vis_C = dashpotCoeff * colArea;
     double cFactor = colArea * dashpotCoeff;
 
-    s << "set colThickness "<< colThickness << endln;
-    s << "set sElemX " << sElemX << endln;
-    s << "set colArea [expr $sElemX*$colThickness]" << endln; // [expr $sElemX*$thick(1)]
-    s << "set rockVs "<< rockVs << endln;
-    s << "set rockDen " << rockDen << endln;
-    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << endln; // [expr $rockVs*$rockDen]
-    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<endln;
-    s << "set cFactor [expr $colArea*$dashpotCoeff]" << endln;
+    s << "set colThickness "<< colThickness << "\n";
+    s << "set sElemX " << sElemX << "\n";
+    s << "set colArea [expr $sElemX*$colThickness]" << "\n"; // [expr $sElemX*$thick(1)]
+    s << "set rockVs "<< rockVs << "\n";
+    s << "set rockDen " << rockDen << "\n";
+    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << "\n"; // [expr $rockVs*$rockDen]
+    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<"\n";
+    s << "set cFactor [expr $colArea*$dashpotCoeff]" << "\n";
 
     s << "\n\n# 4.2 Create dashpot nodes and apply proper fixities. \n\n";
 
-    s << "model BasicBuilder -ndm 2 -ndf 2" << endln << endln;
-    s << "node " << numNodes + 1 << " 0.0 0.0" << endln;
-    s << "node " << numNodes + 2 << " 0.0 0.0" << endln;
-    s << "fix " << numNodes + 1 << " 1 1" << endln;
-    s << "fix " << numNodes + 2 << " 0 1" << endln;
-    s << endln;
+    s << "model BasicBuilder -ndm 2 -ndf 2" << "\n" << "\n";
+    s << "node " << numNodes + 1 << " 0.0 0.0" << "\n";
+    s << "node " << numNodes + 2 << " 0.0 0.0" << "\n";
+    s << "fix " << numNodes + 1 << " 1 1" << "\n";
+    s << "fix " << numNodes + 2 << " 0 1" << "\n";
+    s << "\n";
 
     s << "# 4.3 Apply equalDOF to the node connected to the column. \n\n";
-    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << endln;
+    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << "\n";
 
     s << "\n\n# 4.4 Remove fixities created for gravity. \n\n";
     // TODO:
-    s << "remove sp 1 1" << endln;
-    s << "remove sp 2 1" << endln;
+    s << "remove sp 1 1" << "\n";
+    s << "remove sp 2 1" << "\n";
 
 
     s << "\n\n# 4.5 Apply equalDOF for the first 4 nodes (3D) or 2 nodes (2D). \n\n";
@@ -816,26 +818,26 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     if (!theModelType.compare("2D")) //2D
     {
-        s << "equalDOF " << 1 << " "<< 2 << " 1 " << endln;
+        s << "equalDOF " << 1 << " "<< 2 << " 1 " << "\n";
     }
 
 
 
     s << "\n\n# 4.6 Create the dashpot element. \n\n";
 
-    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << endln;
+    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << "\n";
     s << "\n\n\n";
 
 
-    s << "setTime 0.0" << endln;
-    s << "wipeAnalysis" << endln;
-    s << "remove recorders" << endln << endln << endln;
+    s << "setTime 0.0" << "\n";
+    s << "wipeAnalysis" << "\n";
+    s << "remove recorders" << "\n" << "\n" << "\n";
 
     s << "# ------------------------------------------------------------\n";
     s << "# 5. Dynamic analysis                                         \n";
     s << "# ------------------------------------------------------------\n\n";
 
-    s << "model BasicBuilder -ndm 2 -ndf 3" << endln; // TODO: it seems this is not necessary.
+    s << "model BasicBuilder -ndm 2 -ndf 3" << "\n"; // TODO: it seems this is not necessary.
 
 
     s << "\n\n# ------------------------------------------------------------\n";
@@ -850,17 +852,17 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     int nStepsMotion = theMotionX->getNumSteps();//1998;//theMotionX->getNumSteps() ; //1998; // number of motions in the record. TODO: use a funciton to get it
     int nSteps = int((nStepsMotion-1) * motionDT / dT);
     int remStep = nSteps;
-    s << "set dT " << dT << endln;
-    s << "set motionDT " << motionDT << endln;
-    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<endln;
-    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<endln;
+    s << "set dT " << dT << "\n";
+    s << "set motionDT " << motionDT << "\n";
+    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<"\n";
+    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<"\n";
 
     // using a stress input with the dashpot
     if (theMotionX->isInitialized())
     {
-        s << "pattern Plain 10 $mSeries {"<<endln;
-        s << "    load 1  1.0 0.0 0.0" << endln;
-        s << "}" << endln << endln;
+        s << "pattern Plain 10 $mSeries {"<<"\n";
+        s << "    load 1  1.0 0.0 0.0" << "\n";
+        s << "}" << "\n" << "\n";
 
         // update the number of steps as well as the dt vector
         int temp = theMotionX->getNumSteps();
@@ -883,11 +885,11 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     //theTest->setTolerance(1.0e-5);
 
-    s << "constraints Transformation" << endln;
-    s << "test NormDispIncr 1.0e-4 35 0" << endln; // TODO
-    s << "algorithm   Newton" << endln;
-    s << "numberer    RCM" << endln;
-    s << "system SparseGeneral" << endln;//BandGeneral
+    s << "constraints Transformation" << "\n";
+    s << "test NormDispIncr 1.0e-4 35 0" << "\n"; // TODO
+    s << "algorithm   Newton" << "\n";
+    s << "numberer    RCM" << "\n";
+    s << "system SparseGeneral" << "\n";//BandGeneral
 
 
     double gamma_dynm = 0.5;
@@ -916,17 +918,17 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     if (PRINTDEBUG)
     {
-        //opserr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << endln;
-        opserr << "a0 = " << a0 << "    a1 = " << a1 << endln;
+        //std::cerr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << "\n";
+        std::cerr << "a0 = " << a0 << "    a1 = " << a1 << "\n";
     }
 
-    s << "set gamma_dynm " << gamma_dynm << endln;
-    s << "set beta_dynm " << beta_dynm << endln;
-    s << "integrator  Newmark $gamma_dynm $beta_dynm" << endln;
-    s << "set a0 " << a0 << endln;
-    s << "set a1 " << a1 << endln;
-    s << "rayleigh    $a0 $a1 0.0 0.0" << endln;
-    s << "analysis Transient" << endln << endln;
+    s << "set gamma_dynm " << gamma_dynm << "\n";
+    s << "set beta_dynm " << beta_dynm << "\n";
+    s << "integrator  Newmark $gamma_dynm $beta_dynm" << "\n";
+    s << "set a0 " << a0 << "\n";
+    s << "set a1 " << a1 << "\n";
+    s << "rayleigh    $a0 $a1 0.0 0.0" << "\n";
+    s << "analysis Transient" << "\n" << "\n";
 
     s << "# ------------------------------------------------------------\n";
     s << "# 5.3 Define outputs and recorders                            \n";
@@ -935,97 +937,97 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
     double recDT = 0.001;
 
-    s << "set recDT " << recDT << endln;
-    s << "file mkdir out_tcl" << endln;
-    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<endln;// 3
+    s << "set recDT " << recDT << "\n";
+    s << "file mkdir out_tcl" << "\n";
+    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<"\n";// 3
 
-    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<endln;// 3
+    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<"\n";// 3
 
-    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  disp\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  vel\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  disp\""<<"\n";
+    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  vel\""<<"\n";
+    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<"\n";
 
-    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<endln;
+    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<"\n";
 
-    s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<<numElems <<"  stress 3"<<endln;
-    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numElems <<"  strain"<<endln;
-    s<< endln << endln;
+    s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<<numElems <<"  stress 3"<<"\n";
+    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numElems <<"  strain"<<"\n";
+    s<< "\n" << "\n";
 
     s << "# ------------------------------------------------------------\n";
     s << "# 5.4 Perform dynamic analysis                                \n";
     s << "# ------------------------------------------------------------\n\n";
 
-    s << "set nSteps " << nSteps << endln;
-    s << "set remStep " << remStep << endln;
-    s << "set success 0" << endln << endln;
+    s << "set nSteps " << nSteps << "\n";
+    s << "set remStep " << remStep << "\n";
+    s << "set success 0" << "\n" << "\n";
 
-    s << "proc subStepAnalyze {dT subStep} {" << endln;
-    s << "	if {$subStep > 10} {" << endln;
-    s << "		return -10" << endln;
-    s << "	}" << endln;
-    s << "	for {set i 1} {$i < 3} {incr i} {" << endln;
-    s << "		puts \"Try dT = $dT\"" << endln;
-    s << "		set success [analyze 1 $dT]" << endln;
-    s << "		if {$success != 0} {" << endln;
-    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << endln;
-    s << "			if {$success == -10} {" << endln;
-    s << "				puts \"Did not converge.\"" << endln;
-    s << "				return $success" << endln;
-    s << "			}" << endln;
-    s << "		} else {" << endln;
-    s << "			if {$i==1} {" << endln;
-    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << endln;
-    s << "			} else {" << endln;
-    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << endln;
-    s << "			}" << endln;
-    s << "		}" << endln;
-    s << "	}" << endln;
-    s << "	return $success" << endln;
-    s << "}" << endln << endln << endln;
+    s << "proc subStepAnalyze {dT subStep} {" << "\n";
+    s << "	if {$subStep > 10} {" << "\n";
+    s << "		return -10" << "\n";
+    s << "	}" << "\n";
+    s << "	for {set i 1} {$i < 3} {incr i} {" << "\n";
+    s << "		puts \"Try dT = $dT\"" << "\n";
+    s << "		set success [analyze 1 $dT]" << "\n";
+    s << "		if {$success != 0} {" << "\n";
+    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << "\n";
+    s << "			if {$success == -10} {" << "\n";
+    s << "				puts \"Did not converge.\"" << "\n";
+    s << "				return $success" << "\n";
+    s << "			}" << "\n";
+    s << "		} else {" << "\n";
+    s << "			if {$i==1} {" << "\n";
+    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << "\n";
+    s << "			} else {" << "\n";
+    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << "\n";
+    s << "			}" << "\n";
+    s << "		}" << "\n";
+    s << "	}" << "\n";
+    s << "	return $success" << "\n";
+    s << "}" << "\n" << "\n" << "\n";
 
 
-    s << "puts \"Start analysis\"" << endln;
-    s << "set startT [clock seconds]" << endln;
-    //s << "if {1} {" << endln;
-    s << "set finalTime [expr $remStep * $dT]" << endln;
-    s << "set success 0" << endln;
-    s << "set currentTime 0." << endln;
-    s << "set timeMarker 0." << endln;
-    s << "while {$success == 0 && $currentTime < $finalTime} {" << endln;
-    s << "	set subStep 0" << endln;
-    s << "	set success [analyze 1  $dT]" << endln;
-    s << "	if {$success != 0} {" << endln;
-    s << "	set curTime  [getTime]" << endln;
-    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-    s << "	set curStep  [expr int($curTime/$dT + 1)]" << endln;
-    s << "	set remStep  [expr int($nSteps-$curStep)]" << endln;
-    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-    s << "    } else {" << endln;
-    s << "          set progress [expr $currentTime/$finalTime * 100.]" << endln;
-    s << "          if { $progress > $timeMarker} {" << endln;
-    s << "              set timeMarker [expr $timeMarker+2]" << endln;
-    s << "              puts \"$progress%\"" << endln;
-    s << "              }" << endln;
-    s << "              set currentTime [getTime]" << endln;
-    s << "	}" << endln;
-    s << "}" << endln << endln;
-    //s << "}" << endln << endln;
+    s << "puts \"Start analysis\"" << "\n";
+    s << "set startT [clock seconds]" << "\n";
+    //s << "if {1} {" << "\n";
+    s << "set finalTime [expr $remStep * $dT]" << "\n";
+    s << "set success 0" << "\n";
+    s << "set currentTime 0." << "\n";
+    s << "set timeMarker 0." << "\n";
+    s << "while {$success == 0 && $currentTime < $finalTime} {" << "\n";
+    s << "	set subStep 0" << "\n";
+    s << "	set success [analyze 1  $dT]" << "\n";
+    s << "	if {$success != 0} {" << "\n";
+    s << "	set curTime  [getTime]" << "\n";
+    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+    s << "	set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+    s << "	set remStep  [expr int($nSteps-$curStep)]" << "\n";
+    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+    s << "    } else {" << "\n";
+    s << "          set progress [expr $currentTime/$finalTime * 100.]" << "\n";
+    s << "          if { $progress > $timeMarker} {" << "\n";
+    s << "              set timeMarker [expr $timeMarker+2]" << "\n";
+    s << "              puts \"$progress%\"" << "\n";
+    s << "              }" << "\n";
+    s << "              set currentTime [getTime]" << "\n";
+    s << "	}" << "\n";
+    s << "}" << "\n" << "\n";
+    //s << "}" << "\n" << "\n";
 
-    s << "set endT [clock seconds]" << endln << endln;
-    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << endln << endln;
-    s << "puts \"Finished with dynamic analysis...\"" << endln << endln;
+    s << "set endT [clock seconds]" << "\n" << "\n";
+    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << "\n" << "\n";
+    s << "puts \"Finished with dynamic analysis...\"" << "\n" << "\n";
 
-    s << endln;
-    //s << "print -file out_tcl/Domain.out" << endln << endln;
+    s << "\n";
+    //s << "print -file out_tcl/Domain.out" << "\n" << "\n";
 
-    s << "wipe" << endln;
-    s << "puts \"Site response analysis is finished.\""<< endln;
-    s << "exit" << endln << endln;
+    s << "wipe" << "\n";
+    s << "puts \"Site response analysis is finished.\""<< "\n";
+    s << "exit" << "\n" << "\n";
 
     s.close();
     ns.close();
@@ -1137,10 +1139,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theNode = new Node(numNodes + 1, 3, 0.0, yCoord); theDomain->addNode(theNode);
 //    theNode = new Node(numNodes + 2, 3, sElemX, yCoord); theDomain->addNode(theNode);
 //    s << "model BasicBuilder -ndm 2 -ndf 3  \n\n";
-//    s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
-//    s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
-//    ns << numNodes + 1 << " 0.0 " << yCoord << endln;
-//    ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+//    s << "node " << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//    s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
+//    ns << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//    ns << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
 //    numNodes += 2;
 
 //    s << std::scientific << std::setprecision(14);
@@ -1201,7 +1203,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //            int numEleThisLayer = static_cast<int> (std::round(thickness / eSizeV));
 //            numEleThisLayer = std::max(1,numEleThisLayer);
 //            double t = thickness / numEleThisLayer;
-//            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << endln;
+//            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << "\n";
 //            for (int i=1; i<=numEleThisLayer;i++)
 //            {
 //                yCoord += t ;
@@ -1210,10 +1212,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                theNode = new Node(numNodes + 2, 3, sElemX, yCoord);
 //                theDomain->addNode(theNode);
 
-//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
-//                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
-//                ns << numNodes + 1 << " 0.0 " << yCoord << endln;
-//                ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
+//                ns << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//                ns << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
 
 //                double alpha = 1.0e-8;
 //                // Define one material for each element
@@ -1224,7 +1226,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    double poisson = mat["poisson"];
 //                    plasticPoissonVec.push_back(poisson);
 //                    theMat = new ElasticIsotropicMaterial(numElems + 1, E , poisson, density);
-//                    s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<endln;
+//                    s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<"\n";
 //                    double emax = 0.8;
 //                    double emin = 0.5;
 
@@ -1269,11 +1271,11 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    theMat = new PM4Sand(numElems + 1, thisDr,Go,hpo,thisDen,P_atm,h0,emax,emin,nb,nd,Ado,z_max,cz,ce,phic,nu,cgd,cdr,ckaf,Q,R,m,Fsed_min,p_sedo);
 //                    s << "nDMaterial PM4Sand " << numElems + 1<< " " << thisDr<< " " <<Go<< " " <<hpo<< " " <<thisDen<< " " <<P_atm<< " " <<h0<< " "<<emax<< " "<<emin<< " " <<
 //                         nb<< " " <<nd<< " " <<Ado<< " " <<z_max<< " " <<cz<< " " <<ce<< " " <<phic<< " " <<(K0 / (1.0 + K0))<< " " <<cgd<< " " <<cdr<< " " <<ckaf<< " " <<
-//                         Q<< " " <<R<< " " <<m<< " " <<Fsed_min<< " " <<p_sedo << endln;
+//                         Q<< " " <<R<< " " <<m<< " " <<Fsed_min<< " " <<p_sedo << "\n";
 
 //                    /*
 //                    theMat = new PM4Sand(matTag, thisDr,G0,hpo,thisDen);
-//                    s << "nDMaterial PM4Sand " << matTag<< " " << thisDr<< " " <<G0<< " " <<hpo<< " " <<thisDen << endln;
+//                    s << "nDMaterial PM4Sand " << matTag<< " " << thisDr<< " " <<G0<< " " <<hpo<< " " <<thisDen << "\n";
 //                    */
 //                }else if(!matType.compare("PM4Silt"))
 //                {
@@ -1312,7 +1314,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    s << "nDMaterial PM4Silt " << numElems + 1<< " " << S_u<< " " <<Su_Rat<< " " <<G_o<< " " <<h_po<< " " <<thisDen<< " "
 //                      <<Su_factor<< " " <<P_atm<< " " <<(K0 / (1.0 + K0))<< " " <<nG<< " " <<h0<< " " <<eInit<< " " <<lambda<< " " <<phicv<< " "
 //                     <<nb_wet<< " " <<nb_dry<< " " <<nd<< " " <<Ado<< " " <<ru_max<< " " <<z_max<< " " <<cz<< " " <<ce<< " " <<cgd
-//                    << " " <<ckaf<< " " <<m_m<< " " <<CG_consol << endln;
+//                    << " " <<ckaf<< " " <<m_m<< " " <<CG_consol << "\n";
 //                }else if(!matType.compare("PIMY"))
 //                {
 //                    double thisDr = mat["Dr"];
@@ -1334,7 +1336,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    theMat = new PressureIndependMultiYield(numElems + 1,nd,rho,refShearModul,refBulkModul,cohesi,peakShearStra,
 //                                                            frictionAng, refPress,  pressDependCoe, noYieldSurf);
 //                    s << "nDMaterial PressureIndependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<cohesi<<" "<<peakShearStra<<" "<<
-//                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<endln;
+//                         frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<"\n";
 //                }else if(!matType.compare("PDMY"))
 //                {
 
@@ -1374,7 +1376,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                                                          e, cs1,cs2,cs3,pa,c);
 //                    s << "nDMaterial PressureDependMultiYield "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
 //                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << noYieldSurf
-//                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<endln;
+//                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<"\n";
 //                }else if(!matType.compare("PDMY02"))
 //                {
 
@@ -1413,7 +1415,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                                                            contrac2, dilat2,liquefac1,liquefac2,e,cs1,cs2,cs3,pa);
 //                    s << "nDMaterial PressureDependMultiYield02 "<<numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
 //                         refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" "<< noYieldSurf << " "<<contrac2<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2
-//                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<endln;
+//                      <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<"\n";
 
 //                }
 //                else if(!matType.compare("ManzariDafalias"))
@@ -1445,7 +1447,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    //TODO: PM4Silt->ManzariDafalias
 //                    theMat = new ManzariDafalias(numElems + 1, G0, nu, e_init, Mc, c, lambda_c, e0, ksi, P_atm, m, h0, ch, nb, A0, nd, z_max, cz, Den);
 //                    s << "nDMaterial ManzariDafalias " << numElems + 1<< " " << G0<< " " <<(K0 / (1+K0))<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " "
-//                      <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << endln;
+//                      <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << "\n";
 //                }
 //                else if(!matType.compare("J2Bounding"))
 //                {
@@ -1466,14 +1468,14 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                    double h0 = 0.0;
 //                    theMat = new J2CyclicBoundingSurface(numElems + 1, G, K, su, rho, h, m,h0, k_in, beta);
 //                    s << "nDMaterial J2CyclicBoundingSurface " << numElems + 1<< " " << G<< " " <<K<< " "
-//                      <<su<< " " <<rho<< " " <<h<< " " <<m<< " " << h0 << " " <<k_in<< " " <<beta << endln;
+//                      <<su<< " " <<rho<< " " <<h<< " " <<m<< " " << h0 << " " <<k_in<< " " <<beta << "\n";
 
 
 //                    /*
 //                                 * double h0 = 0.0;
 //                                theMat = new J2CyclicBoundingSurface(matTag, G, K, su, rho, h, m, k_in, beta);
 //                                s << "nDMaterial J2CyclicBoundingSurface " << matTag<< " " << G<< " " <<K<< " "
-//                                  <<su<< " " <<rho<< " " <<h<< " " <<m << " " << h0 << " " <<k_in<< " " <<beta << endln;
+//                                  <<su<< " " <<rho<< " " <<h<< " " <<m << " " << h0 << " " <<k_in<< " " <<beta << "\n";
 //                                */
 //                }
 //                else if(!matType.compare("PDMY03"))
@@ -1512,13 +1514,13 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                                                            contraction_e, dilation_a, dilation_b, dilation_c, noYieldSurf, 0, liqParam1, liqParam2, pa, S0);
 //                    s << "nDMaterial PressureDependMultiYield03 "<<numElems + 1 << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
 //                         refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-//                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<<liqParam1<<" "<<liqParam2<<" "<<noYieldSurf<<" "<<pa<<" "<<S0<<endln;
+//                      <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<<liqParam1<<" "<<liqParam2<<" "<<noYieldSurf<<" "<<pa<<" "<<S0<<"\n";
 //                }
 //                else if(!matType.compare("PDMY03_Random"))
 //                {
 //                    if (!m_runningStochastic)
 //                    {
-//                        s << "source material.tcl" << endln;
+//                        s << "source material.tcl" << "\n";
 //                        m_runningStochastic = true;
 //                    }
 
@@ -1531,7 +1533,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                {
 //                    if (!m_runningStochastic)
 //                    {
-//                        s << "source material.tcl" << endln;
+//                        s << "source material.tcl" << "\n";
 //                        m_runningStochastic = true;
 //                    }
 //                    double nu = mat["nu"];
@@ -1542,7 +1544,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 
 //                OPS_addNDMaterial(theMat);
-//                if (PRINTDEBUG) opserr << "Material " << matType.c_str() << ", tag = " << numElems + 1 << endln;
+//                if (PRINTDEBUG) std::cerr << "Material " << matType.c_str() << ", tag = " << numElems + 1 << "\n";
 
 
 
@@ -1556,16 +1558,16 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //                {
 //                    b1 = -1.0 * g * sin(slopex1*pi/180.);
 //                    b2 = g * cos(slopex1*pi/180.);
-//                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << endln;
+//                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << "\n";
 //                }
 //                else
 //                {
 //                    b1 = 1.0 * g * sin((180-slopex1)*pi/180.);
 //                    b2 = g * cos((180-slopex1)*pi/180.);
-//                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << endln;
+//                    s<< std::to_string(b1) <<" "<< std::to_string(b2)  << "\n";
 //                }
 //                es << numElems + 1<<" " <<numNodes - 1 <<" "<<numNodes<<" "<< numNodes + 2<<" "<< numNodes + 1<<" "
-//                   << theMat->getTag() << endln;
+//                   << theMat->getTag() << "\n";
 
 //                theEle = new SSPquadUP(numElems + 1, numNodes - 1, numNodes, numNodes + 2, numNodes + 1,
 //                                       *theMat, 1.0, uBulk, 1.0, 1.0, 1.0, evoid, alpha, b1, b2); // -9.81 * theMat->getRho() TODO: theMat->getRho()
@@ -1615,7 +1617,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theSP = new SP_Constraint(1, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 
-//    s << "fix 1 1 1 0" << endln;
+//    s << "fix 1 1 1 0" << "\n";
 
 //    theSP = new SP_Constraint(2, 0, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
@@ -1623,7 +1625,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theSP = new SP_Constraint(2, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 
-//    s << "fix 2 1 1 0" << endln << endln;
+//    s << "fix 2 1 1 0" << "\n" << "\n";
 
 
 
@@ -1642,7 +1644,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    {
 //        theMP = new MP_Constraint(nodeCount + 1, nodeCount + 2, Ccr, rcDOF, rcDOF);
 //        theDomain->addMP_Constraint(theMP);
-//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2" << endln;
+//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2" << "\n";
 //    }
 //    s << "\n\n";
 
@@ -1653,7 +1655,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    {
 //        theSP = new SP_Constraint(dryNodes[i], 2, 0.0, true);
 //        theDomain->addSP_Constraint(theSP);
-//        s << "fix " << dryNodes[i] << " 0 0 1" << endln;
+//        s << "fix " << dryNodes[i] << " 0 0 1" << "\n";
 //    }
 //    s << "\n\n";
 
@@ -1699,28 +1701,28 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //            Information stateInfo(0);
 //            theEle->updateParameter(1,stateInfo);
 //        }
-//        s << "updateMaterialStage -material "<< theEleTag <<" -stage 0" << endln ;
+//        s << "updateMaterialStage -material "<< theEleTag <<" -stage 0" << "\n" ;
 //    }
-//    s << endln;
+//    s << "\n";
 
 //    s << "# 3.1 elastic gravity analysis (transient) \n\n";
 
 //    double gamma = 0.8333;// 5./6.;
 //    double beta = 0.4444;//4./9.;
 
-//    s << "constraints Transformation" << endln;
-//    s << "test NormDispIncr 1.0e-4 35 1" << endln;
-//    s << "algorithm   Newton" << endln;
-//    s << "numberer RCM" << endln;
-//    s << "system SparseGeneral" << endln;//BandGeneral
-//    s << "set gamma " << gamma << endln;
-//    s << "set beta " << beta << endln;
-//    s << "integrator  Newmark $gamma $beta" << endln;
-//    s << "analysis Transient" << endln << endln;
+//    s << "constraints Transformation" << "\n";
+//    s << "test NormDispIncr 1.0e-4 35 1" << "\n";
+//    s << "algorithm   Newton" << "\n";
+//    s << "numberer RCM" << "\n";
+//    s << "system SparseGeneral" << "\n";//BandGeneral
+//    s << "set gamma " << gamma << "\n";
+//    s << "set beta " << beta << "\n";
+//    s << "integrator  Newmark $gamma $beta" << "\n";
+//    s << "analysis Transient" << "\n" << "\n";
 
-//    s << "set startT  [clock seconds]" << endln;
-//    s << "analyze     10 1.0" << endln;
-//    s << "puts \"Finished with elastic gravity analysis...\"" << endln << endln;
+//    s << "set startT  [clock seconds]" << "\n";
+//    s << "analyze     10 1.0" << "\n";
+//    s << "puts \"Finished with elastic gravity analysis...\"" << "\n" << "\n";
 
 //    // create analysis objects - I use static analysis for gravity
 //    //AnalysisModel *
@@ -1769,12 +1771,12 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        converged = theAnalysis->analyze(10,1.0);
 //        if (!converged)
 //        {
-//            opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //        } else
 //        {
-//            opserr << "Didn't converge at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Didn't converge at time " << theDomain->getCurrentTime() << "\n";
 //        }
-//        opserr << "Finished with elastic gravity analysis..." << endln << endln;
+//        std::cerr << "Finished with elastic gravity analysis..." << "\n" << "\n";
 
 
 //        /*
@@ -1783,7 +1785,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //            //int converged = theAnalysis->analyze(1, 0.01, 0.005, 0.02, 1);
 //            int converged = theAnalysis->analyze(1);
 //            if (!converged) {
-//                opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//                std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //            }
 //        }
 //        */
@@ -1797,7 +1799,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 
 
-//    s << "# 3.2 plastic gravity analysis (transient)" << endln << endln;
+//    s << "# 3.2 plastic gravity analysis (transient)" << "\n" << "\n";
 
 //    theElementIter1 = theDomain->getElements();
 //    while ((theEle = theElementIter1()) != 0)
@@ -1817,9 +1819,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //            Information stateInfo(1);
 //            theEle->updateParameter(1,stateInfo);
 //        }
-//        s << "updateMaterialStage -material "<< theEleTag <<" -stage 1" << endln ;
+//        s << "updateMaterialStage -material "<< theEleTag <<" -stage 1" << "\n" ;
 //    }
-//    s << endln;
+//    s << "\n";
 
 //    theElementIter1 = theDomain->getElements();
 //    while ((theEle = theElementIter1()) != 0)
@@ -1832,12 +1834,12 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        {
 //            Information stateInfo(0.0);
 //            theEle->updateParameter(8,stateInfo);
-//            s << "setParameter -value 0 -ele "<< theEleTag <<" FirstCall "<< theEleTag << endln;
+//            s << "setParameter -value 0 -ele "<< theEleTag <<" FirstCall "<< theEleTag << "\n";
 //        }
 //    }
-//    s << endln;
+//    s << "\n";
 //    //for (int i=0; i != soilMatTags.size(); i++)
-//    //   s << "updateMaterialStage -material "<< i <<" -stage 1" << endln ;
+//    //   s << "updateMaterialStage -material "<< i <<" -stage 1" << "\n" ;
 
 
 //    // ElementIter &theElementIterFC = theDomain->getElements();
@@ -1852,7 +1854,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    //     {
 //    //         Information myInfox(0);
 //    //         theEle->updateParameter(8,myInfox);
-//    //         s << "setParameter -value 0 -ele "<<theEleTag<<" FirstCall "<< matNumDict[theEleTag] << endln;
+//    //         s << "setParameter -value 0 -ele "<<theEleTag<<" FirstCall "<< matNumDict[theEleTag] << "\n";
 //    //     }
 //    // }
 
@@ -1871,10 +1873,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //            theEle->updateParameter(7,myInfox);
 
 //            //setParameter -value 0 -ele $elementTag poissonRatio $matTag
-//            s << "setParameter -value " << plasticPoissonVec[theEleTag - 1] << " -ele "<< theEleTag <<" poissonRatio "<< matNumDict[theEleTag] << endln;
+//            s << "setParameter -value " << plasticPoissonVec[theEleTag - 1] << " -ele "<< theEleTag <<" poissonRatio "<< matNumDict[theEleTag] << "\n";
 //        }
 //    }
-//    s << endln;
+//    s << "\n";
 
 
 
@@ -1884,19 +1886,19 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 //        if (!converged)
 //        {
-//            opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //        } else
 //        {
-//            opserr << "Didn't converge at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Didn't converge at time " << theDomain->getCurrentTime() << "\n";
 //        }
-//        opserr << "Finished with plastic gravity analysis..." endln;
+//        std::cerr << "Finished with plastic gravity analysis..." "\n";
 //    }
-//    s << "analyze     10 1.0" << endln;
-//    s << "puts \"Finished with plastic gravity analysis...\"" << endln << endln;
+//    s << "analyze     10 1.0" << "\n";
+//    s << "puts \"Finished with plastic gravity analysis...\"" << "\n" << "\n";
 
 
 
-//    s << "# 3.3 Update element permeability for post gravity analysis"<< endln << endln;
+//    s << "# 3.3 Update element permeability for post gravity analysis"<< "\n" << "\n";
 
 //    theElementIter = theDomain->getElements();
 //    char out[64];
@@ -1916,11 +1918,11 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        Information myInfoy(thisvPerm);
 //        theEle->updateParameter(4,myInfoy);
 
-//        s << "setParameter -value "<< std::setprecision(6) << thishPerm<<" -ele "<< theEleTag<<" hPerm "<<endln;
-//        s << "setParameter -value "<< std::setprecision(6) << thisvPerm<<" -ele "<< theEleTag<<" vPerm "<<endln;
+//        s << "setParameter -value "<< std::setprecision(6) << thishPerm<<" -ele "<< theEleTag<<" hPerm "<<"\n";
+//        s << "setParameter -value "<< std::setprecision(6) << thisvPerm<<" -ele "<< theEleTag<<" vPerm "<<"\n";
 
 //    }
-//    s << endln << endln << endln;
+//    s << "\n" << "\n" << "\n";
 
 
 
@@ -1943,14 +1945,14 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theViscousMats[0] = new ViscousMaterial(dashMatTag, vis_C, 1.0);
 //    OPS_addUniaxialMaterial(theViscousMats[0]);
 
-//    s << "set colThickness "<< colThickness << endln;
-//    s << "set sElemX " << sElemX << endln;
-//    s << "set colArea [expr $sElemX*$colThickness]" << endln; // [expr $sElemX*$thick(1)]
-//    s << "set rockVs "<< rockVs << endln;
-//    s << "set rockDen " << rockDen << endln;
-//    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << endln; // [expr $rockVs*$rockDen]
-//    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<endln;
-//    s << "set cFactor [expr $colArea*$dashpotCoeff]" << endln;
+//    s << "set colThickness "<< colThickness << "\n";
+//    s << "set sElemX " << sElemX << "\n";
+//    s << "set colArea [expr $sElemX*$colThickness]" << "\n"; // [expr $sElemX*$thick(1)]
+//    s << "set rockVs "<< rockVs << "\n";
+//    s << "set rockDen " << rockDen << "\n";
+//    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << "\n"; // [expr $rockVs*$rockDen]
+//    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<"\n";
+//    s << "set cFactor [expr $colArea*$dashpotCoeff]" << "\n";
 
 
 //    s << "\n\n# 4.2 Create dashpot nodes and apply proper fixities. \n\n";
@@ -1960,21 +1962,21 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theNode = new Node(numNodes + 2, 2, 0.0, 0.0);
 //    theDomain->addNode(theNode); // TODO ?
 
-//    s << "model BasicBuilder -ndm 2 -ndf 2" << endln << endln;
-//    s << "node " << numNodes + 1 << " 0.0 0.0" << endln;
-//    s << "node " << numNodes + 2 << " 0.0 0.0" << endln;
+//    s << "model BasicBuilder -ndm 2 -ndf 2" << "\n" << "\n";
+//    s << "node " << numNodes + 1 << " 0.0 0.0" << "\n";
+//    s << "node " << numNodes + 2 << " 0.0 0.0" << "\n";
 
 
 //    theSP = new SP_Constraint(numNodes + 1, 0, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 //    theSP = new SP_Constraint(numNodes + 1, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
-//    s << "fix " << numNodes + 1 << " 1 1" << endln;
+//    s << "fix " << numNodes + 1 << " 1 1" << "\n";
 
 //    theSP = new SP_Constraint(numNodes + 2, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
-//    s << "fix " << numNodes + 2 << " 0 1" << endln;
-//    s << endln;
+//    s << "fix " << numNodes + 2 << " 0 1" << "\n";
+//    s << "\n";
 
 
 
@@ -1987,7 +1989,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    rcDOFconn(0) = 0;
 //    theMP = new MP_Constraint(1, numNodes + 2, Ccrconn, rcDOFconn, rcDOFconn);
 //    theDomain->addMP_Constraint(theMP); //TODO
-//    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << endln;
+//    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << "\n";
 
 
 
@@ -2000,8 +2002,8 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        delete theSP;
 //    }
 //    // TODO:
-//    s << "remove sp 1 1" << endln;
-//    s << "remove sp 2 1" << endln;
+//    s << "remove sp 1 1" << "\n";
+//    s << "remove sp 2 1" << "\n";
 
 
 //    s << "\n\n# 4.5 Apply equalDOF for the first 4 nodes (3D) or 2 nodes (2D). \n\n";
@@ -2015,7 +2017,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        constDOF(0) = 0;
 //        theMP = new MP_Constraint(1, 2, constrainInXZ, constDOF, constDOF);
 //        theDomain->addMP_Constraint(theMP);
-//        s << "equalDOF " << 1 << " "<< 2 << " 1 " << endln;
+//        s << "equalDOF " << 1 << " "<< 2 << " 1 " << "\n";
 //    }
 
 
@@ -2037,15 +2039,15 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    //element zeroLength [expr $nElemT+1]  $dashF $dashS -mat [expr $numLayers+1]  -dir 1
 //    theEle = new ZeroLength(numElems + 1, 2, numNodes + 1, numNodes + 2, x, y, 1, theViscousMats, directions); //TODO ?
 //    theDomain->addElement(theEle);
-//    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << endln;
+//    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << "\n";
 //    s << "\n\n\n";
 
 
-//    //theDomain->Print(opserr);
+//    //theDomain->Print(std::cerr);
 
-//    s << "setTime 0.0" << endln;
-//    s << "wipeAnalysis" << endln;
-//    s << "remove recorders" << endln << endln << endln;
+//    s << "setTime 0.0" << "\n";
+//    s << "wipeAnalysis" << "\n";
+//    s << "remove recorders" << "\n" << "\n" << "\n";
 
 
 
@@ -2069,7 +2071,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    s << "# 5. Dynamic analysis                                         \n";
 //    s << "# ------------------------------------------------------------\n\n";
 
-//    s << "model BasicBuilder -ndm 2 -ndf 3" << endln; // TODO: it seems this is not necessary.
+//    s << "model BasicBuilder -ndm 2 -ndf 3" << "\n"; // TODO: it seems this is not necessary.
 
 
 //    s << "\n\n# ------------------------------------------------------------\n";
@@ -2084,10 +2086,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    int nStepsMotion = theMotionX->getNumSteps();//1998;//theMotionX->getNumSteps() ; //1998; // number of motions in the record. TODO: use a funciton to get it
 //    int nSteps = int((nStepsMotion-1) * motionDT / dT);
 //    int remStep = nSteps;
-//    s << "set dT " << dT << endln;
-//    s << "set motionDT " << motionDT << endln;
-//    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<endln;
-//    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<endln;
+//    s << "set dT " << dT << "\n";
+//    s << "set motionDT " << motionDT << "\n";
+//    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<"\n";
+//    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<"\n";
 
 //    // using a stress input with the dashpot
 //    if (theMotionX->isInitialized())
@@ -2108,9 +2110,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        theLP->addNodalLoad(theLoad);
 //        theDomain->addLoadPattern(theLP);
 
-//        s << "pattern Plain 10 $mSeries {"<<endln;
-//        s << "    load 1  1.0 0.0 0.0" << endln;
-//        s << "}" << endln << endln;
+//        s << "pattern Plain 10 $mSeries {"<<"\n";
+//        s << "    load 1  1.0 0.0 0.0" << "\n";
+//        s << "}" << "\n" << "\n";
 
 //        // update the number of steps as well as the dt vector
 //        int temp = theMotionX->getNumSteps();
@@ -2133,11 +2135,11 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 //    //theTest->setTolerance(1.0e-5);
 
-//    s << "constraints Transformation" << endln;
-//    s << "test NormDispIncr 1.0e-4 35 0" << endln; // TODO
-//    s << "algorithm   Newton" << endln;
-//    s << "numberer    RCM" << endln;
-//    s << "system SparseGeneral" << endln;//BandGeneral
+//    s << "constraints Transformation" << "\n";
+//    s << "test NormDispIncr 1.0e-4 35 0" << "\n"; // TODO
+//    s << "algorithm   Newton" << "\n";
+//    s << "numberer    RCM" << "\n";
+//    s << "system SparseGeneral" << "\n";//BandGeneral
 
 
 
@@ -2201,8 +2203,8 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 //    if (PRINTDEBUG)
 //    {
-//        //opserr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << endln;
-//        opserr << "a0 = " << a0 << "    a1 = " << a1 << endln;
+//        //std::cerr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << "\n";
+//        std::cerr << "a0 = " << a0 << "    a1 = " << a1 << "\n";
 //    }
 //    theDomain->setRayleighDampingFactors(a0, a1, 0.0, 0.0);
 
@@ -2215,13 +2217,13 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    // reset time in the domain
 //    theDomain->setCurrentTime(0.0);
 
-//    s << "set gamma_dynm " << gamma_dynm << endln;
-//    s << "set beta_dynm " << beta_dynm << endln;
-//    s << "integrator  Newmark $gamma_dynm $beta_dynm" << endln;
-//    s << "set a0 " << a0 << endln;
-//    s << "set a1 " << a1 << endln;
-//    s << "rayleigh    $a0 $a1 0.0 0.0" << endln;
-//    s << "analysis Transient" << endln << endln;
+//    s << "set gamma_dynm " << gamma_dynm << "\n";
+//    s << "set beta_dynm " << beta_dynm << "\n";
+//    s << "integrator  Newmark $gamma_dynm $beta_dynm" << "\n";
+//    s << "set a0 " << a0 << "\n";
+//    s << "set a1 " << a1 << "\n";
+//    s << "rayleigh    $a0 $a1 0.0 0.0" << "\n";
+//    s << "analysis Transient" << "\n" << "\n";
 
 //    // count quad elements
 //    ElementIter &theElementIterh = theDomain->getElements();
@@ -2263,10 +2265,10 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    }
 
 
-//    s << "set recDT " << recDT << endln;
-//    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<endln;// 3
+//    s << "set recDT " << recDT << "\n";
+//    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<"\n";// 3
 
 
 //    if(doAnalysis)
@@ -2296,9 +2298,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 
 
 
-//    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<endln;// 3
+//    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<"\n";// 3
 
 
 //    /*
@@ -2312,7 +2314,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    theRecorder = new NodeRecorder(dofToRecord, &pwpNodesToRecord, 0, "vel", *theDomain, *theOutputStream, motionDT, true, NULL);
 //    theDomain->addRecorder(*theRecorder);
 
-//    s<< "eval \"recorder Node -file out_tcl/pwpLiq.out -time -dT $recDT -node 17 -dof 3 vel\""<<endln;
+//    s<< "eval \"recorder Node -file out_tcl/pwpLiq.out -time -dT $recDT -node 17 -dof 3 vel\""<<"\n";
 //    */
 
 
@@ -2349,15 +2351,15 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        theDomain->addRecorder(*theRecorder);
 //    }
 
-//    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  disp\""<<endln;
-//    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  vel\""<<endln;
+//    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  disp\""<<"\n";
+//    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  vel\""<<"\n";
 //    if (m_runningStochastic) {
 //        // write acceleration output to current workDir for EE-UQ
-//        s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+//        s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<"\n";
 //    } else {
-//        s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<endln;
+//        s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 2  accel\""<<"\n";
 //    }
-//    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<endln;
+//    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 3 vel\""<<"\n";
 
 //    if(doAnalysis)
 //    {
@@ -2383,9 +2385,9 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //        theDomain->addRecorder(*theRecorder);
 //    }
 
-//    s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<<numQuadEles<<"  stress 3"<<endln;
-//    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numQuadEles<<"  strain"<<endln;
-//    s<< endln << endln;
+//    s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<<numQuadEles<<"  stress 3"<<"\n";
+//    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numQuadEles<<"  strain"<<"\n";
+//    s<< "\n" << "\n";
 
 
 
@@ -2396,136 +2398,136 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    s << "# 5.4 Perform dynamic analysis                                \n";
 //    s << "# ------------------------------------------------------------\n\n";
 
-//    s << "set nSteps " << nSteps << endln;
-//    s << "set remStep " << remStep << endln;
-//    s << "set success 0" << endln << endln;
+//    s << "set nSteps " << nSteps << "\n";
+//    s << "set remStep " << remStep << "\n";
+//    s << "set success 0" << "\n" << "\n";
 
-//    s << "proc subStepAnalyze {dT subStep} {" << endln;
-//    s << "	if {$subStep > 10} {" << endln;
-//    s << "		return -10" << endln;
-//    s << "	}" << endln;
-//    s << "	for {set i 1} {$i < 3} {incr i} {" << endln;
-//    s << "		puts \"Try dT = $dT\"" << endln;
-//    s << "		set success [analyze 1 $dT]" << endln;
-//    s << "		if {$success != 0} {" << endln;
-//    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << endln;
-//    s << "			if {$success == -10} {" << endln;
-//    s << "				puts \"Did not converge.\"" << endln;
-//    s << "				return $success" << endln;
-//    s << "			}" << endln;
-//    s << "		} else {" << endln;
-//    s << "			if {$i==1} {" << endln;
-//    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << endln;
-//    s << "			} else {" << endln;
-//    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << endln;
-//    s << "			}" << endln;
-//    s << "		}" << endln;
-//    s << "	}" << endln;
-//    s << "	return $success" << endln;
-//    s << "}" << endln << endln << endln;
+//    s << "proc subStepAnalyze {dT subStep} {" << "\n";
+//    s << "	if {$subStep > 10} {" << "\n";
+//    s << "		return -10" << "\n";
+//    s << "	}" << "\n";
+//    s << "	for {set i 1} {$i < 3} {incr i} {" << "\n";
+//    s << "		puts \"Try dT = $dT\"" << "\n";
+//    s << "		set success [analyze 1 $dT]" << "\n";
+//    s << "		if {$success != 0} {" << "\n";
+//    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << "\n";
+//    s << "			if {$success == -10} {" << "\n";
+//    s << "				puts \"Did not converge.\"" << "\n";
+//    s << "				return $success" << "\n";
+//    s << "			}" << "\n";
+//    s << "		} else {" << "\n";
+//    s << "			if {$i==1} {" << "\n";
+//    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << "\n";
+//    s << "			} else {" << "\n";
+//    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << "\n";
+//    s << "			}" << "\n";
+//    s << "		}" << "\n";
+//    s << "	}" << "\n";
+//    s << "	return $success" << "\n";
+//    s << "}" << "\n" << "\n" << "\n";
 
 
 //    /*
 //    // solution 1: direct steps
-//    s << "set thisStep 0"<<endln;
-//    s << "set success 0"<<endln;
-//    s << "while {$thisStep < 1998} {"<<endln;
-//    s << "    set thisStep [expr $thisStep+1]"<<endln;
-//    s << "    set success [analyze 1 $dT]"<<endln;
-//    s << "    if {$success == 0} {;# success"<<endln;
-//    s << "        puts \"Analysis Finished at step: $thisStep\""<<endln;
-//    s << "    } else {"<<endln;
-//    s << "        puts \"Analysis Failed at step: $thisStep ----------------------------------------------!!!\""<<endln;
-//    s << "    }"<<endln;
-//    s << "}"<<endln<<endln;
-//    s << "wipe"<<endln;
-//    s << "puts \"Site response analysis is finished.\n\""<< endln;
-//    s << "exit"<<endln<< endln <<endln;
+//    s << "set thisStep 0"<<"\n";
+//    s << "set success 0"<<"\n";
+//    s << "while {$thisStep < 1998} {"<<"\n";
+//    s << "    set thisStep [expr $thisStep+1]"<<"\n";
+//    s << "    set success [analyze 1 $dT]"<<"\n";
+//    s << "    if {$success == 0} {;# success"<<"\n";
+//    s << "        puts \"Analysis Finished at step: $thisStep\""<<"\n";
+//    s << "    } else {"<<"\n";
+//    s << "        puts \"Analysis Failed at step: $thisStep ----------------------------------------------!!!\""<<"\n";
+//    s << "    }"<<"\n";
+//    s << "}"<<"\n"<<"\n";
+//    s << "wipe"<<"\n";
+//    s << "puts \"Site response analysis is finished.\n\""<< "\n";
+//    s << "exit"<<"\n"<< "\n" <<"\n";
 //    */
 
 
 //    /*
-//    s << "puts \"Start analysis\"" << endln;
-//    s << "set startT [clock seconds]" << endln;
-//    s << "while {$success != -10} {" << endln;
-//    s << "	set subStep 0" << endln;
-//    s << "	set success [analyze $remStep  $dT]" << endln;
-//    s << "	if {$success == 0} {" << endln;
-//    s << "		puts \"Analysis Finished\"" << endln;
-//    s << "		break" << endln;
-//    s << "	} else {" << endln;
-//    s << "		set curTime  [getTime]" << endln;
-//    s << "		puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "		set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "		set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "		set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "		puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "	}" << endln;
-//    s << "}" << endln << endln;
+//    s << "puts \"Start analysis\"" << "\n";
+//    s << "set startT [clock seconds]" << "\n";
+//    s << "while {$success != -10} {" << "\n";
+//    s << "	set subStep 0" << "\n";
+//    s << "	set success [analyze $remStep  $dT]" << "\n";
+//    s << "	if {$success == 0} {" << "\n";
+//    s << "		puts \"Analysis Finished\"" << "\n";
+//    s << "		break" << "\n";
+//    s << "	} else {" << "\n";
+//    s << "		set curTime  [getTime]" << "\n";
+//    s << "		puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "		set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "		set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "		set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "		puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "	}" << "\n";
+//    s << "}" << "\n" << "\n";
 //    */
 
 
-//    s << "puts \"Start analysis\"" << endln;
-//    s << "set startT [clock seconds]" << endln;
-//    //s << "if {1} {" << endln;
-//    s << "set finalTime [expr $remStep * $dT]" << endln;
-//    s << "set success 0" << endln;
-//    s << "set currentTime 0." << endln;
-//    s << "set timeMarker 0." << endln;
-//    s << "while {$success == 0 && $currentTime < $finalTime} {" << endln;
-//    s << "	set subStep 0" << endln;
-//    s << "	set success [analyze 1  $dT]" << endln;
-//    s << "	if {$success != 0} {" << endln;
-//    s << "	set curTime  [getTime]" << endln;
-//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "	set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "    } else {" << endln;
-//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << endln;
-//    s << "          if { $progress > $timeMarker} {" << endln;
-//    s << "              set timeMarker [expr $timeMarker+2]" << endln;
-//    s << "              puts \"$progress%\"" << endln;
-//    s << "              }" << endln;
-//    s << "              set currentTime [getTime]" << endln;
-//    s << "	}" << endln;
-//    s << "}" << endln << endln;
-//    //s << "}" << endln << endln;
+//    s << "puts \"Start analysis\"" << "\n";
+//    s << "set startT [clock seconds]" << "\n";
+//    //s << "if {1} {" << "\n";
+//    s << "set finalTime [expr $remStep * $dT]" << "\n";
+//    s << "set success 0" << "\n";
+//    s << "set currentTime 0." << "\n";
+//    s << "set timeMarker 0." << "\n";
+//    s << "while {$success == 0 && $currentTime < $finalTime} {" << "\n";
+//    s << "	set subStep 0" << "\n";
+//    s << "	set success [analyze 1  $dT]" << "\n";
+//    s << "	if {$success != 0} {" << "\n";
+//    s << "	set curTime  [getTime]" << "\n";
+//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "	set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "    } else {" << "\n";
+//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << "\n";
+//    s << "          if { $progress > $timeMarker} {" << "\n";
+//    s << "              set timeMarker [expr $timeMarker+2]" << "\n";
+//    s << "              puts \"$progress%\"" << "\n";
+//    s << "              }" << "\n";
+//    s << "              set currentTime [getTime]" << "\n";
+//    s << "	}" << "\n";
+//    s << "}" << "\n" << "\n";
+//    //s << "}" << "\n" << "\n";
 
 
 //    /*
-//    s << "if {0} {" << endln;
-//    s << "while {$success != -10} {" << endln;
-//    s << "    set subStep 0" << endln;
-//    s << "    set success [analyze $remStep  $dT]" << endln;
-//    s << "    if {$success == 0} {" << endln;
-//    s << "        puts \"Analysis Finished\"" << endln;
-//    s << "        break" << endln;
-//    s << "    } else {" << endln;
-//    s << "        set curTime  [getTime]" << endln;
-//    s << "        puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "        set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "        set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "       set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "        puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "    }" << endln;
-//    s << "}" << endln;
-//    s << "}" << endln;
+//    s << "if {0} {" << "\n";
+//    s << "while {$success != -10} {" << "\n";
+//    s << "    set subStep 0" << "\n";
+//    s << "    set success [analyze $remStep  $dT]" << "\n";
+//    s << "    if {$success == 0} {" << "\n";
+//    s << "        puts \"Analysis Finished\"" << "\n";
+//    s << "        break" << "\n";
+//    s << "    } else {" << "\n";
+//    s << "        set curTime  [getTime]" << "\n";
+//    s << "        puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "        set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "        set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "       set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "        puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "    }" << "\n";
+//    s << "}" << "\n";
+//    s << "}" << "\n";
 //    */
 
 
 
-//    s << "set endT [clock seconds]" << endln << endln;
-//    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << endln << endln;
-//    s << "puts \"Finished with dynamic analysis...\"" << endln << endln;
+//    s << "set endT [clock seconds]" << "\n" << "\n";
+//    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << "\n" << "\n";
+//    s << "puts \"Finished with dynamic analysis...\"" << "\n" << "\n";
 
-//    s << endln;
-//    //s << "print -file out_tcl/Domain.out" << endln << endln;
+//    s << "\n";
+//    //s << "print -file out_tcl/Domain.out" << "\n" << "\n";
 
-//    s << "wipe" << endln;
-//    s << "puts \"Site response analysis is finished.\""<< endln;
-//    s << "exit" << endln << endln;
+//    s << "wipe" << "\n";
+//    s << "puts \"Site response analysis is finished.\""<< "\n";
+//    s << "exit" << "\n" << "\n";
 
 //    s.close();
 //    ns.close();
@@ -2536,7 +2538,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    OPS_Stream* theOutputStreamAll;
 //    theOutputStreamAll = new DataFileStream("Domain.out", OVERWRITE, 2, 0, false, 6, false);
 //    theDomain->Print(*theOutputStreamAll);
-//    opserr << theOutputStreamAll;
+//    std::cerr << theOutputStreamAll;
 //    delete theOutputStreamAll;
 //    */
 
@@ -2570,11 +2572,11 @@ int SiteResponseModel::trueRun()
             double totalTime = dT * nSteps;
             int success = 0;
 
-            opserr << "Analysis started:" << endln;
+            std::cerr << "Analysis started:" << "\n";
             std::stringstream progressBar;
             for (int analysisCount = 0; analysisCount < remStep; ++analysisCount)
             {
-                std::cout << "step: " << analysisCount << " / " << remStep-1 << endln;
+                std::cout << "step: " << analysisCount << " / " << remStep-1 << "\n";
                 if (!forward) break;
                 //int converged = theAnalysis->analyze(1, 0.01, 0.005, 0.02, 1);
                 //double stepDT = dt[analysisCount];
@@ -2583,8 +2585,8 @@ int SiteResponseModel::trueRun()
                 int converged = theTransientAnalysis->analyze(1, dT);
                 if (!converged)
                 {
-                    std::cout << "Converged at time " << theDomain->getCurrentTime() << endln;
-                    opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+                    std::cout << "Converged at time " << theDomain->getCurrentTime() << "\n";
+                    std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 
                     if (analysisCount % (int)(remStep / 20) == 0)
                     {
@@ -2605,20 +2607,20 @@ int SiteResponseModel::trueRun()
                 }
                 else
                 {
-                    std::cout << "Site response analysis did not converge. Trying substepping..." << endln;
-                    opserr << "Site response analysis did not converge. Trying substepping..." << endln;
+                    std::cout << "Site response analysis did not converge. Trying substepping..." << "\n";
+                    std::cerr << "Site response analysis did not converge. Trying substepping..." << "\n";
 
                     int subStep = 0;
                     success = subStepAnalyze(dT/2., subStep+1, theTransientAnalysis);
                     if(!fabs(success)<1)
                     {
-                        std::cout << "Substepping didn't work... exit" << endln;
-                        opserr << "Substepping didn't work... exit" << endln;
+                        std::cout << "Substepping didn't work... exit" << "\n";
+                        std::cerr << "Substepping didn't work... exit" << "\n";
                         exit(-1);
                     }
                 }
             }
-            opserr << "Site response analysis done..." << endln;
+            std::cerr << "Site response analysis done..." << "\n";
             if (callback && forward) m_callbackFunction(100.0);
             progressBar << "\r[";
             for (int ii = 0; ii < 20; ii++)
@@ -2627,9 +2629,9 @@ int SiteResponseModel::trueRun()
             progressBar << "]  🚌   100%\n";
             opsout << progressBar.str().c_str();
             opsout.flush();
-            opsout << endln;
+            opsout << "\n";
         } else { // substep
-            opserr << "Analysis started (substepping):" << endln;
+            std::cerr << "Analysis started (substepping):" << "\n";
             double finalTime = dT * remStep;
             int success = 0;
             double currentTime = 0.;
@@ -2653,7 +2655,7 @@ int SiteResponseModel::trueRun()
                     if (currentProgress > timeMaker)
                     {
                         timeMaker += 1;
-                        //std::cout << currentProgress << endln;
+                        //std::cout << currentProgress << "\n";
                         remStept = 100-currentProgress;
                         if (currentProgress % stepLag == 0 && currentProgress > stepLag)
                         {
@@ -2678,7 +2680,7 @@ int SiteResponseModel::trueRun()
             }
 
 
-            opserr << "Site response analysis done..." << endln;
+            std::cerr << "Site response analysis done..." << "\n";
             if (callback && forward) m_callbackFunction(100.0);
             progressBar << "\r[";
             for (int ii = 0; ii < 100/stepLag; ii++)
@@ -2687,7 +2689,7 @@ int SiteResponseModel::trueRun()
             progressBar << "]  🚌   100%\n";
             opsout << progressBar.str().c_str();
             opsout.flush();
-            opsout << endln;
+            opsout << "\n";
 
         }
 
@@ -2702,14 +2704,13 @@ int SiteResponseModel::trueRun()
     OPS_Stream* theOutputStreamAll;
     theOutputStreamAll = new DataFileStream("/Users/simcenter/Codes/SimCenter/s3hark/bin/s3hark.out", OVERWRITE, 2, 0, false, 6, false);
     theDomain->Print(*theOutputStreamAll);
-    opserr << theOutputStreamAll;
+    std::cerr << theOutputStreamAll;
     delete theOutputStreamAll;
     */
 
     return 100;
 
 }
-#endif
 
 int SiteResponseModel::subStepAnalyze(double dT, int subStep, DirectIntegrationAnalysis* theTransientAnalysis)
 {
@@ -2722,7 +2723,7 @@ int SiteResponseModel::subStepAnalyze(double dT, int subStep, DirectIntegrationA
     int success = 0;
     for (int i=1; i < 3; i++)
     {
-        opserr << "Try dT = " << dT << endln;
+        std::cerr << "Try dT = " << dT << "\n";
         success = theTransientAnalysis->analyze(1, dT);// 0 means success
         //success = subStepAnalyze(dT/2, subStep +1,);
         if(fabs(success) > 0.0 )
@@ -2735,15 +2736,16 @@ int SiteResponseModel::subStepAnalyze(double dT, int subStep, DirectIntegrationA
             }
         } else {
             if (i==1)
-                opserr << "Substep " << subStep << " : Left side converged with dT = " << dT;
+                std::cerr << "Substep " << subStep << " : Left side converged with dT = " << dT;
             else
-                opserr << "Substep " << subStep << " : Right side converged with dT = " << dT;
+                std::cerr << "Substep " << subStep << " : Right side converged with dT = " << dT;
         }
     }
 
     return success;
 
 }
+#endif
 
 
 int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
@@ -2780,17 +2782,17 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     ofstream ns ("out_tcl/nodesInfo.dat", std::ofstream::out);
     ofstream es ("out_tcl/elementInfo.dat", std::ofstream::out);
     */
-    ofstream s (theAnalysisDir + "/model.tcl", std::ofstream::out);//TODO: may not work on windows
+    std::ofstream s (theAnalysisDir + "/model.tcl", std::ofstream::out);//TODO: may not work on windows
     s.precision(16);
-    ofstream ns (theTclOutputDir+"/nodesInfo.dat", std::ofstream::out);
-    ofstream es (theTclOutputDir+"/elementInfo.dat", std::ofstream::out);
-    ofstream esmat3D (theTclOutputDir+"/elementMatInfo3D.dat", std::ofstream::out);
+    std::ofstream ns (theTclOutputDir+"/nodesInfo.dat", std::ofstream::out);
+    std::ofstream es (theTclOutputDir+"/elementInfo.dat", std::ofstream::out);
+    std::ofstream esmat3D (theTclOutputDir+"/elementMatInfo3D.dat", std::ofstream::out);
     //ofstream s ("/Users/simcenter/Codes/SimCenter/build-SiteResponseTool-Desktop_Qt_5_11_1_clang_64bit-Debug/SiteResponseTool.app/Contents/MacOS/model.tcl", std::ofstream::out);
     s << "# #########################################################" << "\n\n";
     s << "wipe \n\n";
 
-    s << "set g " << g << endln;
-    s << "set pi " << std::setprecision(22)  << pi << endln;
+    s << "set g " << g << "\n";
+    s << "set pi " << std::setprecision(22)  << pi << "\n";
 
 
     // basic settings
@@ -2837,8 +2839,8 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     std::vector<double> layerElemSize;
     std::vector<int> dryNodes;
 
-    s << "set slopex1 " << slopex1 << endln;
-    s << "set slopex2 " << slopex2 << endln;
+    s << "set slopex1 " << slopex1 << "\n";
+    s << "set slopex2 " << slopex2 << "\n";
 
 
     s << "\n# ------------------------------------------ \n";
@@ -2848,16 +2850,16 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     double zthick = colThickness;
 
     s << "model BasicBuilder -ndm 3 -ndf 4  \n\n";
-    s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-    s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-    s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-    s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << endln;
+    s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+    s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+    s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+    s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << "\n";
 
 
-    ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-    ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-    ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-    ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << endln;
+    ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+    ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+    ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+    ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << "\n";
 
     s << std::scientific << std::setprecision(14);
 
@@ -2915,7 +2917,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
             int numEleThisLayer = static_cast<int> (std::round(thickness / eSizeV));
             numEleThisLayer = std::max(1,numEleThisLayer);
             double t = thickness / numEleThisLayer;
-            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << endln;
+            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << "\n";
             for (int i=1; i<=numEleThisLayer;i++)
             {
                 yCoord += t ;
@@ -2924,7 +2926,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                 double E = mat["E"];
                 double density = mat["density"];
                 double poisson = mat["poisson"];
-                s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<endln;
+                s << "nDMaterial ElasticIsotropic " << numElems + 1 << " "<< E <<" " << " "<<poisson<<" "<<density<<"\n";
                 double emax = 0.8;
                 double emin = 0.5;
                 //evoid  = emax - Dr * (emax - emin);
@@ -2951,7 +2953,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                 //evoid  = emax - Dr * (emax - emin);
 
                 s << "nDMaterial PressureIndependMultiYield "<< numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<cohesi<<" "<<peakShearStra<<" "<<
-                     frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<endln;
+                     frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<"\n";
             }
             else if(!matType.compare("PDMY")) {
                 double thisDr = mat["Dr"];
@@ -2985,7 +2987,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
 
                 s << "nDMaterial PressureDependMultiYield "<< numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
                      refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << noYieldSurf
-                  <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<endln;
+                  <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<"\n";
 
             }
             else if(!matType.compare("PDMY02")) {
@@ -3023,7 +3025,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                 s << "nDMaterial PressureDependMultiYield02 "<< numElems + 1 << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "
                   <<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<refPress<<" "<<pressDependCoe<<" "
                  <<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" "<< noYieldSurf << " " <<contrac2<<" "<<dilat2
-                <<" "<<liquefac1<<" "<<liquefac2<<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<endln;
+                <<" "<<liquefac1<<" "<<liquefac2<<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<"\n";
             }
             else if(!matType.compare("ManzariDafalias"))
             {
@@ -3055,7 +3057,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
 
                 //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
                 //TODO: PM4Silt->ManzariDafalias
-                s << "nDMaterial ManzariDafalias " << numElems + 1 << " " << G0<< " " <<nu<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " " <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << endln;
+                s << "nDMaterial ManzariDafalias " << numElems + 1 << " " << G0<< " " <<nu<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " " <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << "\n";
 
             }
             else if(!matType.compare("J2Bounding"))
@@ -3080,7 +3082,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                 // new J2
                 //TODO: k_in -> chi  ?
                 s << "nDMaterial J2CyclicBoundingSurface " << numElems + 1 << " " << G<< " " <<K<< " "
-                  <<su<< " " <<rho<< " " <<h<< " " <<m<< " "<< h0 <<" " <<k_in<< " " <<beta << endln;
+                  <<su<< " " <<rho<< " " <<h<< " " <<m<< " "<< h0 <<" " <<k_in<< " " <<beta << "\n";
            }
             else if(!matType.compare("PDMY03"))
             {
@@ -3112,20 +3114,20 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
 
                 s << "nDMaterial PressureDependMultiYield03 "<< numElems + 1 << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
                      refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<endln;
+                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<"\n";
             }
-            if (PRINTDEBUG) opserr << "Material " << matType.c_str() << ", tag = " << matTag << endln;
+            if (PRINTDEBUG) std::cerr << "Material " << matType.c_str() << ", tag = " << matTag << "\n";
 
-                s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-                s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-                s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-                s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << endln;
+                s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+                s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+                s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+                s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << "\n";
 
 
-                ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-                ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-                ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-                ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << endln;
+                ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+                ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+                ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+                ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << "\n";
 
                 double alpha = 1.5e-6; // seems different from 2D
 
@@ -3153,15 +3155,15 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
                     s << std::setprecision(7) << b2 <<" ";}
 
                 if (fabs(-1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g)<epsilon)
-                    s << std::setprecision(7) << 0.0 <<endln;
+                    s << std::setprecision(7) << 0.0 <<"\n";
                 else {
                     b3 = -1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g ;
-                    s << std::setprecision(7) << b3 <<endln;}
+                    s << std::setprecision(7) << b3 <<"\n";}
 
                 es << numElems + 1<<" " <<numNodes - 3 <<" "<< numNodes-2 <<" "<< numNodes -1<<" "<<numNodes<<" "
                    <<numNodes+1  <<" "<<numNodes+2<<" "<< numNodes + 3<<" "<< numNodes + 4<<" "
-                  << matTag << endln;
-                esmat3D << numElems + 1 << " " << matType << endln;
+                  << matTag << "\n";
+                esmat3D << numElems + 1 << " " << matType << "\n";
 
                 if (yCoord >= (totalHeight - groundWaterTable))
                 { 	//record dry nodes above ground water table
@@ -3199,29 +3201,29 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s << "# ------------------------------------------ \n \n";
 
     s << "# 2.1 Apply fixities at base              \n\n";
-    s << "fix 1 1 1 1 0" << endln;
-    s << "fix 2 0 1 0 0" << endln << endln;
-    s << "fix 3 0 1 0 0" << endln;
-    s << "fix 4 0 1 0 0" << endln << endln;
+    s << "fix 1 1 1 1 0" << "\n";
+    s << "fix 2 0 1 0 0" << "\n" << "\n";
+    s << "fix 3 0 1 0 0" << "\n";
+    s << "fix 4 0 1 0 0" << "\n" << "\n";
 
-    s << "equalDOF  1 2 1 3" << endln ;
-    s << "equalDOF  1 3 1 3" << endln ;
-    s << "equalDOF  1 4 1 3" << endln << endln;
+    s << "equalDOF  1 2 1 3" << "\n" ;
+    s << "equalDOF  1 3 1 3" << "\n" ;
+    s << "equalDOF  1 4 1 3" << "\n" << "\n";
 
     s << "# 2.2 Apply periodic boundary conditions    \n\n";
 
     for (int nodeCount = 4; nodeCount < numNodes; nodeCount += 4)
     {
-        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2 3" << endln;
-        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 3 << " 1 2 3" << endln;
-        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 4 << " 1 2 3" << endln;
+        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2 3" << "\n";
+        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 3 << " 1 2 3" << "\n";
+        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 4 << " 1 2 3" << "\n";
     }
     s << "\n\n";
 
     s << "# 2.3 Apply pore pressure boundaries for nodes above water table. \n\n";
     for (int i = 0; i < dryNodes.size(); i++)
     {
-        s << "fix " << dryNodes[i] << " 0 0 0 1" << endln;
+        s << "fix " << dryNodes[i] << " 0 0 0 1" << "\n";
     }
     s << "\n\n";
 
@@ -3236,51 +3238,51 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
 
     double gamma = 0.5;
     double beta = 0.25;
-    s << "set gamma " << gamma << endln;
-    s << "set beta " << beta << endln;
-    s << "constraints Penalty 1.e14 1.e14" << endln;
-    s << "test        NormDispIncr 1e-5 30 " << endln;
-    s << "algorithm   Newton" << endln;
-    s << "#numberer    Plain" << endln;
-    s << "numberer    RCM ;#same with cpp" << endln;
-    s << "#system      SparseGeneral" << endln;
-    s << "system      BandGeneral ;#same with cpp" << endln;
-    s << "integrator  Newmark $gamma $beta " << endln;
-    s << "analysis    Transient" << endln;
+    s << "set gamma " << gamma << "\n";
+    s << "set beta " << beta << "\n";
+    s << "constraints Penalty 1.e14 1.e14" << "\n";
+    s << "test        NormDispIncr 1e-5 30 " << "\n";
+    s << "algorithm   Newton" << "\n";
+    s << "#numberer    Plain" << "\n";
+    s << "numberer    RCM ;#same with cpp" << "\n";
+    s << "#system      SparseGeneral" << "\n";
+    s << "system      BandGeneral ;#same with cpp" << "\n";
+    s << "integrator  Newmark $gamma $beta " << "\n";
+    s << "analysis    Transient" << "\n";
 
     for (int i=1; i <= numElems; i++)
-        s << "updateMaterialStage -material "<< i <<" -stage 0" << endln ;
+        s << "updateMaterialStage -material "<< i <<" -stage 0" << "\n" ;
 
-    s << "set startT  [clock seconds]" << endln;
-    s << "analyze     20 5e2" << endln;
-    s << "puts \"Finished with elastic gravity analysis...\"" << endln << endln;
+    s << "set startT  [clock seconds]" << "\n";
+    s << "analyze     20 5e2" << "\n";
+    s << "puts \"Finished with elastic gravity analysis...\"" << "\n" << "\n";
 
-    s << "# 3.2 plastic gravity analysis (transient)" << endln << endln;
+    s << "# 3.2 plastic gravity analysis (transient)" << "\n" << "\n";
 
-    s << endln;
+    s << "\n";
     for (int i=1; i <= numElems; i++)
-        s << "updateMaterialStage -material "<< i <<" -stage 1" << endln ;
+        s << "updateMaterialStage -material "<< i <<" -stage 1" << "\n" ;
 
-    s << "analyze     40 5e2" << endln;
-    s << "puts \"Finished with plastic gravity analysis...\"" << endln << endln;
+    s << "analyze     40 5e2" << "\n";
+    s << "puts \"Finished with plastic gravity analysis...\"" << "\n" << "\n";
 
 
-    s << "# 3.3 Update element permeability for post gravity analysis"<< endln << endln;
+    s << "# 3.3 Update element permeability for post gravity analysis"<< "\n" << "\n";
 
     for (int theEleTag = 1; theEleTag <= numElems; theEleTag++)  {
         double thishPerm = -hPermVec[theEleTag-1]/g;
         double thisvPerm = -vPermVec[theEleTag-1]/g;
         //setParameter -value 1 -ele $elementTag hPerm $matTag
-        s << "setParameter -value "<< std::setprecision(6) <<thishPerm<<" -ele "<< theEleTag<<" xPerm "<<endln;
-        s << "setParameter -value "<< std::setprecision(6) <<thisvPerm<<" -ele "<< theEleTag<<" yPerm "<<endln;
-        s << "setParameter -value "<< std::setprecision(6) <<thishPerm<<" -ele "<< theEleTag<<" zPerm "<<endln;
+        s << "setParameter -value "<< std::setprecision(6) <<thishPerm<<" -ele "<< theEleTag<<" xPerm "<<"\n";
+        s << "setParameter -value "<< std::setprecision(6) <<thisvPerm<<" -ele "<< theEleTag<<" yPerm "<<"\n";
+        s << "setParameter -value "<< std::setprecision(6) <<thishPerm<<" -ele "<< theEleTag<<" zPerm "<<"\n";
 
     }
-    s << endln << endln << endln;
+    s << "\n" << "\n" << "\n";
 
-    s << "setTime 0.0" << endln;
-    s << "wipeAnalysis" << endln;
-    s << "remove recorders" << endln << endln << endln;
+    s << "setTime 0.0" << "\n";
+    s << "wipeAnalysis" << "\n";
+    s << "remove recorders" << "\n" << "\n" << "\n";
 
     s << "# ------------------------------------------------------------\n";
     s << "# 4. Add the compliant base                                   \n";
@@ -3289,45 +3291,45 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s << "# 4.1 Set basic properties of the base. \n\n";
     int dashMatTag = numElems + 1;
 
-    s << "set colThickness "<< colThickness << endln;
-    s << "set sElemX " << sElemX << endln;
-    s << "set colArea [expr $sElemX*$colThickness]" << endln; // [expr $sElemX*$thick(1)]
-    s << "set rockVs "<< rockVs << endln;
-    s << "set rockDen " << rockDen << endln;
-    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << endln; // [expr $rockVs*$rockDen]
-    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<endln;
-    s << "set cFactor [expr $colArea*$dashpotCoeff]" << endln;
+    s << "set colThickness "<< colThickness << "\n";
+    s << "set sElemX " << sElemX << "\n";
+    s << "set colArea [expr $sElemX*$colThickness]" << "\n"; // [expr $sElemX*$thick(1)]
+    s << "set rockVs "<< rockVs << "\n";
+    s << "set rockDen " << rockDen << "\n";
+    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << "\n"; // [expr $rockVs*$rockDen]
+    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<"\n";
+    s << "set cFactor [expr $colArea*$dashpotCoeff]" << "\n";
 
     s << "\n\n# 4.2 Create dashpot nodes and apply proper fixities. \n\n";
 
-    s << "model BasicBuilder -ndm 3 -ndf 3" << endln << endln;
-    s << "node " << numNodes + 1 << " 0.0 0.0 0.0" << endln;
-    s << "node " << numNodes + 2 << " 0.0 0.0 0.0" << endln;
-    s << "node " << numNodes + 3 << " 0.0 0.0 0.0" << endln;
+    s << "model BasicBuilder -ndm 3 -ndf 3" << "\n" << "\n";
+    s << "node " << numNodes + 1 << " 0.0 0.0 0.0" << "\n";
+    s << "node " << numNodes + 2 << " 0.0 0.0 0.0" << "\n";
+    s << "node " << numNodes + 3 << " 0.0 0.0 0.0" << "\n";
 
-    s << "fix " << numNodes + 1 << " 1 1 1" << endln;
-    s << "fix " << numNodes + 2 << " 0 1 1" << endln;
-    s << "fix " << numNodes + 3 << " 1 1 0" << endln;
+    s << "fix " << numNodes + 1 << " 1 1 1" << "\n";
+    s << "fix " << numNodes + 2 << " 0 1 1" << "\n";
+    s << "fix " << numNodes + 3 << " 1 1 0" << "\n";
 
-    s << endln;
+    s << "\n";
 
 
     s << "# 4.3 Apply equalDOF to the node connected to the column. \n\n";
 
-    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << endln;
-    s << "equalDOF " << 1 << " "<< numNodes + 3 << " 3" << endln;
+    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << "\n";
+    s << "equalDOF " << 1 << " "<< numNodes + 3 << " 3" << "\n";
 
     // TODO:
-    s << "remove sp 1 1" << endln;
-    s << "remove sp 1 3" << endln;
+    s << "remove sp 1 1" << "\n";
+    s << "remove sp 1 3" << "\n";
     /*
-    s << "remove sp 2 1" << endln;
-    s << "remove sp 3 1" << endln;
-    s << "remove sp 4 1" << endln;
-    s << "remove sp 1 3" << endln;
-    s << "remove sp 2 3" << endln;
-    s << "remove sp 3 3" << endln;
-    s << "remove sp 4 3" << endln;
+    s << "remove sp 2 1" << "\n";
+    s << "remove sp 3 1" << "\n";
+    s << "remove sp 4 1" << "\n";
+    s << "remove sp 1 3" << "\n";
+    s << "remove sp 2 3" << "\n";
+    s << "remove sp 3 3" << "\n";
+    s << "remove sp 4 3" << "\n";
     */
 
     s << "\n\n# 4.5 Create the dashpot element. \n\n";
@@ -3342,8 +3344,8 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     y(1) = 1.0;
     y(2) = 0.0;
 
-    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << endln;
-    s << "element zeroLength "<<numElems + 2 <<" "<< numNodes + 1 <<" "<< numNodes + 3<<" -mat "<<dashMatTag<<"  -dir 3" << endln;
+    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << "\n";
+    s << "element zeroLength "<<numElems + 2 <<" "<< numNodes + 1 <<" "<< numNodes + 3<<" -mat "<<dashMatTag<<"  -dir 3" << "\n";
     s << "\n\n\n";
 
 
@@ -3351,7 +3353,7 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s << "# 5. Dynamic analysis                                         \n";
     s << "# ------------------------------------------------------------\n\n";
 
-    //s << "model BasicBuilder -ndm 3 -ndf 4" << endln; // TODO: it seems this is not necessary.
+    //s << "model BasicBuilder -ndm 3 -ndf 4" << "\n"; // TODO: it seems this is not necessary.
 
 
     s << "# ------------------------------------------------------------\n";
@@ -3366,23 +3368,23 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     int nStepsMotion = theMotionX->getNumSteps();//1998;//theMotionX->getNumSteps() ; //1998; // number of motions in the record. TODO: use a funciton to get it
     int nSteps = int((nStepsMotion-1) * motionDT / dT +1);
     int remStep = nSteps;
-    s << "set dT " << dT << endln;
-    s << "set motionDT " << motionDT << endln;
-    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<endln;
-    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<endln;
-    s << "set mSeriesx2 \"Path -dt $motionDT -filePath Rock-y.vel -factor $cFactor\""<<endln;
+    s << "set dT " << dT << "\n";
+    s << "set motionDT " << motionDT << "\n";
+    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<"\n";
+    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<"\n";
+    s << "set mSeriesx2 \"Path -dt $motionDT -filePath Rock-y.vel -factor $cFactor\""<<"\n";
 
     // using a stress input with the dashpot
     if (theMotionX->isInitialized() && theMotionZ->isInitialized())
     {
 
-        s << "pattern Plain 10 $mSeries {"<<endln;
-        s << "    load 1  1.0 0.0 0.0 0.0" << endln;
-        s << "}" << endln << endln;
+        s << "pattern Plain 10 $mSeries {"<<"\n";
+        s << "    load 1  1.0 0.0 0.0 0.0" << "\n";
+        s << "}" << "\n" << "\n";
 
-        s << "pattern Plain 11 $mSeriesx2 {"<<endln;
-        s << "    load 1  0.0 0.0 1.0 0.0" << endln;
-        s << "}" << endln << endln;
+        s << "pattern Plain 11 $mSeriesx2 {"<<"\n";
+        s << "    load 1  0.0 0.0 1.0 0.0" << "\n";
+        s << "}" << "\n" << "\n";
 
         // update the number of steps as well as the dt vector
         int temp = theMotionX->getNumSteps();
@@ -3402,8 +3404,8 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     double gamma_dynm = 0.5;
     double beta_dynm = 0.25;
 
-    s << "set gamma_dynm " << gamma_dynm << endln;
-    s << "set beta_dynm " << beta_dynm << endln;
+    s << "set gamma_dynm " << gamma_dynm << "\n";
+    s << "set beta_dynm " << beta_dynm << "\n";
 
     double pi = 4.0 * atan(1.0);
 
@@ -3417,49 +3419,49 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
 
     if (PRINTDEBUG)
     {
-        //opserr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << endln;
-        opserr << "a0 = " << a0 << "    a1 = " << a1 << endln;
+        //std::cerr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << "\n";
+        std::cerr << "a0 = " << a0 << "    a1 = " << a1 << "\n";
     }
 
 
     // benchmark solver
 
-    s << "#constraints Penalty 1.e14 1.e14"<<endln;
-    s << "constraints Transformation ;#same with cpp"<<endln;
-    s << "test        NormDispIncr 1.0e-3 55 "<<endln;
-    s << "#algorithm   KrylovNewton"<<endln;
-    s << "algorithm   Newton ;#same with cpp"<<endln;
-    s << "#numberer    Plain"<<endln;
-    s << "numberer    Plain ;#same with cpp"<<endln;
-    s << "#system      SparseGeneral"<<endln;
-    s << "system      BandGeneral ;#same with cpp"<<endln;
-    s << "integrator  Newmark $gamma_dynm $beta_dynm"<<endln;
-    s << "#rayleigh    $a0 $a1 0.0 0.0"<<endln;
-    s << "analysis    Transient"<<endln;
+    s << "#constraints Penalty 1.e14 1.e14"<<"\n";
+    s << "constraints Transformation ;#same with cpp"<<"\n";
+    s << "test        NormDispIncr 1.0e-3 55 "<<"\n";
+    s << "#algorithm   KrylovNewton"<<"\n";
+    s << "algorithm   Newton ;#same with cpp"<<"\n";
+    s << "#numberer    Plain"<<"\n";
+    s << "numberer    Plain ;#same with cpp"<<"\n";
+    s << "#system      SparseGeneral"<<"\n";
+    s << "system      BandGeneral ;#same with cpp"<<"\n";
+    s << "integrator  Newmark $gamma_dynm $beta_dynm"<<"\n";
+    s << "#rayleigh    $a0 $a1 0.0 0.0"<<"\n";
+    s << "analysis    Transient"<<"\n";
 
     s << "\n";
     s << "# ------------------------------------------------------------\n";
     s << "# 5.3 Define outputs and recorders                            \n";
     s << "# ------------------------------------------------------------\n\n";
 
-    s << "file mkdir out_tcl" << endln;
+    s << "file mkdir out_tcl" << "\n";
     double recDT = motionDT;
-    s << "set recDT " << recDT << endln;
-    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<endln;// 3
+    s << "set recDT " << recDT << "\n";
+    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<"\n";// 3
 
-    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<endln;// 1 2
-    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<endln;// 3
+    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<"\n";// 1 2
+    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<"\n";// 3
 
-    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  disp\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  vel\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<endln;
-    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 4 vel\""<<endln;
+    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  disp\""<<"\n";
+    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  vel\""<<"\n";
+    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<"\n";
+    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 4 vel\""<<"\n";
     s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<< numElems <<"  stress 6 \n";
-    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<< numElems <<"  strain"<<endln;
-    s<< endln;
+    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<< numElems <<"  strain"<<"\n";
+    s<< "\n";
 
 
 
@@ -3467,71 +3469,71 @@ int SiteResponseModel::buildEffectiveStressModel3D(bool doAnalysis)
     s << "# 5.4 Perform dynamic analysis                                \n";
     s << "# ------------------------------------------------------------\n\n";
 
-    s << "set nSteps " << nSteps << endln;
-    s << "set remStep " << remStep << endln;
-    s << "set success 0" << endln << endln;
+    s << "set nSteps " << nSteps << "\n";
+    s << "set remStep " << remStep << "\n";
+    s << "set success 0" << "\n" << "\n";
 
-    s << "proc subStepAnalyze {dT subStep} {" << endln;
-    s << "	if {$subStep > 10} {" << endln;
-    s << "		return -10" << endln;
-    s << "	}" << endln;
-    s << "	for {set i 0} {$i < 3} {incr i} {" << endln;
-    s << "		puts \"Try dT = $dT\"" << endln;
-    s << "		set success [analyze 1 $dT]" << endln;
-    s << "		if {$success != 0} {" << endln;
-    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << endln;
-    s << "			if {$success == -10} {" << endln;
-    s << "				puts \"Did not converge.\"" << endln;
-    s << "				return $success" << endln;
-    s << "			}" << endln;
-    s << "		} else {" << endln;
-    s << "			if {$i==1} {" << endln;
-    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << endln;
-    s << "			} else {" << endln;
-    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << endln;
-    s << "			}" << endln;
-    s << "		}" << endln;
-    s << "	}" << endln;
-    s << "	return $success" << endln;
-    s << "}" << endln << endln << endln;
+    s << "proc subStepAnalyze {dT subStep} {" << "\n";
+    s << "	if {$subStep > 10} {" << "\n";
+    s << "		return -10" << "\n";
+    s << "	}" << "\n";
+    s << "	for {set i 0} {$i < 3} {incr i} {" << "\n";
+    s << "		puts \"Try dT = $dT\"" << "\n";
+    s << "		set success [analyze 1 $dT]" << "\n";
+    s << "		if {$success != 0} {" << "\n";
+    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << "\n";
+    s << "			if {$success == -10} {" << "\n";
+    s << "				puts \"Did not converge.\"" << "\n";
+    s << "				return $success" << "\n";
+    s << "			}" << "\n";
+    s << "		} else {" << "\n";
+    s << "			if {$i==1} {" << "\n";
+    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << "\n";
+    s << "			} else {" << "\n";
+    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << "\n";
+    s << "			}" << "\n";
+    s << "		}" << "\n";
+    s << "	}" << "\n";
+    s << "	return $success" << "\n";
+    s << "}" << "\n" << "\n" << "\n";
 
 
 
-    s << "puts \"Start analysis\"" << endln;
-    s << "set remStep $nSteps" << endln;
-    s << "set startT [clock seconds]" << endln;
-    s << "set finalTime [expr $remStep * $dT]" << endln;
-    s << "set success 0" << endln;
-    s << "set currentTime 0." << endln;
-    s << "set timeMarker 0." << endln;
-    s << "while {$success == 0 && $currentTime < $finalTime} {" << endln;
-    s << "	set subStep 0" << endln;
-    s << "	set success [analyze 1  $dT]" << endln;
-    s << "	if {$success != 0} {" << endln;
-    s << "	set curTime  [getTime]" << endln;
-    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-    s << "	set curStep  [expr int($curTime/$dT + 1)]" << endln;
-    s << "	set remStep  [expr int($nSteps-$curStep)]" << endln;
-    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-    s << "    } else {" << endln;
-    s << "          set progress [expr $currentTime/$finalTime * 100.]" << endln;
-    s << "          if { $progress > $timeMarker} {" << endln;
-    s << "              set timeMarker [expr $timeMarker+2]" << endln;
-    s << "              puts \"$progress%\"" << endln;
-    s << "              }" << endln;
-    s << "              set currentTime [getTime]" << endln;
-    s << "	}" << endln;
-    s << "}" << endln << endln;
-    s << "remove recorders" << endln;
-    s << "set endT    [clock seconds]" <<endln;
-    s << "puts \"Finished with dynamic analysis...\"" <<endln;
-    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<endln;
-    //s << "print -file out_tcl/Domain-3D-s3hark-tcl.out" <<endln;
+    s << "puts \"Start analysis\"" << "\n";
+    s << "set remStep $nSteps" << "\n";
+    s << "set startT [clock seconds]" << "\n";
+    s << "set finalTime [expr $remStep * $dT]" << "\n";
+    s << "set success 0" << "\n";
+    s << "set currentTime 0." << "\n";
+    s << "set timeMarker 0." << "\n";
+    s << "while {$success == 0 && $currentTime < $finalTime} {" << "\n";
+    s << "	set subStep 0" << "\n";
+    s << "	set success [analyze 1  $dT]" << "\n";
+    s << "	if {$success != 0} {" << "\n";
+    s << "	set curTime  [getTime]" << "\n";
+    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+    s << "	set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+    s << "	set remStep  [expr int($nSteps-$curStep)]" << "\n";
+    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+    s << "    } else {" << "\n";
+    s << "          set progress [expr $currentTime/$finalTime * 100.]" << "\n";
+    s << "          if { $progress > $timeMarker} {" << "\n";
+    s << "              set timeMarker [expr $timeMarker+2]" << "\n";
+    s << "              puts \"$progress%\"" << "\n";
+    s << "              }" << "\n";
+    s << "              set currentTime [getTime]" << "\n";
+    s << "	}" << "\n";
+    s << "}" << "\n" << "\n";
+    s << "remove recorders" << "\n";
+    s << "set endT    [clock seconds]" <<"\n";
+    s << "puts \"Finished with dynamic analysis...\"" <<"\n";
+    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<"\n";
+    //s << "print -file out_tcl/Domain-3D-s3hark-tcl.out" <<"\n";
 
-    s << "" <<endln;
-    s << "wipe" <<endln;
-    s << "puts \"Site response analysis is finished.\"\n"<< endln;
+    s << "" <<"\n";
+    s << "wipe" <<"\n";
+    s << "puts \"Site response analysis is finished.\"\n"<< "\n";
 
     s.close();
     ns.close();
@@ -3587,8 +3589,8 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    s << "# #########################################################" << "\n\n";
 //    s << "wipe \n\n";
 
-//    s << "set g " << g << endln;
-//    s << "set pi " << std::setprecision(22)  << pi << endln;
+//    s << "set g " << g << "\n";
+//    s << "set pi " << std::setprecision(22)  << pi << "\n";
 
 
 //    // basic settings
@@ -3630,8 +3632,8 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    std::vector<double> layerElemSize;
 //    std::vector<int> dryNodes;
 
-//    s << "set slopex1 " << slopex1 << endln;
-//    s << "set slopex2 " << slopex2 << endln;
+//    s << "set slopex1 " << slopex1 << "\n";
+//    s << "set slopex2 " << slopex2 << "\n";
 
 
 //    s << "\n# ------------------------------------------ \n";
@@ -3663,16 +3665,16 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 //    s << "model BasicBuilder -ndm 3 -ndf 4  \n\n";
-//    s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-//    s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-//    s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-//    s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << endln;
+//    s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+//    s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+//    s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+//    s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << "\n";
 
 
-//    ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-//    ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-//    ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-//    ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << endln;
+//    ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+//    ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+//    ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+//    ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << "\n";
 
 //    std::map<int, std::string> eleTypeDict;
 
@@ -3737,7 +3739,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                double density = mat["density"];
 //                double poisson = mat["poisson"];
 //                theMat = new ElasticIsotropicMaterial(matTag, E , poisson, density);
-//                s << "nDMaterial ElasticIsotropic " << matTag << " "<< E <<" " << " "<<poisson<<" "<<density<<endln;
+//                s << "nDMaterial ElasticIsotropic " << matTag << " "<< E <<" " << " "<<poisson<<" "<<density<<"\n";
 //                double emax = 0.8;
 //                double emin = 0.5;
 //                //evoid  = emax - Dr * (emax - emin);
@@ -3768,7 +3770,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                theMat = new PressureIndependMultiYield(matTag,nd,rho,refShearModul,refBulkModul,cohesi,peakShearStra,
 //                                                        frictionAng, refPress,  pressDependCoe, noYieldSurf);
 //                s << "nDMaterial PressureIndependMultiYield "<<matTag << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<cohesi<<" "<<peakShearStra<<" "<<
-//                     frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<endln;
+//                     frictionAng<<" "<< refPress<<" "<<pressDependCoe<<" "<< noYieldSurf <<"\n";
 //            }
 //            else if(!matType.compare("PDMY")) {
 //                double thisDr = mat["Dr"];
@@ -3809,14 +3811,14 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                                                      20,0,e,cs1,cs2,cs3,pa,c);
 //                s << "nDMaterial PressureDependMultiYield "<<matTag << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
 //                        refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3
-//                          <<" 20 "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c<<endln;
+//                          <<" 20 "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c<<"\n";
 //                */
 //                theMat = new PressureDependMultiYield(matTag,nd,rho,refShearModul,refBulkModul,frictionAng,peakShearStra,
 //                                                      refPress,pressDependCoe,PTAng,contrac,dilat1,dilat2,liquefac1,liquefac2,liquefac3,noYieldSurf,0,
 //                                                      e, cs1,cs2,cs3,pa,c);
 //                s << "nDMaterial PressureDependMultiYield "<<matTag << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "<<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<
 //                     refPress<<" "<<pressDependCoe<<" "<<PTAng<<" "<<contrac<<" "<<dilat1<<" "<<dilat2<<" "<<liquefac1<<" "<<liquefac2<<" "<<liquefac3 << " " << noYieldSurf
-//                  <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<endln;
+//                  <<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<c <<"\n";
 
 //            }
 //            else if(!matType.compare("PDMY02")) {
@@ -3863,7 +3865,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                s << "nDMaterial PressureDependMultiYield02 "<<matTag << " "<<nd<<" "<<rho<<" "<<refShearModul<<" "
 //                  <<refBulkModul<<" "<<frictionAng<<" "<<peakShearStra<<" "<<refPress<<" "<<pressDependCoe<<" "
 //                 <<PTAng<<" "<<contrac1<<" "<<contrac3<<" "<<dilat1<<" "<<dilat3<<" "<< noYieldSurf << " " <<contrac2<<" "<<dilat2
-//                <<" "<<liquefac1<<" "<<liquefac2<<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<endln;
+//                <<" "<<liquefac1<<" "<<liquefac2<<" "<<e<<" "<<cs1<<" "<<cs2<<" "<<cs3<<" "<<pa<<" "<<"\n";
 //            }
 //            else if(!matType.compare("ManzariDafalias"))
 //            {
@@ -3896,7 +3898,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                //theMat = new ElasticIsotropicMaterial(matTag, 20000.0, 0.3, thisDen);
 //                //TODO: PM4Silt->ManzariDafalias
 //                theMat = new ManzariDafalias(matTag, G0, nu, e_init, Mc, c, lambda_c, e0, ksi, P_atm, m, h0, ch, nb, A0, nd, z_max, cz, Den);
-//                s << "nDMaterial ManzariDafalias " << matTag<< " " << G0<< " " <<nu<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " " <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << endln;
+//                s << "nDMaterial ManzariDafalias " << matTag<< " " << G0<< " " <<nu<< " " <<e_init<< " " <<Mc<< " " <<c<< " " <<lambda_c<< " " <<e0<< " " <<ksi<< " " <<P_atm<< " " <<m<< " " <<h0<< " " <<ch<< " " <<nb<< " " <<A0<< " " <<nd<< " " <<z_max<< " " <<cz<< " " <<Den << "\n";
 
 //            }
 //            else if(!matType.compare("J2Bounding"))
@@ -3922,12 +3924,12 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                //TODO: k_in -> chi  ?
 //                theMat = new J2CyclicBoundingSurface(matTag, G, K, su, rho, h, m,h0, k_in, beta);
 //                s << "nDMaterial J2CyclicBoundingSurface " << matTag<< " " << G<< " " <<K<< " "
-//                  <<su<< " " <<rho<< " " <<h<< " " <<m<< " "<< h0 <<" " <<k_in<< " " <<beta << endln;
+//                  <<su<< " " <<rho<< " " <<h<< " " <<m<< " "<< h0 <<" " <<k_in<< " " <<beta << "\n";
 
 //                /*
 //                            theMat = new J2CyclicBoundingSurface(matTag, G, K, su, rho, h, m, k_in, beta);
 //                            s << "nDMaterial J2CyclicBoundingSurface " << matTag<< " " << G<< " " <<K<< " "
-//                              <<su<< " " <<rho<< " " <<h<< " " <<m << " "<< h0 << " " <<k_in<< " " <<beta << endln;
+//                              <<su<< " " <<rho<< " " <<h<< " " <<m << " "<< h0 << " " <<k_in<< " " <<beta << "\n";
 //                            */
 //            }
 //            else if(!matType.compare("PDMY03"))
@@ -3965,10 +3967,10 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                                                        contraction_e, dilation_a, dilation_b, dilation_c, noYieldSurf, 0, liqParam1, liqParam2, pa, S0);
 //                s << "nDMaterial PressureDependMultiYield03 "<< matTag << " "<<nd<<" "<<massDen<<" "<<refG<<" "<<refB<<" "<<frinctionAng<<" "<<peakShearStrain<<" "<<
 //                     refPress<<" "<<pressDependCoe<<" "<<phaseTransAng<<" "<<mType<<" "<<contraction_a<<" "<<contraction_b<<" "<<contraction_c<<" " <<contraction_d<<" "
-//                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<endln;
+//                  <<contraction_e<<" "<<dilation_a<<" "<<dilation_b<<" "<<dilation_c<<" "<< noYieldSurf << " " << liqParam1 << " "<< liqParam2 << " "<<pa<<" "<<S0<<"\n";
 //            }
 //            OPS_addNDMaterial(theMat);
-//            if (PRINTDEBUG) opserr << "Material " << matType.c_str() << ", tag = " << matTag << endln;
+//            if (PRINTDEBUG) std::cerr << "Material " << matType.c_str() << ", tag = " << matTag << "\n";
 
 
 
@@ -3977,7 +3979,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //            int numEleThisLayer = static_cast<int> (std::round(thickness / eSizeV));
 //            numEleThisLayer = std::max(1,numEleThisLayer);
 //            double t = thickness / numEleThisLayer;
-//            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << endln;
+//            s << "# " << lname << ": thickness = "<< thickness << ", "<< numEleThisLayer<< " elements." << "\n";
 //            for (int i=1; i<=numEleThisLayer;i++)
 //            {
 //                yCoord += t ;
@@ -3992,23 +3994,23 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 //                /*
-//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << endln;
-//                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
-//                ns << numNodes + 1 << " 0.0 " << yCoord << endln;
-//                ns << numNodes + 2 << " " << sElemX << " " << yCoord << endln;
+//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//                s << "node " << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
+//                ns << numNodes + 1 << " 0.0 " << yCoord << "\n";
+//                ns << numNodes + 2 << " " << sElemX << " " << yCoord << "\n";
 //                */
 
 
-//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-//                s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-//                s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-//                s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << endln;
+//                s << "node " << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+//                s << "node " << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+//                s << "node " << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+//                s << "node " << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 " << "\n";
 
 
-//                ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << endln;
-//                ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << endln;
-//                ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << endln;
-//                ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << endln;
+//                ns << numNodes + 1 << " 0.0 " << yCoord << " 0.0 " << "\n";
+//                ns << numNodes + 2 << " 0.0 " << yCoord << " " << zthick << " " << "\n";
+//                ns << numNodes + 3 << " " << sElemX << " " << yCoord << " " << zthick << " " << "\n";
+//                ns << numNodes + 4 << " " << sElemX << " " << yCoord << " 0.0 "  << "\n";
 
 
 
@@ -4055,10 +4057,10 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                    s << std::setprecision(7) << b2 <<" ";}
 
 //                if (fabs(-1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g)<epsilon)
-//                    s << std::setprecision(7) << 0.0 <<endln;
+//                    s << std::setprecision(7) << 0.0 <<"\n";
 //                else {
 //                    b3 = -1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g ;
-//                    s << std::setprecision(7) << b3 <<endln;}
+//                    s << std::setprecision(7) << b3 <<"\n";}
 
 //                theEle = new SSPbrickUP(numElems + 1,
 //                                        numNodes - 3, numNodes - 2, numNodes - 1, numNodes ,
@@ -4084,25 +4086,25 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                else s <<  "[expr cos($slopex1*$pi/180.) * $g]" <<" ";
 
 //                if (fabs(-1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g)<epsilon)
-//                    s << std::setprecision(16) << 0.0 <<endln;
-//                else s << "[expr -1.0*sin($slopex1*$pi/180.)*sin($slopex2*$pi/180.) * $g]" <<endln;
+//                    s << std::setprecision(16) << 0.0 <<"\n";
+//                else s << "[expr -1.0*sin($slopex1*$pi/180.)*sin($slopex2*$pi/180.) * $g]" <<"\n";
 //                */
 
 
 
-//                //s << std::setprecision(9) << std::to_string(-1.0*sin(slopex1*pi/180.) * cos(slopex2*pi/180.) * g) <<" "<< std::to_string(cos(slopex1*pi/180.) * g) <<" " << std::to_string(-1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g) << endln;
-//                //s << std::setprecision(16) << -1.0*sin(slopex1*pi/180.) * cos(slopex2*pi/180.) * g <<" "<< cos(slopex1*pi/180.) * g <<" " << -1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g << endln;
-//                //s << std::setprecision(16) << -1.0*sin(atan(slopex1)) * cos(atan(slopex2)) * g <<" "<< cos(atan(slopex1)) * g <<" " << -1.0*sin(atan(slopex1))*sin(atan(slopex2)) * g << endln;
+//                //s << std::setprecision(9) << std::to_string(-1.0*sin(slopex1*pi/180.) * cos(slopex2*pi/180.) * g) <<" "<< std::to_string(cos(slopex1*pi/180.) * g) <<" " << std::to_string(-1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g) << "\n";
+//                //s << std::setprecision(16) << -1.0*sin(slopex1*pi/180.) * cos(slopex2*pi/180.) * g <<" "<< cos(slopex1*pi/180.) * g <<" " << -1.0*sin(slopex1*pi/180.)*sin(slopex2*pi/180.) * g << "\n";
+//                //s << std::setprecision(16) << -1.0*sin(atan(slopex1)) * cos(atan(slopex2)) * g <<" "<< cos(atan(slopex1)) * g <<" " << -1.0*sin(atan(slopex1))*sin(atan(slopex2)) * g << "\n";
 
 //                /*
 //                es << numElems + 1<<" " <<numNodes - 3 <<" "<< numNodes - 2<<" "<< numNodes +2<<" "<<numNodes+1<<" "
 //                     <<numNodes  <<" "<<numNodes-1<<" "<< numNodes + 3<<" "<< numNodes + 4<<" "
-//                    << theMat->getTag() << endln;
+//                    << theMat->getTag() << "\n";
 //                */
 //                es << numElems + 1<<" " <<numNodes - 3 <<" "<< numNodes-2 <<" "<< numNodes -1<<" "<<numNodes<<" "
 //                   <<numNodes+1  <<" "<<numNodes+2<<" "<< numNodes + 3<<" "<< numNodes + 4<<" "
-//                  << theMat->getTag() << endln;
-//                esmat3D << numElems + 1 << " " << matType << endln;
+//                  << theMat->getTag() << "\n";
+//                esmat3D << numElems + 1 << " " << matType << "\n";
 
 //                theDomain->addElement(theEle);
 //                /*
@@ -4166,22 +4168,22 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theDomain->addSP_Constraint(theSP);
 //    theSPtoRemove(1) = theSP->getTag();
 
-//    s << "fix 1 1 1 1 0" << endln;
+//    s << "fix 1 1 1 1 0" << "\n";
 
 //    theSP = new SP_Constraint(2, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 
-//    s << "fix 2 0 1 0 0" << endln << endln;
+//    s << "fix 2 0 1 0 0" << "\n" << "\n";
 
 //    theSP = new SP_Constraint(3, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 
-//    s << "fix 3 0 1 0 0" << endln;
+//    s << "fix 3 0 1 0 0" << "\n";
 
 //    theSP = new SP_Constraint(4, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 
-//    s << "fix 4 0 1 0 0" << endln << endln;
+//    s << "fix 4 0 1 0 0" << "\n" << "\n";
 
 //    MP_Constraint *theMP_base;
 //    int crrdim_base = 2 ;//For 3D it's 3; for 2d, it's 2
@@ -4195,9 +4197,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theMP_base = new MP_Constraint(1, 3, Ccr_base, rcDOF_base, rcDOF_base); theDomain->addMP_Constraint(theMP_base);
 //    theMP_base = new MP_Constraint(1, 4, Ccr_base, rcDOF_base, rcDOF_base); theDomain->addMP_Constraint(theMP_base);
 
-//    s << "equalDOF  1 2 1 3" << endln ;
-//    s << "equalDOF  1 3 1 3" << endln ;
-//    s << "equalDOF  1 4 1 3" << endln << endln;
+//    s << "equalDOF  1 2 1 3" << "\n" ;
+//    s << "equalDOF  1 3 1 3" << "\n" ;
+//    s << "equalDOF  1 4 1 3" << "\n" << "\n";
 
 //    s << "# 2.2 Apply periodic boundary conditions    \n\n";
 //    MP_Constraint *theMP;
@@ -4220,9 +4222,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theDomain->addMP_Constraint(theMP);
 //        theMP = new MP_Constraint(nodeCount + 1, nodeCount + 4, Ccr, rcDOF, rcDOF);
 //        theDomain->addMP_Constraint(theMP);
-//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2 3" << endln;
-//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 3 << " 1 2 3" << endln;
-//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 4 << " 1 2 3" << endln;
+//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 2 << " 1 2 3" << "\n";
+//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 3 << " 1 2 3" << "\n";
+//        s << "equalDOF " << nodeCount + 1 << " "<< nodeCount + 4 << " 1 2 3" << "\n";
 //    }
 //    s << "\n\n";
 
@@ -4233,7 +4235,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    {
 //        theSP = new SP_Constraint(dryNodes[i], 3, 0.0, true);
 //        theDomain->addSP_Constraint(theSP);
-//        s << "fix " << dryNodes[i] << " 0 0 0 1" << endln;
+//        s << "fix " << dryNodes[i] << " 0 0 0 1" << "\n";
 //    }
 //    s << "\n\n";
 
@@ -4269,35 +4271,35 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    double gamma = 0.5;
 //    double beta = 0.25;
 
-//    s << "constraints Transformation" << endln;
-//    s << "test NormDispIncr 1.0e-4 35 1" << endln;
-//    s << "algorithm   Newton" << endln;
-//    s << "numberer RCM" << endln;
-//    s << "system SparseGeneral" << endln;//BandGeneral
-//    s << "set gamma " << gamma << endln;
-//    s << "set beta " << beta << endln;
-//    s << "integrator  Newmark $gamma $beta" << endln;
-//    s << "analysis Transient" << endln << endln;
+//    s << "constraints Transformation" << "\n";
+//    s << "test NormDispIncr 1.0e-4 35 1" << "\n";
+//    s << "algorithm   Newton" << "\n";
+//    s << "numberer RCM" << "\n";
+//    s << "system SparseGeneral" << "\n";//BandGeneral
+//    s << "set gamma " << gamma << "\n";
+//    s << "set beta " << beta << "\n";
+//    s << "integrator  Newmark $gamma $beta" << "\n";
+//    s << "analysis Transient" << "\n" << "\n";
 //    */
 
 //    double gamma = 0.5;
 //    double beta = 0.25;
-//    s << "set gamma " << gamma << endln;
-//    s << "set beta " << beta << endln;
-//    s << "constraints Penalty 1.e14 1.e14" << endln;
-//    s << "test        NormDispIncr 1e-5 30 " << endln;
-//    s << "algorithm   Newton" << endln;
-//    s << "#numberer    Plain" << endln;
-//    s << "numberer    RCM ;#same with cpp" << endln;
-//    s << "#system      SparseGeneral" << endln;
-//    s << "system      BandGeneral ;#same with cpp" << endln;
-//    s << "integrator  Newmark $gamma $beta " << endln;
-//    s << "analysis    Transient" << endln;
+//    s << "set gamma " << gamma << "\n";
+//    s << "set beta " << beta << "\n";
+//    s << "constraints Penalty 1.e14 1.e14" << "\n";
+//    s << "test        NormDispIncr 1e-5 30 " << "\n";
+//    s << "algorithm   Newton" << "\n";
+//    s << "#numberer    Plain" << "\n";
+//    s << "numberer    RCM ;#same with cpp" << "\n";
+//    s << "#system      SparseGeneral" << "\n";
+//    s << "system      BandGeneral ;#same with cpp" << "\n";
+//    s << "integrator  Newmark $gamma $beta " << "\n";
+//    s << "analysis    Transient" << "\n";
 
 
-//    s << "set startT  [clock seconds]" << endln;
-//    s << "analyze     20 5e2" << endln;
-//    s << "puts \"Finished with elastic gravity analysis...\"" << endln << endln;
+//    s << "set startT  [clock seconds]" << "\n";
+//    s << "analyze     20 5e2" << "\n";
+//    s << "puts \"Finished with elastic gravity analysis...\"" << "\n" << "\n";
 
 //    // create analysis objects - I use static analysis for gravity
 //    //AnalysisModel *
@@ -4343,19 +4345,19 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        converged = theAnalysis->analyze(20,5.0e2);
 //        if (!converged)
 //        {
-//            opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //        } else
 //        {
-//            opserr << "Didn't converge at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Didn't converge at time " << theDomain->getCurrentTime() << "\n";
 //        }
-//        opserr << "Finished with elastic gravity analysis..." << endln << endln;
+//        std::cerr << "Finished with elastic gravity analysis..." << "\n" << "\n";
 //        /*
 //    // static
 //    for (int analysisCount = 0; analysisCount < 2; ++analysisCount) {
 //            //int converged = theAnalysis->analyze(1, 0.01, 0.005, 0.02, 1);
 //            int converged = theAnalysis->analyze(1);
 //            if (!converged) {
-//                opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//                std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //            }
 //        }
 //     */
@@ -4364,7 +4366,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 
-//    s << "# 3.2 plastic gravity analysis (transient)" << endln << endln;
+//    s << "# 3.2 plastic gravity analysis (transient)" << "\n" << "\n";
 
 //    ElementIter &theElementIter = theDomain->getElements();
 //    while ((theEle = theElementIter()) != 0)
@@ -4389,9 +4391,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        }
 //    }
 
-//    s << endln;
+//    s << "\n";
 //    for (int i=0; i != soilMatTags.size(); i++)
-//        s << "updateMaterialStage -material "<< soilMatTags[i] <<" -stage 1" << endln ;
+//        s << "updateMaterialStage -material "<< soilMatTags[i] <<" -stage 1" << "\n" ;
 
 
 //    if(doAnalysis)
@@ -4400,18 +4402,18 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 //        if (!converged)
 //        {
-//            opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 //        } else
 //        {
-//            opserr << "Didn't converge at time " << theDomain->getCurrentTime() << endln;
+//            std::cerr << "Didn't converge at time " << theDomain->getCurrentTime() << "\n";
 //        }
-//        opserr << "Finished with plastic gravity analysis..." endln;
+//        std::cerr << "Finished with plastic gravity analysis..." "\n";
 //    }
-//    s << "analyze     40 5e2" << endln;
-//    s << "puts \"Finished with plastic gravity analysis...\"" << endln << endln;
+//    s << "analyze     40 5e2" << "\n";
+//    s << "puts \"Finished with plastic gravity analysis...\"" << "\n" << "\n";
 
 
-//    s << "# 3.3 Update element permeability for post gravity analysis"<< endln << endln;
+//    s << "# 3.3 Update element permeability for post gravity analysis"<< "\n" << "\n";
 
 //    //ElementIter &
 //    theElementIter = theDomain->getElements();
@@ -4431,16 +4433,16 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theEle->updateParameter(6,myInfoz);
 
 //        //setParameter -value 1 -ele $elementTag hPerm $matTag
-//        s << "setParameter -value "<<-thishPerm/g<<" -ele "<< theEleTag<<" xPerm "<<endln;
-//        s << "setParameter -value "<<-thisvPerm/g<<" -ele "<< theEleTag<<" yPerm "<<endln;
-//        s << "setParameter -value "<<-thishPerm/g<<" -ele "<< theEleTag<<" zPerm "<<endln;
+//        s << "setParameter -value "<<-thishPerm/g<<" -ele "<< theEleTag<<" xPerm "<<"\n";
+//        s << "setParameter -value "<<-thisvPerm/g<<" -ele "<< theEleTag<<" yPerm "<<"\n";
+//        s << "setParameter -value "<<-thishPerm/g<<" -ele "<< theEleTag<<" zPerm "<<"\n";
 
 //    }
-//    s << endln << endln << endln;
+//    s << "\n" << "\n" << "\n";
 
-//    s << "setTime 0.0" << endln;
-//    s << "wipeAnalysis" << endln;
-//    s << "remove recorders" << endln << endln << endln;
+//    s << "setTime 0.0" << "\n";
+//    s << "wipeAnalysis" << "\n";
+//    s << "remove recorders" << "\n" << "\n" << "\n";
 
 //    theDomain->setCommittedTime(0.0);
 //    //delete theIntegrator;
@@ -4467,14 +4469,14 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theViscousMats[1] = new ViscousMaterial(dashMatTag+1, vis_C, 1.0);
 //    OPS_addUniaxialMaterial(theViscousMats[1]);
 
-//    s << "set colThickness "<< colThickness << endln;
-//    s << "set sElemX " << sElemX << endln;
-//    s << "set colArea [expr $sElemX*$colThickness]" << endln; // [expr $sElemX*$thick(1)]
-//    s << "set rockVs "<< rockVs << endln;
-//    s << "set rockDen " << rockDen << endln;
-//    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << endln; // [expr $rockVs*$rockDen]
-//    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<endln;
-//    s << "set cFactor [expr $colArea*$dashpotCoeff]" << endln;
+//    s << "set colThickness "<< colThickness << "\n";
+//    s << "set sElemX " << sElemX << "\n";
+//    s << "set colArea [expr $sElemX*$colThickness]" << "\n"; // [expr $sElemX*$thick(1)]
+//    s << "set rockVs "<< rockVs << "\n";
+//    s << "set rockDen " << rockDen << "\n";
+//    s << "set dashpotCoeff  [expr $rockVs*$rockDen]" << "\n"; // [expr $rockVs*$rockDen]
+//    s << "uniaxialMaterial Viscous " << dashMatTag <<" "<<"[expr $dashpotCoeff*$colArea] 1"<<"\n";
+//    s << "set cFactor [expr $colArea*$dashpotCoeff]" << "\n";
 
 
 
@@ -4488,10 +4490,10 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theDomain->addNode(theNode);
 
 
-//    s << "model BasicBuilder -ndm 3 -ndf 3" << endln << endln;
-//    s << "node " << numNodes + 1 << " 0.0 0.0 0.0" << endln;
-//    s << "node " << numNodes + 2 << " 0.0 0.0 0.0" << endln;
-//    s << "node " << numNodes + 3 << " 0.0 0.0 0.0" << endln;
+//    s << "model BasicBuilder -ndm 3 -ndf 3" << "\n" << "\n";
+//    s << "node " << numNodes + 1 << " 0.0 0.0 0.0" << "\n";
+//    s << "node " << numNodes + 2 << " 0.0 0.0 0.0" << "\n";
+//    s << "node " << numNodes + 3 << " 0.0 0.0 0.0" << "\n";
 
 
 //    theSP = new SP_Constraint(numNodes + 1, 0, 0.0, true);
@@ -4500,21 +4502,21 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theDomain->addSP_Constraint(theSP);
 //    theSP = new SP_Constraint(numNodes + 1, 2, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
-//    s << "fix " << numNodes + 1 << " 1 1 1" << endln;
+//    s << "fix " << numNodes + 1 << " 1 1 1" << "\n";
 
 //    theSP = new SP_Constraint(numNodes + 2, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 //    theSP = new SP_Constraint(numNodes + 2, 2, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
-//    s << "fix " << numNodes + 2 << " 0 1 1" << endln;
+//    s << "fix " << numNodes + 2 << " 0 1 1" << "\n";
 
 //    theSP = new SP_Constraint(numNodes + 3, 0, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
 //    theSP = new SP_Constraint(numNodes + 3, 1, 0.0, true);
 //    theDomain->addSP_Constraint(theSP);
-//    s << "fix " << numNodes + 3 << " 1 1 0" << endln;
+//    s << "fix " << numNodes + 3 << " 1 1 0" << "\n";
 
-//    s << endln;
+//    s << "\n";
 
 
 //    s << "# 4.3 Apply equalDOF to the node connected to the column. \n\n";
@@ -4531,8 +4533,8 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theMP = new MP_Constraint(1, numNodes + 3, Ccrconn, rcDOFconn, rcDOFconn);
 //    theDomain->addMP_Constraint(theMP);
 
-//    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << endln;
-//    s << "equalDOF " << 1 << " "<< numNodes + 3 << " 3" << endln;
+//    s << "equalDOF " << 1 << " "<< numNodes + 2 << " 1" << "\n";
+//    s << "equalDOF " << 1 << " "<< numNodes + 3 << " 3" << "\n";
 
 
 //    for (int i_remove = 0; i_remove < sizeTheSPtoRemove; i_remove++)
@@ -4541,16 +4543,16 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        delete theSP;
 //    }
 //    // TODO:
-//    s << "remove sp 1 1" << endln;
-//    s << "remove sp 1 3" << endln;
+//    s << "remove sp 1 1" << "\n";
+//    s << "remove sp 1 3" << "\n";
 //    /*
-//    s << "remove sp 2 1" << endln;
-//    s << "remove sp 3 1" << endln;
-//    s << "remove sp 4 1" << endln;
-//    s << "remove sp 1 3" << endln;
-//    s << "remove sp 2 3" << endln;
-//    s << "remove sp 3 3" << endln;
-//    s << "remove sp 4 3" << endln;
+//    s << "remove sp 2 1" << "\n";
+//    s << "remove sp 3 1" << "\n";
+//    s << "remove sp 4 1" << "\n";
+//    s << "remove sp 1 3" << "\n";
+//    s << "remove sp 2 3" << "\n";
+//    s << "remove sp 3 3" << "\n";
+//    s << "remove sp 4 3" << "\n";
 //    */
 
 //    /*
@@ -4569,7 +4571,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        constDOF(0) = 0;
 //        theMP = new MP_Constraint(1, 2, constrainInXZ, constDOF, constDOF);
 //        theDomain->addMP_Constraint(theMP);
-//        s << "equalDOF " << 1 << " "<< 2 << " 1 " << endln;
+//        s << "equalDOF " << 1 << " "<< 2 << " 1 " << "\n";
 //    }
 //    */
 //    /*
@@ -4582,9 +4584,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theDomain->addMP_Constraint(theMP);
 //    theMP = new MP_Constraint(1, 4, constrainInXZ, constDOF, constDOF);
 //    theDomain->addMP_Constraint(theMP);
-//    s << "equalDOF " << 1 << " "<< 2 << " 1 3" << endln;
-//    s << "equalDOF " << 1 << " "<< 3 << " 1 3" << endln;
-//    s << "equalDOF " << 1 << " "<< 4 << " 1 3" << endln;
+//    s << "equalDOF " << 1 << " "<< 2 << " 1 3" << "\n";
+//    s << "equalDOF " << 1 << " "<< 3 << " 1 3" << "\n";
+//    s << "equalDOF " << 1 << " "<< 4 << " 1 3" << "\n";
 //    */
 
 
@@ -4620,8 +4622,8 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 
-//    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << endln;
-//    s << "element zeroLength "<<numElems + 2 <<" "<< numNodes + 1 <<" "<< numNodes + 3<<" -mat "<<dashMatTag<<"  -dir 3" << endln;
+//    s << "element zeroLength "<<numElems + 1 <<" "<< numNodes + 1 <<" "<< numNodes + 2<<" -mat "<<dashMatTag<<"  -dir 1" << "\n";
+//    s << "element zeroLength "<<numElems + 2 <<" "<< numNodes + 1 <<" "<< numNodes + 3<<" -mat "<<dashMatTag<<"  -dir 3" << "\n";
 //    s << "\n\n\n";
 
 
@@ -4629,7 +4631,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    s << "# 5. Dynamic analysis                                         \n";
 //    s << "# ------------------------------------------------------------\n\n";
 
-//    //s << "model BasicBuilder -ndm 3 -ndf 4" << endln; // TODO: it seems this is not necessary.
+//    //s << "model BasicBuilder -ndm 3 -ndf 4" << "\n"; // TODO: it seems this is not necessary.
 
 
 //    s << "# ------------------------------------------------------------\n";
@@ -4644,11 +4646,11 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    int nStepsMotion = theMotionX->getNumSteps();//1998;//theMotionX->getNumSteps() ; //1998; // number of motions in the record. TODO: use a funciton to get it
 //    int nSteps = int((nStepsMotion-1) * motionDT / dT +1);
 //    int remStep = nSteps;
-//    s << "set dT " << dT << endln;
-//    s << "set motionDT " << motionDT << endln;
-//    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<endln;
-//    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<endln;
-//    s << "set mSeriesx2 \"Path -dt $motionDT -filePath Rock-y.vel -factor $cFactor\""<<endln;
+//    s << "set dT " << dT << "\n";
+//    s << "set motionDT " << motionDT << "\n";
+//    //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<"\n";
+//    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<"\n";
+//    s << "set mSeriesx2 \"Path -dt $motionDT -filePath Rock-y.vel -factor $cFactor\""<<"\n";
 
 //    // using a stress input with the dashpot
 //    if (theMotionX->isInitialized() && theMotionZ->isInitialized())
@@ -4683,13 +4685,13 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theLPz->addNodalLoad(theLoadz);
 //        theDomain->addLoadPattern(theLPz);
 
-//        s << "pattern Plain 10 $mSeries {"<<endln;
-//        s << "    load 1  1.0 0.0 0.0 0.0" << endln;
-//        s << "}" << endln << endln;
+//        s << "pattern Plain 10 $mSeries {"<<"\n";
+//        s << "    load 1  1.0 0.0 0.0 0.0" << "\n";
+//        s << "}" << "\n" << "\n";
 
-//        s << "pattern Plain 11 $mSeriesx2 {"<<endln;
-//        s << "    load 1  0.0 0.0 1.0 0.0" << endln;
-//        s << "}" << endln << endln;
+//        s << "pattern Plain 11 $mSeriesx2 {"<<"\n";
+//        s << "    load 1  0.0 0.0 1.0 0.0" << "\n";
+//        s << "}" << "\n" << "\n";
 
 //        // update the number of steps as well as the dt vector
 //        int temp = theMotionX->getNumSteps();
@@ -4714,11 +4716,11 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 
-//    //s << "constraints Transformation" << endln;
-//    //s << "test NormDispIncr 1.0e-4 35 0" << endln; // TODO
-//    //s << "algorithm   Newton" << endln;
-//    //s << "numberer    RCM" << endln;
-//    //s << "system SparseGeneral" << endln;//BandGeneral
+//    //s << "constraints Transformation" << "\n";
+//    //s << "test NormDispIncr 1.0e-4 35 0" << "\n"; // TODO
+//    //s << "algorithm   Newton" << "\n";
+//    //s << "numberer    RCM" << "\n";
+//    //s << "system SparseGeneral" << "\n";//BandGeneral
 
 
 //    // create analysis objects - 3D solver
@@ -4770,8 +4772,8 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 //    if (PRINTDEBUG)
 //    {
-//        //opserr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << endln;
-//        opserr << "a0 = " << a0 << "    a1 = " << a1 << endln;
+//        //std::cerr << "f1 = " << natFreq << "    f2 = " << 5.0 * natFreq << "\n";
+//        std::cerr << "a0 = " << a0 << "    a1 = " << a1 << "\n";
 //    }
 //    //theDomain->setRayleighDampingFactors(a0, 0.0, a1, 0.0);
 
@@ -4786,14 +4788,14 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theDomain->setCurrentTime(0.0);
 
 
-//    //s << "set gamma_dynm " << gamma_dynm << endln;
-//    //s << "set beta_dynm " << beta_dynm << endln;
-//    //s << "integrator  Newmark $gamma_dynm $beta_dynm" << endln;
-//    //s << "set a0 " << a0 << endln;
-//    //s << "set a1 " << a1 << endln;
-//    //s << "rayleigh    $a0 $a1 0.0 0.0" << endln;
-//    ////s << "analysis Transient" << endln << endln;
-//    //s << "analysis Transient" << endln << endln;
+//    //s << "set gamma_dynm " << gamma_dynm << "\n";
+//    //s << "set beta_dynm " << beta_dynm << "\n";
+//    //s << "integrator  Newmark $gamma_dynm $beta_dynm" << "\n";
+//    //s << "set a0 " << a0 << "\n";
+//    //s << "set a1 " << a1 << "\n";
+//    //s << "rayleigh    $a0 $a1 0.0 0.0" << "\n";
+//    ////s << "analysis Transient" << "\n" << "\n";
+//    //s << "analysis Transient" << "\n" << "\n";
 
 
 
@@ -4803,18 +4805,18 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 //    // benchmark solver
 
-//    s << "#constraints Penalty 1.e14 1.e14"<<endln;
-//    s << "constraints Transformation ;#same with cpp"<<endln;
-//    s << "test        NormDispIncr 1.0e-3 55 "<<endln;
-//    s << "#algorithm   KrylovNewton"<<endln;
-//    s << "algorithm   Newton ;#same with cpp"<<endln;
-//    s << "#numberer    Plain"<<endln;
-//    s << "numberer    Plain ;#same with cpp"<<endln;
-//    s << "#system      SparseGeneral"<<endln;
-//    s << "system      BandGeneral ;#same with cpp"<<endln;
-//    s << "integrator  Newmark $gamma $beta"<<endln;
-//    s << "#rayleigh    $a0 $a1 0.0 0.0"<<endln;
-//    s << "analysis    Transient"<<endln;
+//    s << "#constraints Penalty 1.e14 1.e14"<<"\n";
+//    s << "constraints Transformation ;#same with cpp"<<"\n";
+//    s << "test        NormDispIncr 1.0e-3 55 "<<"\n";
+//    s << "#algorithm   KrylovNewton"<<"\n";
+//    s << "algorithm   Newton ;#same with cpp"<<"\n";
+//    s << "#numberer    Plain"<<"\n";
+//    s << "numberer    Plain ;#same with cpp"<<"\n";
+//    s << "#system      SparseGeneral"<<"\n";
+//    s << "system      BandGeneral ;#same with cpp"<<"\n";
+//    s << "integrator  Newmark $gamma $beta"<<"\n";
+//    s << "#rayleigh    $a0 $a1 0.0 0.0"<<"\n";
+//    s << "analysis    Transient"<<"\n";
 
 
 
@@ -4859,12 +4861,12 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theRecorder = new NodeRecorder(dofToRecord, &nodesToRecord, 0, "disp", *theDomain, *theOutputStream, motionDT, true, NULL);
 //        theDomain->addRecorder(*theRecorder);
 //    }
-//    s << "file mkdir out_tcl" << endln;
+//    s << "file mkdir out_tcl" << "\n";
 //    double recDT = motionDT;
-//    s << "set recDT " << recDT << endln;
-//    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<endln;// 3
+//    s << "set recDT " << recDT << "\n";
+//    s<< "eval \"recorder Node -file out_tcl/surface.disp -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  disp\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/surface.acc -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3  accel\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/surface.vel -time -dT $recDT -node "<<numNodes<<" -dof 1 2 3 vel\""<<"\n";// 3
 
 
 //    if(doAnalysis)
@@ -4892,9 +4894,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theDomain->addRecorder(*theRecorder);
 //    }
 
-//    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<endln;// 1 2
-//    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<endln;// 3
+//    s<< "eval \"recorder Node -file out_tcl/base.disp -time -dT $recDT -node 1 -dof 1 2 3  disp\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/base.acc -time -dT $recDT -node 1 -dof 1 2 3  accel\""<<"\n";// 1 2
+//    s<< "eval \"recorder Node -file out_tcl/base.vel -time -dT $recDT -node 1 -dof 1 2 3 vel\""<<"\n";// 3
 
 
 //    /*
@@ -4908,7 +4910,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    theRecorder = new NodeRecorder(dofToRecord, &pwpNodesToRecord, 0, "vel", *theDomain, *theOutputStream, motionDT, true, NULL);
 //    theDomain->addRecorder(*theRecorder);
 
-//    s<< "eval \"recorder Node -file out_tcl/pwpLiq.out -time -dT $recDT -node 17 -dof 4 vel\""<<endln;
+//    s<< "eval \"recorder Node -file out_tcl/pwpLiq.out -time -dT $recDT -node 17 -dof 4 vel\""<<"\n";
 //    */
 
 //    if(doAnalysis)
@@ -4944,11 +4946,11 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //        theDomain->addRecorder(*theRecorder);
 //    }
 
-//    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  disp\""<<endln;
-//    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  vel\""<<endln;
-//    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<endln;
-//    s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<endln;   // this is for postProcess.py
-//    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 4 vel\""<<endln;
+//    s<< "eval \"recorder Node -file out_tcl/displacement.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  disp\""<<"\n";
+//    s<< "eval \"recorder Node -file out_tcl/velocity.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  vel\""<<"\n";
+//    s<< "eval \"recorder Node -file out_tcl/acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<"\n";
+//    s<< "eval \"recorder Node -file acceleration.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 1 3  accel\""<<"\n";   // this is for postProcess.py
+//    s<< "eval \"recorder Node -file out_tcl/porePressure.out -time -dT $recDT -nodeRange 1 "<<numNodes<<" -dof 4 vel\""<<"\n";
 
 
 //    if(doAnalysis)
@@ -4977,13 +4979,13 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    }
 
 
-//    //s<< "recorder Element -file out_tcl/stress2.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress "<<endln;
+//    //s<< "recorder Element -file out_tcl/stress2.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress "<<"\n";
 //    //s<< "recorder Element -file out_tcl/stress1.xxxout -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress 6 \n";
 //    s<< "recorder Element -file out_tcl/stress.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress 6 \n";
-//    //s<< "recorder Element -file out_tcl/stress4.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress "<<endln;
+//    //s<< "recorder Element -file out_tcl/stress4.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  stress "<<"\n";
 
-//    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  strain"<<endln;
-//    s<< endln;
+//    s<< "recorder Element -file out_tcl/strain.out -time -dT $recDT  -eleRange 1 "<<numBrickUPEles<<"  strain"<<"\n";
+//    s<< "\n";
 
 
 
@@ -4994,184 +4996,184 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    s << "# 5.4 Perform dynamic analysis                                \n";
 //    s << "# ------------------------------------------------------------\n\n";
 
-//    s << "set nSteps " << nSteps << endln;
-//    s << "set remStep " << remStep << endln;
-//    s << "set success 0" << endln << endln;
+//    s << "set nSteps " << nSteps << "\n";
+//    s << "set remStep " << remStep << "\n";
+//    s << "set success 0" << "\n" << "\n";
 
-//    s << "proc subStepAnalyze {dT subStep} {" << endln;
-//    s << "	if {$subStep > 10} {" << endln;
-//    s << "		return -10" << endln;
-//    s << "	}" << endln;
-//    s << "	for {set i 0} {$i < 3} {incr i} {" << endln;
-//    s << "		puts \"Try dT = $dT\"" << endln;
-//    s << "		set success [analyze 1 $dT]" << endln;
-//    s << "		if {$success != 0} {" << endln;
-//    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << endln;
-//    s << "			if {$success == -10} {" << endln;
-//    s << "				puts \"Did not converge.\"" << endln;
-//    s << "				return $success" << endln;
-//    s << "			}" << endln;
-//    s << "		} else {" << endln;
-//    s << "			if {$i==1} {" << endln;
-//    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << endln;
-//    s << "			} else {" << endln;
-//    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << endln;
-//    s << "			}" << endln;
-//    s << "		}" << endln;
-//    s << "	}" << endln;
-//    s << "	return $success" << endln;
-//    s << "}" << endln << endln << endln;
+//    s << "proc subStepAnalyze {dT subStep} {" << "\n";
+//    s << "	if {$subStep > 10} {" << "\n";
+//    s << "		return -10" << "\n";
+//    s << "	}" << "\n";
+//    s << "	for {set i 0} {$i < 3} {incr i} {" << "\n";
+//    s << "		puts \"Try dT = $dT\"" << "\n";
+//    s << "		set success [analyze 1 $dT]" << "\n";
+//    s << "		if {$success != 0} {" << "\n";
+//    s << "			set success [subStepAnalyze [expr $dT/2.0] [expr $subStep+1]]" << "\n";
+//    s << "			if {$success == -10} {" << "\n";
+//    s << "				puts \"Did not converge.\"" << "\n";
+//    s << "				return $success" << "\n";
+//    s << "			}" << "\n";
+//    s << "		} else {" << "\n";
+//    s << "			if {$i==1} {" << "\n";
+//    s << "				puts \"Substep $subStep : Left side converged with dT = $dT\"" << "\n";
+//    s << "			} else {" << "\n";
+//    s << "				puts \"Substep $subStep : Right side converged with dT = $dT\"" << "\n";
+//    s << "			}" << "\n";
+//    s << "		}" << "\n";
+//    s << "	}" << "\n";
+//    s << "	return $success" << "\n";
+//    s << "}" << "\n" << "\n" << "\n";
 
 
 //    /*
 //    // solution 1: direct steps
-//    s << "set thisStep 0"<<endln;
-//    s << "set success 0"<<endln;
-//    s << "while {$thisStep < 1998} {"<<endln;
-//    s << "    set thisStep [expr $thisStep+1]"<<endln;
-//    s << "    set success [analyze 1 $dT]"<<endln;
-//    s << "    if {$success == 0} {;# success"<<endln;
-//    s << "        puts \"Analysis Finished at step: $thisStep\""<<endln;
-//    s << "    } else {"<<endln;
-//    s << "        puts \"Analysis Failed at step: $thisStep ----------------------------------------------!!!\""<<endln;
-//    s << "    }"<<endln;
-//    s << "}"<<endln<<endln;
-//    s << "wipe"<<endln;
-//    s << "puts \"Site response analysis is finished.\n\""<< endln;
-//    s << "exit"<<endln<< endln <<endln;
+//    s << "set thisStep 0"<<"\n";
+//    s << "set success 0"<<"\n";
+//    s << "while {$thisStep < 1998} {"<<"\n";
+//    s << "    set thisStep [expr $thisStep+1]"<<"\n";
+//    s << "    set success [analyze 1 $dT]"<<"\n";
+//    s << "    if {$success == 0} {;# success"<<"\n";
+//    s << "        puts \"Analysis Finished at step: $thisStep\""<<"\n";
+//    s << "    } else {"<<"\n";
+//    s << "        puts \"Analysis Failed at step: $thisStep ----------------------------------------------!!!\""<<"\n";
+//    s << "    }"<<"\n";
+//    s << "}"<<"\n"<<"\n";
+//    s << "wipe"<<"\n";
+//    s << "puts \"Site response analysis is finished.\n\""<< "\n";
+//    s << "exit"<<"\n"<< "\n" <<"\n";
 //    */
 
 
 //    /*
-//    s << "puts \"Start analysis\"" << endln;
-//    s << "set startT [clock seconds]" << endln;
-//    s << "while {$success != -10} {" << endln;
-//    s << "	set subStep 0" << endln;
-//    s << "	set success [analyze $remStep  $dT]" << endln;
-//    s << "	if {$success == 0} {" << endln;
-//    s << "		puts \"Analysis Finished\"" << endln;
-//    s << "		break" << endln;
-//    s << "	} else {" << endln;
-//    s << "		set curTime  [getTime]" << endln;
-//    s << "		puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "		set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "		set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "		set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "		puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "	}" << endln;
-//    s << "}" << endln << endln;
+//    s << "puts \"Start analysis\"" << "\n";
+//    s << "set startT [clock seconds]" << "\n";
+//    s << "while {$success != -10} {" << "\n";
+//    s << "	set subStep 0" << "\n";
+//    s << "	set success [analyze $remStep  $dT]" << "\n";
+//    s << "	if {$success == 0} {" << "\n";
+//    s << "		puts \"Analysis Finished\"" << "\n";
+//    s << "		break" << "\n";
+//    s << "	} else {" << "\n";
+//    s << "		set curTime  [getTime]" << "\n";
+//    s << "		puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "		set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "		set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "		set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "		puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "	}" << "\n";
+//    s << "}" << "\n" << "\n";
 //    */
 
 
 //    /*
-//    s << "puts \"Start analysis\"" << endln;
-//    s << "set startT [clock seconds]" << endln;
-//    //s << "if {1} {" << endln;
-//    s << "set finalTime [expr $remStep * $dT]" << endln;
-//    s << "set success 0" << endln;
-//    s << "set currentTime 0." << endln;
-//    s << "set timeMarker 0." << endln;
-//    s << "while {$success == 0 && $currentTime < $finalTime} {" << endln;
-//    s << "	set subStep 0" << endln;
-//    s << "	set success [analyze 1  $dT]" << endln;
-//    s << "	if {$success != 0} {" << endln;
-//    s << "	set curTime  [getTime]" << endln;
-//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "	set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "    } else {" << endln;
-//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << endln;
-//    s << "          if { $progress > $timeMarker} {" << endln;
-//    s << "              set timeMarker [expr $timeMarker+2]" << endln;
-//    s << "              puts \"$progress%\"" << endln;
-//    s << "              }" << endln;
-//    s << "              set currentTime [getTime]" << endln;
-//    s << "	}" << endln;
-//    s << "}" << endln << endln;
-//    //s << "}" << endln << endln;
+//    s << "puts \"Start analysis\"" << "\n";
+//    s << "set startT [clock seconds]" << "\n";
+//    //s << "if {1} {" << "\n";
+//    s << "set finalTime [expr $remStep * $dT]" << "\n";
+//    s << "set success 0" << "\n";
+//    s << "set currentTime 0." << "\n";
+//    s << "set timeMarker 0." << "\n";
+//    s << "while {$success == 0 && $currentTime < $finalTime} {" << "\n";
+//    s << "	set subStep 0" << "\n";
+//    s << "	set success [analyze 1  $dT]" << "\n";
+//    s << "	if {$success != 0} {" << "\n";
+//    s << "	set curTime  [getTime]" << "\n";
+//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "	set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "    } else {" << "\n";
+//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << "\n";
+//    s << "          if { $progress > $timeMarker} {" << "\n";
+//    s << "              set timeMarker [expr $timeMarker+2]" << "\n";
+//    s << "              puts \"$progress%\"" << "\n";
+//    s << "              }" << "\n";
+//    s << "              set currentTime [getTime]" << "\n";
+//    s << "	}" << "\n";
+//    s << "}" << "\n" << "\n";
+//    //s << "}" << "\n" << "\n";
 //    */
 
 
 //    /*
-//    s << "if {0} {" << endln;
-//    s << "while {$success != -10} {" << endln;
-//    s << "    set subStep 0" << endln;
-//    s << "    set success [analyze $remStep  $dT]" << endln;
-//    s << "    if {$success == 0} {" << endln;
-//    s << "        puts \"Analysis Finished\"" << endln;
-//    s << "        break" << endln;
-//    s << "    } else {" << endln;
-//    s << "        set curTime  [getTime]" << endln;
-//    s << "        puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "        set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "        set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "       set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "        puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "    }" << endln;
-//    s << "}" << endln;
-//    s << "}" << endln;
+//    s << "if {0} {" << "\n";
+//    s << "while {$success != -10} {" << "\n";
+//    s << "    set subStep 0" << "\n";
+//    s << "    set success [analyze $remStep  $dT]" << "\n";
+//    s << "    if {$success == 0} {" << "\n";
+//    s << "        puts \"Analysis Finished\"" << "\n";
+//    s << "        break" << "\n";
+//    s << "    } else {" << "\n";
+//    s << "        set curTime  [getTime]" << "\n";
+//    s << "        puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "        set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "        set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "       set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "        puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "    }" << "\n";
+//    s << "}" << "\n";
+//    s << "}" << "\n";
 //    */
 
 //    /*
-//    s << "set endT [clock seconds]" << endln << endln;
-//    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << endln << endln;
-//    s << "puts \"Finished with dynamic analysis...\"" << endln << endln;
+//    s << "set endT [clock seconds]" << "\n" << "\n";
+//    s << "puts \"loading analysis execution time: [expr $endT-$startT] seconds.\"" << "\n" << "\n";
+//    s << "puts \"Finished with dynamic analysis...\"" << "\n" << "\n";
 
-//    s << endln;
-//    s << "print -file out_tcl/Domain.out" << endln << endln;
+//    s << "\n";
+//    s << "print -file out_tcl/Domain.out" << "\n" << "\n";
 
-//    s << "wipe" << endln;
-//    s << "puts \"Site response analysis is finished.\n\""<< endln;
-//    s << "exit" << endln << endln;
+//    s << "wipe" << "\n";
+//    s << "puts \"Site response analysis is finished.\n\""<< "\n";
+//    s << "exit" << "\n" << "\n";
 //    */
 
 
 
 
 //    /*
-//    s << "# perform analysis with timestep reduction loop" <<endln;
-//    s << "set ok [analyze $nSteps  $dT]" <<endln;
-//    //s << "puts $cmd \"set ok analyze $nSteps  $dT\"" <<endln;
-//    s << "" <<endln;
-//    s << "# if analysis fails, reduce timestep and continue with analysis" <<endln;
-//    s << "if {$ok != 0} {" <<endln;
-//    //s << "    puts \"did not converge, reducing time step\"" <<endln;
-//    s << "    set curTime  [getTime]" <<endln;
-//    s << "    set mTime $curTime" <<endln;
-//    //s << "    puts \"curTime: $curTime\"" <<endln;
-//    s << "    set curStep  [expr $curTime/$dT]" <<endln;
-//    //s << "    puts \"curStep: $curStep\"" <<endln;
-//    s << "    set rStep  [expr ($nSteps-$curStep)*2.0]" <<endln;
-//    s << "    set remStep  [expr int(($nSteps-$curStep)*2.0)]" <<endln;
-//    //s << "    puts \"remStep: $remStep\"" <<endln;
-//    s << "    set dT       [expr $dT/2.0]" <<endln;
-//    //s << "    puts \"dT: $dT\"" <<endln;
-//    s << " " <<endln;
-//    s << "    set ok [analyze  $remStep  $dT]" <<endln;
-//    s << "    set progress [expr ($nSteps - $remStep)/$nSteps * 100.]" << endln;
-//    s << "    puts \"$progress%\"" << endln;
-//    s << " " <<endln;
-//    s << "    # if analysis fails again, reduce timestep and continue with analysis" <<endln;
-//    s << "    if {$ok != 0} {" <<endln;
-//    //s << "        puts \"did not converge, reducing time step\"" <<endln;
-//    s << "        set curTime  [getTime]" <<endln;
-//    //s << "        puts \"curTime: $curTime\"" <<endln;
-//    s << "        set curStep  [expr ($curTime-$mTime)/$dT]" <<endln;
-//    //s << "        puts \"curStep: $curStep\"" <<endln;
-//    s << "        set remStep  [expr int(($rStep-$curStep)*2.0)]" <<endln;
-//    //s << "        puts \"remStep: $remStep\"" <<endln;
-//    s << "        set dT       [expr $dT/2.0]" <<endln;
-//    //s << "        puts \"dT: $dT\"" <<endln;
-//    s << " " <<endln;
-//    s << "        analyze  $remStep  $dT" <<endln;
-//    s << "    }" <<endln;
-//    s << "}" <<endln;
-//    s << "set endT    [clock seconds]" <<endln;
-//    s << "puts \"Finished with dynamic analysis...\"" <<endln;
-//    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<endln;
-//    s << "" <<endln;
+//    s << "# perform analysis with timestep reduction loop" <<"\n";
+//    s << "set ok [analyze $nSteps  $dT]" <<"\n";
+//    //s << "puts $cmd \"set ok analyze $nSteps  $dT\"" <<"\n";
+//    s << "" <<"\n";
+//    s << "# if analysis fails, reduce timestep and continue with analysis" <<"\n";
+//    s << "if {$ok != 0} {" <<"\n";
+//    //s << "    puts \"did not converge, reducing time step\"" <<"\n";
+//    s << "    set curTime  [getTime]" <<"\n";
+//    s << "    set mTime $curTime" <<"\n";
+//    //s << "    puts \"curTime: $curTime\"" <<"\n";
+//    s << "    set curStep  [expr $curTime/$dT]" <<"\n";
+//    //s << "    puts \"curStep: $curStep\"" <<"\n";
+//    s << "    set rStep  [expr ($nSteps-$curStep)*2.0]" <<"\n";
+//    s << "    set remStep  [expr int(($nSteps-$curStep)*2.0)]" <<"\n";
+//    //s << "    puts \"remStep: $remStep\"" <<"\n";
+//    s << "    set dT       [expr $dT/2.0]" <<"\n";
+//    //s << "    puts \"dT: $dT\"" <<"\n";
+//    s << " " <<"\n";
+//    s << "    set ok [analyze  $remStep  $dT]" <<"\n";
+//    s << "    set progress [expr ($nSteps - $remStep)/$nSteps * 100.]" << "\n";
+//    s << "    puts \"$progress%\"" << "\n";
+//    s << " " <<"\n";
+//    s << "    # if analysis fails again, reduce timestep and continue with analysis" <<"\n";
+//    s << "    if {$ok != 0} {" <<"\n";
+//    //s << "        puts \"did not converge, reducing time step\"" <<"\n";
+//    s << "        set curTime  [getTime]" <<"\n";
+//    //s << "        puts \"curTime: $curTime\"" <<"\n";
+//    s << "        set curStep  [expr ($curTime-$mTime)/$dT]" <<"\n";
+//    //s << "        puts \"curStep: $curStep\"" <<"\n";
+//    s << "        set remStep  [expr int(($rStep-$curStep)*2.0)]" <<"\n";
+//    //s << "        puts \"remStep: $remStep\"" <<"\n";
+//    s << "        set dT       [expr $dT/2.0]" <<"\n";
+//    //s << "        puts \"dT: $dT\"" <<"\n";
+//    s << " " <<"\n";
+//    s << "        analyze  $remStep  $dT" <<"\n";
+//    s << "    }" <<"\n";
+//    s << "}" <<"\n";
+//    s << "set endT    [clock seconds]" <<"\n";
+//    s << "puts \"Finished with dynamic analysis...\"" <<"\n";
+//    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<"\n";
+//    s << "" <<"\n";
 //    */
 
 
@@ -5179,44 +5181,44 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 
 
 
-//    s << "puts \"Start analysis\"" << endln;
-//    s << "set remStep $nSteps" << endln;
-//    s << "set startT [clock seconds]" << endln;
-//    s << "set finalTime [expr $remStep * $dT]" << endln;
-//    s << "set success 0" << endln;
-//    s << "set currentTime 0." << endln;
-//    s << "set timeMarker 0." << endln;
-//    s << "while {$success == 0 && $currentTime < $finalTime} {" << endln;
-//    s << "	set subStep 0" << endln;
-//    s << "	set success [analyze 1  $dT]" << endln;
-//    s << "	if {$success != 0} {" << endln;
-//    s << "	set curTime  [getTime]" << endln;
-//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << endln;
-//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << endln;
-//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << endln;
-//    s << "	set remStep  [expr int($nSteps-$curStep)]" << endln;
-//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << endln;
-//    s << "    } else {" << endln;
-//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << endln;
-//    s << "          if { $progress > $timeMarker} {" << endln;
-//    s << "              set timeMarker [expr $timeMarker+2]" << endln;
-//    s << "              puts \"$progress%\"" << endln;
-//    s << "              }" << endln;
-//    s << "              set currentTime [getTime]" << endln;
-//    s << "	}" << endln;
-//    s << "}" << endln << endln;
-//    s << "remove recorders" << endln;
-//    s << "set endT    [clock seconds]" <<endln;
-//    s << "puts \"Finished with dynamic analysis...\"" <<endln;
-//    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<endln;
-//    //s << "print -file out_tcl/Domain-3D-s3hark-tcl.out" <<endln;
+//    s << "puts \"Start analysis\"" << "\n";
+//    s << "set remStep $nSteps" << "\n";
+//    s << "set startT [clock seconds]" << "\n";
+//    s << "set finalTime [expr $remStep * $dT]" << "\n";
+//    s << "set success 0" << "\n";
+//    s << "set currentTime 0." << "\n";
+//    s << "set timeMarker 0." << "\n";
+//    s << "while {$success == 0 && $currentTime < $finalTime} {" << "\n";
+//    s << "	set subStep 0" << "\n";
+//    s << "	set success [analyze 1  $dT]" << "\n";
+//    s << "	if {$success != 0} {" << "\n";
+//    s << "	set curTime  [getTime]" << "\n";
+//    s << "	puts \"Analysis failed at $curTime . Try substepping.\"" << "\n";
+//    s << "	set success  [subStepAnalyze [expr $dT/2.0] [incr subStep]]" << "\n";
+//    s << "	set curStep  [expr int($curTime/$dT + 1)]" << "\n";
+//    s << "	set remStep  [expr int($nSteps-$curStep)]" << "\n";
+//    s << "	puts \"Current step: $curStep , Remaining steps: $remStep\"" << "\n";
+//    s << "    } else {" << "\n";
+//    s << "          set progress [expr $currentTime/$finalTime * 100.]" << "\n";
+//    s << "          if { $progress > $timeMarker} {" << "\n";
+//    s << "              set timeMarker [expr $timeMarker+2]" << "\n";
+//    s << "              puts \"$progress%\"" << "\n";
+//    s << "              }" << "\n";
+//    s << "              set currentTime [getTime]" << "\n";
+//    s << "	}" << "\n";
+//    s << "}" << "\n" << "\n";
+//    s << "remove recorders" << "\n";
+//    s << "set endT    [clock seconds]" <<"\n";
+//    s << "puts \"Finished with dynamic analysis...\"" <<"\n";
+//    s << "puts \"Analysis execution time: [expr $endT-$startT] seconds\"" <<"\n";
+//    //s << "print -file out_tcl/Domain-3D-s3hark-tcl.out" <<"\n";
 
 
 
 
-//    s << "" <<endln;
-//    s << "wipe" <<endln;
-//    s << "puts \"Site response analysis is finished.\"\n"<< endln;
+//    s << "" <<"\n";
+//    s << "wipe" <<"\n";
+//    s << "puts \"Site response analysis is finished.\"\n"<< "\n";
 
 //    s.close();
 //    ns.close();
@@ -5244,7 +5246,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //            double totalTime = dT * nSteps;
 //            int success = 0;
 
-//            opserr << "Analysis started:" << endln;
+//            std::cerr << "Analysis started:" << "\n";
 //            std::stringstream progressBar;
 //            for (int analysisCount = 0; analysisCount < remStep; ++analysisCount)
 //            {
@@ -5255,7 +5257,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                int converged = theTransientAnalysis->analyze(1, dT);
 //                if (!converged)
 //                {
-//                    opserr << "Converged at time " << theDomain->getCurrentTime() << endln;
+//                    std::cerr << "Converged at time " << theDomain->getCurrentTime() << "\n";
 
 //                    if (analysisCount % (int)(remStep / 20) == 0)
 //                    {
@@ -5275,11 +5277,11 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                }
 //                else
 //                {
-//                    opserr << "Site response analysis did not converge." << endln;
+//                    std::cerr << "Site response analysis did not converge." << "\n";
 //                    exit(-1);
 //                }
 //            }
-//            opserr << "Site response analysis done..." << endln;
+//            std::cerr << "Site response analysis done..." << "\n";
 //            if (callback) m_callbackFunction(100.0);
 //            progressBar << "\r[";
 //            for (int ii = 0; ii < 20; ii++)
@@ -5288,9 +5290,9 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //            progressBar << "]  🚌   100%\n";
 //            opsout << progressBar.str().c_str();
 //            opsout.flush();
-//            opsout << endln;
+//            opsout << "\n";
 //        } else { // substep
-//            opserr << "Analysis started (substepping):" << endln;
+//            std::cerr << "Analysis started (substepping):" << "\n";
 //            double finalTime = dT * remStep;
 //            int success = 0;
 //            double currentTime = 0.;
@@ -5313,7 +5315,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //                    if (currentProgress > timeMaker)
 //                    {
 //                        timeMaker += 1;
-//                        //std::cout << currentProgress << endln;
+//                        //std::cout << currentProgress << "\n";
 //                        remStept = 100-currentProgress;
 //                        if (currentProgress % stepLag == 0 && currentProgress > stepLag)
 //                        {
@@ -5338,11 +5340,11 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //            OPS_Stream* theOutputStreamAll;
 //            theOutputStreamAll = new DataFileStream("/Users/simcenter/Codes/SimCenter/s3hark/bin/Domain-3D-s3hark.out", OVERWRITE, 2, 0, false, 6, false);
 //            theDomain->Print(*theOutputStreamAll);
-//            opserr << theOutputStreamAll;
+//            std::cerr << theOutputStreamAll;
 //            delete theOutputStreamAll;
 
 
-//            opserr << "Site response analysis done..." << endln;
+//            std::cerr << "Site response analysis done..." << "\n";
 //            if (callback) m_callbackFunction(100.0);
 //            progressBar << "\r[";
 //            for (int ii = 0; ii < 100/stepLag; ii++)
@@ -5351,7 +5353,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //            progressBar << "]  🚌   100%\n";
 //            opsout << progressBar.str().c_str();
 //            opsout.flush();
-//            opsout << endln;
+//            opsout << "\n";
 
 //        }
 
@@ -5362,7 +5364,7 @@ int SiteResponseModel::buildEffectiveStressModel3DInternal(bool doAnalysis) {
 //    OPS_Stream* theOutputStreamAll;
 //    theOutputStreamAll = new DataFileStream("/Users/simcenter/Codes/SimCenter/s3hark/bin/Domain-3D-s3hark.out", OVERWRITE, 2, 0, false, 6, false);
 //    theDomain->Print(*theOutputStreamAll);
-//    opserr << theOutputStreamAll;
+//    std::cerr << theOutputStreamAll;
 //    delete theOutputStreamAll;
 
 

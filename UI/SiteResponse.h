@@ -7,9 +7,9 @@
 #include "soillayer.h"
 #include "outcropMotion.h"
 
-#include "StandardStream.h"
-#include "FileStream.h"
-#include "OPS_Stream.h"
+//#include "StandardStream.h"
+////#include "FileStream.h"
+//#include "OPS_Stream.h"
 
 
 class SiteResponse {
@@ -30,7 +30,7 @@ public:
 
     std::function<bool(double)> m_callbackFunction;
 
-    FileStream *ferr_true;
+    //FileStream *ferr_true;
 
 	
 private:

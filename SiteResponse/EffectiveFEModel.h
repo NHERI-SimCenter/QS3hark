@@ -17,14 +17,15 @@
 #define EFFECTIVEFEMODEL_H
 
 #include <functional>
-#include "Domain.h"
-#include "Matrix.h"
+
 
 #include "siteLayering.h"
 #include "soillayer.h"
 #include "outcropMotion.h"
 
 #ifndef NOINTERNALFEM
+#include "Domain.h"
+#include "Matrix.h"
 #include "DirectIntegrationAnalysis.h"
 
 #include "AnalysisModel.h"
@@ -102,7 +103,7 @@ public:
 
 
 private:
-    Domain *theDomain;
+
     SiteLayering    SRM_layering;
     OutcropMotion*  theMotionX;
     OutcropMotion*  theMotionZ;
@@ -113,9 +114,11 @@ private:
     std::string     theAnalysisDir;
     bool forward = true;
     bool m_doAnalysis = false;
-#ifndef NOINTERNALFEM
-    // 2D solver
     std::vector<double> dt;
+
+#ifndef NOINTERNALFEM
+     Domain *theDomain;
+    // 2D solver
     AnalysisModel *theModel;
     CTestNormDispIncr *theTest;
     EquiSolnAlgo *theSolnAlgo;

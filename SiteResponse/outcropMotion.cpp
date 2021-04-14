@@ -18,7 +18,7 @@
 #include <fstream>
 #include <sstream>
 #include <numeric>
-
+#include <iostream>
 #include "Vector.h"
 
 bool fileExists(const char* fileName)
@@ -133,13 +133,13 @@ OutcropMotion::setMotion(const char* fName)
 		{
 			// only time file exists. This is a problem
 			isThisInitialized = false;
-                        //opserr << "None of the files " << accFName.c_str() << " or " << velFName.c_str() << " or " << dispFName.c_str() << " exist." << endln;
+                        //opserr << "None of the files " << accFName.c_str() << " or " << velFName.c_str() << " or " << dispFName.c_str() << " exist." << "\n";
 		}
 	}
 	else {
 		// the time file does not exist. This is a problem
 		isThisInitialized = false;
-                //opserr << "The file " << timeFName.c_str() << " containing the array of time does not exist." << endln;
+                //opserr << "The file " << timeFName.c_str() << " containing the array of time does not exist." << "\n";
 	}
 }
 void                
@@ -197,13 +197,13 @@ OutcropMotion::setBBPMotion(const char* fName, int colNum)
 		else
 		{
 			isThisInitialized = false;
-			opserr << "File " << fName << " seems to be empty." << endln;
+            std::cerr << "File " << fName << " seems to be empty." << "\n";
 		}
 	}
 	else {
 		// the time file does not exist. This is a problem
 		isThisInitialized = false;
-		opserr << "File " << fName << " does not exist." << endln;
+        std::cerr << "File " << fName << " does not exist." << "\n";
 	}
 	return;
 }

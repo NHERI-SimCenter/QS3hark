@@ -11,10 +11,10 @@ using json = nlohmann::json;
 
 
 // these must be defined here!!
-StandardStream sserr;
-FileStream ferr("fem.log");
-OPS_Stream *opserrPtr = &ferr;
-OPS_Stream *opsoutPtr = &sserr;
+//StandardStream sserr;
+//FileStream ferr("fem.log");
+//OPS_Stream *opserrPtr = &ferr;
+//OPS_Stream *opsoutPtr = &sserr;
 
 
 SiteResponse::SiteResponse(std::string configureFile,std::string anaDir,std::string outDir,std::string femLog, std::function<bool(double)> callbackFunction ) :
@@ -42,8 +42,8 @@ void SiteResponse::init(std::string configureFile,std::string anaDir,std::string
 {
 
     // set fem log
-    ferr_true = new FileStream(m_femLog.c_str());
-    opserrPtr = ferr_true;
+  //  ferr_true = new FileStream(m_femLog.c_str());
+  //  opserrPtr = ferr_true;
 
     std::ifstream i(configureFile);
     json SRT;

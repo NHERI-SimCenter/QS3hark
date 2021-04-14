@@ -569,6 +569,7 @@ bool RockOutcrop::inputFromJSON(QJsonObject& inobj)
         double thickness = l["thickness"].toDouble();
         double vs = l["vs"].toDouble();
 
+
         if (i==soilLayers.size()-1)// Rock
         {
             QList<QVariant> valueListRock;
@@ -1427,12 +1428,12 @@ bool RockOutcrop::refreshRun(double step) {
         connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
         postProcessor->update();
 
-        theTabManager->setGMViewLoaded();
-        theTabManager->reFreshGMTab();
+        //theTabManager->setGMViewLoaded();
+        //theTabManager->reFreshGMTab();
 
-        theTabManager->reFreshGMView();
-        theTabManager->getTab()->setCurrentIndex(2);
-        resultsTab->setCurrentIndex(1);
+        //theTabManager->reFreshGMView();
+        //theTabManager->getTab()->setCurrentIndex(2);
+        //resultsTab->setCurrentIndex(1);
 
         QMessageBox::information(this,tr("s3hark Information"), "Analysis in s3hark is done.", tr("OK."));
 
@@ -1474,12 +1475,12 @@ void RockOutcrop::onOpenSeesFinished()
             connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
             postProcessor->update();
 
-            theTabManager->setGMViewLoaded();
-            theTabManager->reFreshGMTab();
+           // theTabManager->setGMViewLoaded();
+           //theTabManager->reFreshGMTab();
 
-            theTabManager->reFreshGMView();
-            theTabManager->getTab()->setCurrentIndex(2);
-            resultsTab->setCurrentIndex(1);
+            //theTabManager->reFreshGMView();
+           // theTabManager->getTab()->setCurrentIndex(2);
+           // resultsTab->setCurrentIndex(1);
 
             // QMessageBox::information(this,tr("OpenSees Information"), "Analysis is done.", tr("I know."));
 
