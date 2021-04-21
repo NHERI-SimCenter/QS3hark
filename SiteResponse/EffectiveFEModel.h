@@ -23,7 +23,7 @@
 #include "soillayer.h"
 #include "outcropMotion.h"
 
-#ifndef NOINTERNALFEM
+#ifdef _INTERNAL_FEM
 #include "Domain.h"
 #include "Matrix.h"
 #include "DirectIntegrationAnalysis.h"
@@ -87,7 +87,7 @@ public:
     void setConfigFile(std::string configFile) { theConfigFile = configFile; }
     void  setTclOutputDir(std::string outDir) { theTclOutputDir = outDir; }
     void  setAnalysisDir(std::string anaDir) { theAnalysisDir = anaDir; }
-#ifndef NOINTERNALFEM
+#ifdef _INTERNAL_FME
     int subStepAnalyze(double dT, int subStep, DirectIntegrationAnalysis* theTransientAnalysis);
     int trueRun();
 #endif

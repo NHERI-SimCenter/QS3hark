@@ -21,7 +21,7 @@
 #include "Vector.h"
 //#include "Matrix.h"
 
-#ifndef NOINTERNALFEM
+#ifdef _INTERNAL_FEM
 #include "Node.h"
 #include "Element.h"
 #include "NDMaterial.h"
@@ -2552,7 +2552,7 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
 //    return trueRun();
 //}
 
-#ifndef NOINTERNALFEM
+#ifdef _INTERNAL_FEM
 int SiteResponseModel::trueRun()
 {
     bool doAnalysis = m_doAnalysis;
