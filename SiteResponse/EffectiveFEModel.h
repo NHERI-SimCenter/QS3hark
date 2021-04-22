@@ -49,8 +49,6 @@
 #include <AcceleratedNewton.h>
 */
 
-
-
 #include "LinearSOE.h"
 #include "NodeIter.h"
 #include "ElementIter.h"
@@ -87,7 +85,7 @@ public:
     void setConfigFile(std::string configFile) { theConfigFile = configFile; }
     void  setTclOutputDir(std::string outDir) { theTclOutputDir = outDir; }
     void  setAnalysisDir(std::string anaDir) { theAnalysisDir = anaDir; }
-#ifdef _INTERNAL_FME
+#ifdef _INTERNAL_FEM
     int subStepAnalyze(double dT, int subStep, DirectIntegrationAnalysis* theTransientAnalysis);
     int trueRun();
 #endif
@@ -116,7 +114,7 @@ private:
     bool m_doAnalysis = false;
     std::vector<double> dt;
 
-#ifndef NOINTERNALFEM
+#ifdef _INTERNAL_FEM
      Domain *theDomain;
     // 2D solver
     AnalysisModel *theModel;
