@@ -999,9 +999,9 @@ void TabManager::onFEMTabEdited()
     if(file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
             QTextStream stream(&file);
             for (int i = 0; i < edtsFEM.size(); i++) {
-                stream<< listFEMtab[i] << ","<<" "<<edtsFEM[i]->text() << endl;
+                stream<< listFEMtab[i] << ","<<" "<<edtsFEM[i]->text() << "\n";
             }
-            stream<< "GWT" << ","<<" "<<tableView->getGWT() << endl;
+            stream<< "GWT" << ","<<" "<<tableView->getGWT() << "\n";
             //QString openseesPath = FEMWidget->findChild<QLineEdit*>("openseesPath")->text();
             //stream<< "OpenSeesPath" << ","<<" "<<openseesPath << endl;
             file.close();
@@ -1408,24 +1408,24 @@ QString TabManager::loadGMtoString()
     stream << "xnew = ['x'";
     for (int i=0; i<xd->size(); i+=overStep)
         stream << ", "<<xd->at(i);
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     if (simulationD==3)
     {
         stream << "ynewx1 = ['Rock motion-x1'";
         for (int i=0; i<yd->size(); i+=overStep)
             stream << ", "<<yd->at(i);
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
         stream << "ynewx2 = ['Rock motion-x2'";
         for (int i=0; i<ydx2->size(); i+=overStep)
             stream << ", "<<ydx2->at(i);
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
     }
     else {
         stream << "ynew = ['Rock motion'";
         for (int i=0; i<yd->size(); i+=overStep)
             stream << ", "<<yd->at(i);
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
     }
 
     /*
@@ -1441,25 +1441,25 @@ QString TabManager::loadGMtoString()
     stream << "xSurfaceVel = ['x'";
     for (int i=0; i<xdSurfaceVel->size(); i+=overStep)
         stream << ", "<<xdSurfaceVel->at(i);
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     if (simulationD==3)
     {
         stream << "ySurfaceVelx1 = ['Surface motion-x1'";
         for (int i=0; i<ydSurfaceVel->size(); i+=overStep)
             stream << ", "<<ydSurfaceVel->at(i).toDouble();
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         stream << "ySurfaceVelx2 = ['Surface motion-x2'";
         for (int i=0; i<ydSurfaceVelx2->size(); i+=overStep)
             stream << ", "<<ydSurfaceVelx2->at(i).toDouble();
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
     }
     else {
         stream << "ySurfaceVel = ['Surface motion'";
         for (int i=0; i<ydSurfaceVel->size(); i+=overStep)
             stream << ", "<<ydSurfaceVel->at(i).toDouble();
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
     }
 
     QString nodeResponseStr = loadNodeResponse("vel");
@@ -1473,38 +1473,38 @@ QString TabManager::loadGMtoString()
     //stream << "       xnew = ['x', 1, 2, 3, 4, 5, 6];" <<endl;
     //stream << "       ynew = ['Ground motion', 70, 180, 190, 180, 80, 250];"<<endl;
     //stream << "       chart.unload();"<<endl;
-    stream << "       setTimeout(function () {"<<endl;
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xnew,"<<endl;
+    stream << "       setTimeout(function () {"<<"\n";
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xnew,"<<"\n";
     if(simulationD==3)
     {
-    stream <<"           ynewx1,"<<endl;
-    stream <<"           ynewx2"<<endl;
+    stream <<"           ynewx1,"<<"\n";
+    stream <<"           ynewx2"<<"\n";
     }
-    else stream <<"           ynew"<<endl;
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    else stream <<"           ynew"<<"\n";
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xSurfaceVel,"<<endl;
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xSurfaceVel,"<<"\n";
     if(simulationD==3)
     {
-    stream <<"           ySurfaceVelx1,"<<endl;
-    stream <<"           ySurfaceVelx2"<<endl;
+    stream <<"           ySurfaceVelx1,"<<"\n";
+    stream <<"           ySurfaceVelx2"<<"\n";
     }
-    else stream <<"           ySurfaceVel"<<endl;
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    else stream <<"           ySurfaceVel"<<"\n";
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 1'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 2'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       }, 1000);"<<endl;
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 1'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 2'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       }, 1000);"<<"\n";
     return text;
 
 }
@@ -1540,12 +1540,12 @@ QString TabManager::loadGMtoStringVintage()
     stream << "xnew = ['x'";
     for (int i=0; i<xd.size(); i++)
         stream << ", "<<xd.at(i);
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     stream << "ynew = ['Rock motion'";
     for (int i=0; i<yd.size(); i++)
         stream << ", "<<yd.at(i);
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     /*
      * Get surface motion from file
@@ -1580,12 +1580,12 @@ QString TabManager::loadGMtoStringVintage()
     stream << "xSurfaceVel = ['x'";
     for (int i=0; i<xdSurfaceVel.size(); i++)
         stream << ", "<<xdSurfaceVel.at(i);
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     stream << "ySurfaceVel = ['Surface motion'";
     for (int i=0; i<ydSurfaceVel.size(); i++)
         stream << ", "<<ydSurfaceVel.at(i).toDouble();
-    stream <<"];" <<endl;
+    stream <<"];" <<"\n";
 
     QString nodeResponseStr = loadNodeResponse("vel");
     stream << nodeResponseStr;
@@ -1595,36 +1595,36 @@ QString TabManager::loadGMtoStringVintage()
 
 
 
-    //stream << "       xnew = ['x', 1, 2, 3, 4, 5, 6];" <<endl;
-    //stream << "       ynew = ['Ground motion', 70, 180, 190, 180, 80, 250];"<<endl;
-    //stream << "       chart.unload();"<<endl;
-    stream << "       setTimeout(function () {"<<endl;
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xnew,"<<endl;
-    stream <<"           ynew"<<endl;
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    //stream << "       xnew = ['x', 1, 2, 3, 4, 5, 6];" <<"\n";
+    //stream << "       ynew = ['Ground motion', 70, 180, 190, 180, 80, 250];"<<"\n";
+    //stream << "       chart.unload();"<<"\n";
+    stream << "       setTimeout(function () {"<<"\n";
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xnew,"<<"\n";
+    stream <<"           ynew"<<"\n";
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xSurfaceVel,"<<endl;
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xSurfaceVel,"<<"\n";
     if(simulationD==3)
     {
-    stream <<"           ySurfaceVelx1,"<<endl;
-    stream <<"           ySurfaceVelx2"<<endl;
+    stream <<"           ySurfaceVelx1,"<<"\n";
+    stream <<"           ySurfaceVelx2"<<"\n";
     }
-    else stream <<"           ySurfaceVel"<<endl;
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    else stream <<"           ySurfaceVel"<<"\n";
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 1'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 2'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       }, 1000);"<<endl;
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 1'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 2'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       }, 1000);"<<"\n";
     return text;
 
 }
@@ -1676,23 +1676,23 @@ QString TabManager::loadMotions2String(QString motion)
         stream << "xnew = ['x'";
         for (int i=0; i<xdBase->size(); i+=overStep)
             stream << ", "<<xdBase->at(i);
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         if(simulationD==3)
         {
             stream << "ynewx1 = ['Rock motion-x1'";
             for (int i=0; i<ydBase->size(); i+=overStep)
                 stream << ", "<<ydBase->at(i);
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
             stream << "ynewx2 = ['Rock motion-x2'";
             for (int i=0; i<ydBasex2->size(); i+=overStep)
                 stream << ", "<<ydBasex2->at(i);
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
         }else {
             stream << "ynew = ['Rock motion'";
             for (int i=0; i<ydBase->size(); i+=overStep)
                 stream << ", "<<ydBase->at(i);
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
 
         }
     }
@@ -1714,22 +1714,22 @@ QString TabManager::loadMotions2String(QString motion)
         stream << "xSurfaceVel = ['x'";
         for (int i=0; i<xdSurface->size(); i+=overStep)
             stream << ", "<<xdSurface->at(i);
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
         if(simulationD==3)
         {
             stream << "ySurfaceVelx1 = ['Surface motion-x1'";
             for (int i=0; i<ydSurface->size(); i+=overStep)
                 stream << ", "<<ydSurface->at(i).toDouble();
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
             stream << "ySurfaceVelx2 = ['Surface motion-x2'";
             for (int i=0; i<ydSurfacex2->size(); i+=overStep)
                 stream << ", "<<ydSurfacex2->at(i).toDouble();
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
         }else {
             stream << "ySurfaceVel = ['Surface motion'";
             for (int i=0; i<ydSurface->size(); i+=overStep)
                 stream << ", "<<ydSurface->at(i).toDouble();
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
 
         }
     }
@@ -1739,41 +1739,41 @@ QString TabManager::loadMotions2String(QString motion)
 
 
 
-    //stream << "       xnew = ['x', 1, 2, 3, 4, 5, 6];" <<endl;
-    //stream << "       ynew = ['Ground motion', 70, 180, 190, 180, 80, 250];"<<endl;
-    stream << "       chart.unload();"<<endl;
-    stream << "       setTimeout(function () {"<<endl;
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xnew,"<<endl;
+    //stream << "       xnew = ['x', 1, 2, 3, 4, 5, 6];" <<"\n";
+    //stream << "       ynew = ['Ground motion', 70, 180, 190, 180, 80, 250];"<<"\n";
+    stream << "       chart.unload();"<<"\n";
+    stream << "       setTimeout(function () {"<<"\n";
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xnew,"<<"\n";
     if(simulationD==3)
-    {stream <<"           ynewx1,"<<endl;
-        stream <<"           ynewx2"<<endl;
+    {stream <<"           ynewx1,"<<"\n";
+        stream <<"           ynewx2"<<"\n";
     }else {
-        stream <<"           ynew"<<endl;
+        stream <<"           ynew"<<"\n";
     }
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream << "       chart.load({"<<endl;
-    stream << "           columns: ["<<endl;
-    stream << "           xSurfaceVel,"<<endl;
+    stream << "       chart.load({"<<"\n";
+    stream << "           columns: ["<<"\n";
+    stream << "           xSurfaceVel,"<<"\n";
     if(simulationD==3)
-    {stream <<"           ySurfaceVelx1,"<<endl;
-        stream <<"           ySurfaceVelx2"<<endl;
+    {stream <<"           ySurfaceVelx1,"<<"\n";
+        stream <<"           ySurfaceVelx2"<<"\n";
     }else {
-        stream <<"           ySurfaceVel"<<endl;
+        stream <<"           ySurfaceVel"<<"\n";
     }
-    stream <<"           ]"<<endl;
-    stream <<"       });"<<endl;
+    stream <<"           ]"<<"\n";
+    stream <<"       });"<<"\n";
 
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 1'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       chart.unload({"<<endl;
-    stream <<"           ids: 'Demo motion 2'"<<endl;
-    stream <<"       });"<<endl;
-    stream <<"       }, 500);"<<endl;
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 1'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       chart.unload({"<<"\n";
+    stream <<"           ids: 'Demo motion 2'"<<"\n";
+    stream <<"       });"<<"\n";
+    stream <<"       }, 500);"<<"\n";
     return text;
 
 }
@@ -1815,7 +1815,7 @@ QString TabManager::loadNodeResponse(QString motion)
         stream << "time = ['x'";
         for (int i=0; i<(*v)[0].size(); i+=overStep)
             stream << ", "<<(*v)[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         int eleID = elementModel->getSize();
         for (int j=7;j<v->size();j+=4)
@@ -1826,16 +1826,16 @@ QString TabManager::loadNodeResponse(QString motion)
                 stream << "n"+QString::number(eleID)+" = ['Node "+QString::number(eleID)+"'";
                 for (int i=0; i<(*v)[j].size(); i+=overStep)
                     stream << ", "<<(*v)[j][i];
-                stream <<"];" <<endl;
+                stream <<"];" <<"\n";
             }else {
                 stream << "n"+QString::number(eleID)+"x1 = ['Node "+QString::number(eleID)+"-x1'";
                 for (int i=0; i<(*v)[j].size(); i+=overStep)
                     stream << ", "<<(*v)[j][i];
-                stream <<"];" <<endl;
+                stream <<"];" <<"\n";
                 stream << "n"+QString::number(eleID)+"x2 = ['Node "+QString::number(eleID)+"-x2'";
                 for (int i=0; i<(*v)[j+1].size(); i+=overStep)
                     stream << ", "<<(*v)[j+1][i];
-                stream <<"];" <<endl;
+                stream <<"];" <<"\n";
             }
         }
 
@@ -1863,17 +1863,17 @@ QString TabManager::loadNodeSa()
         stream << "xnew = ['x'";
         for (int i=0; i<Periods->size(); i++)
             stream << ", "<< (*Periods)[i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         stream << "ynew = ['Rock'";
         for (int i=0; i<(*saVec)[0].size(); i++)
             stream << ", "<<(*saVec)[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         stream << "time = ['x'";
         for (int i=0; i<Periods->size(); i++)
             stream << ", "<<(*Periods)[i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
 
         int eleID = elementModel->getSize()+1;
@@ -1885,7 +1885,7 @@ QString TabManager::loadNodeSa()
             //stream << "n"+QString::number(eleID)+" = ['Node marked by <'";
             for (int i=0; i<(*saVec)[j].size(); i++)
                 stream << ", "<<(*saVec)[j][i];
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
         }
 
     }else
@@ -1948,18 +1948,18 @@ QString TabManager::loadPWPResponse()
         stream << "xnew = ['x'";
         for (int i=0; i<v[0].size(); i+=overStep)
             stream << ", "<<v[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         stream << "ynew = ['Rock'";
         for (int i=0; i<v[2].size(); i+=overStep)
             stream << ", "<<v[2][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
 
         stream << "time = ['x'";
         for (int i=0; i<v[0].size(); i+=overStep)
             stream << ", "<<v[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
 
         int eleID = elementModel->getSize();
@@ -1973,7 +1973,7 @@ QString TabManager::loadPWPResponse()
             //stream << "pwp"+QString::number(eleID)+" = ['Node marked by <'";
             for (int i=0; i<v[j].size(); i+=overStep)
                 stream << ", "<<v[j][i];
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
         }
     }
 
@@ -2033,7 +2033,7 @@ QString TabManager::loadruPWPResponse()
         stream << "time = ['x'";
         for (int i=0; i<v[0].size(); i+=overStep)
             stream << ", "<<v[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
 
         int eleID = elementModel->getSize();
@@ -2067,7 +2067,7 @@ QString TabManager::loadruPWPResponse()
                 double thisepwp = - (v[j][i]-v[j][0]) / v1[eleInd];
                 stream << ", "<<thisepwp;
             }
-            stream <<"];" <<endl;
+            stream <<"];" <<"\n";
         }
     }
 
@@ -2160,7 +2160,7 @@ QString TabManager::loadEleResponse(QString motion)
         stream << "time = ['x'";
         for (int i=0; i<vStress[0].size(); i+=overStep)
             stream << ", "<<vStress[0][i];
-        stream <<"];" <<endl;
+        stream <<"];" <<"\n";
 
         QString outTitle;
         if(motion=="strain")
@@ -2191,7 +2191,7 @@ QString TabManager::loadEleResponse(QString motion)
                     //stream << "pwp"+QString::number(eleID)+" = ['Node marked by <'";
                     for (int i=0; i<v[j].size(); i+=overStep)
                         stream << ", "<<v[j][i];
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                 }
                 else
                 {
@@ -2199,17 +2199,17 @@ QString TabManager::loadEleResponse(QString motion)
                     //stream << "pwp"+QString::number(eleID)+" = ['Node marked by <'";
                     for (int i=0; i<v[j].size(); i+=overStep)
                         stream << ", "<<v[j][i];
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                     stream << outTitle+"23"+QString::number(eleID)+" = ['Element "+QString::number(eleID)+" (23)'";
                     //stream << "pwp"+QString::number(eleID)+" = ['Node marked by <'";
                     for (int i=0; i<v[j+1].size(); i+=overStep)
                         stream << ", "<<v[j+1][i];
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                     stream << outTitle+"13"+QString::number(eleID)+" = ['Element "+QString::number(eleID)+" (13)'";
                     //stream << "pwp"+QString::number(eleID)+" = ['Node marked by <'";
                     for (int i=0; i<v[j+2].size(); i+=overStep)
                         stream << ", "<<v[j+2][i];
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                 }
             }
         }else{
@@ -2225,33 +2225,33 @@ QString TabManager::loadEleResponse(QString motion)
                     {
                         stream << ", "<<vStress[j][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
 
                     stream << "Strain"+QString::number(eleID)+" = ['x'";
                     for (int i=0; i<vStrain[j].size(); i+=overStep)
                     {
                         stream << ", "<<vStrain[j][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                 }else {
                     stream << "Stress12"+QString::number(eleID)+" = ['Element "+QString::number(eleID)+" (12)'";
                     for (int i=0; i<vStress[j].size(); i+=overStep)
                     {
                         stream << ", "<<vStress[j][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                     stream << "Stress23"+QString::number(eleID)+" = ['Element "+QString::number(eleID)+" (23)'";
                     for (int i=0; i<vStress[j+1].size(); i+=overStep)
                     {
                         stream << ", "<<vStress[j+1][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
                     stream << "Stress13"+QString::number(eleID)+" = ['Element "+QString::number(eleID)+" (13)'";
                     for (int i=0; i<vStress[j+2].size(); i+=overStep)
                     {
                         stream << ", "<<vStress[j+2][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
 
                    //stream << "Strain12"+QString::number(eleID)+" = ['Elementx "+QString::number(eleID)+" (12)'";
                     stream << "Strain12"+QString::number(eleID)+" = ['x"+QString::number(eleID)+"12'";
@@ -2259,7 +2259,7 @@ QString TabManager::loadEleResponse(QString motion)
                     {
                         stream << ", "<<vStrain[j][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
 
                     //stream << "Strain12"+QString::number(eleID)+" = ['Elementx "+QString::number(eleID)+" (13)'";
                     stream << "Strain23"+QString::number(eleID)+" = ['x"+QString::number(eleID)+"23'";
@@ -2267,7 +2267,7 @@ QString TabManager::loadEleResponse(QString motion)
                     {
                         stream << ", "<<vStrain[j+1][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
 
                     //stream << "Strain12"+QString::number(eleID)+" = ['Elementx "+QString::number(eleID)+" (23)'";
                     stream << "Strain13"+QString::number(eleID)+" = ['x"+QString::number(eleID)+"13'";
@@ -2275,7 +2275,7 @@ QString TabManager::loadEleResponse(QString motion)
                     {
                         stream << ", "<<vStrain[j+1][i] ;
                     }
-                    stream <<"];" <<endl;
+                    stream <<"];" <<"\n";
 
                 }
             }
@@ -2468,15 +2468,15 @@ void TabManager::fillFEMTab(){
             double RockDen = 2.0;
             double DashpotCoeff = RockVs * RockDen;
             double VisC = eSizeH * eleThickness * DashpotCoeff;
-            stream << "eSizeH,"<<" "<<eSizeH << endl;
-            stream << "eSizeV,"<<" "<<eSizeV << endl;
-            stream << "RockVs,"<<" "<<RockVs << endl;
-            stream << "RockDen,"<<" "<<RockDen << endl;
-            stream << "DashpotCoeff,"<<" "<<DashpotCoeff << endl;
-            stream << "VisC,"<<" "<<VisC << endl;
-            stream << "GMPath,"<<" "<<"Input the path of a ground motion file. " << endl;
-            stream << "openseesPath,"<<" "<<"Input the full path of OpenSees excutable. " << endl;
-            stream << "GWT,"<<" "<<"0.0" << endl;
+            stream << "eSizeH,"<<" "<<eSizeH << "\n";
+            stream << "eSizeV,"<<" "<<eSizeV << "\n";
+            stream << "RockVs,"<<" "<<RockVs << "\n";
+            stream << "RockDen,"<<" "<<RockDen << "\n";
+            stream << "DashpotCoeff,"<<" "<<DashpotCoeff << "\n";
+            stream << "VisC,"<<" "<<VisC << "\n";
+            stream << "GMPath,"<<" "<<"Input the path of a ground motion file. " << "\n";
+            stream << "openseesPath,"<<" "<<"Input the full path of OpenSees excutable. " << "\n";
+            stream << "GWT,"<<" "<<"0.0" << "\n";
             fileNew.close();
             file.open(QIODevice::ReadOnly);
         }
