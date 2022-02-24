@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>PDMY02Ui</class>
+ <widget class="QDialog" name="PDMY02Ui">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>660</width>
+    <width>928</width>
     <height>324</height>
    </rect>
   </property>

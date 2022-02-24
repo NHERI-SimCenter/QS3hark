@@ -27,7 +27,6 @@
         $$PWD/SiteResponse/soillayer.cpp \
         $$PWD/SiteResponse/siteLayering.cpp \
         $$PWD/SiteResponse/outcropMotion.cpp \
-        $$PWD/UI/ProfileManager.cpp \
         $$PWD/UI/PostProcessor.cpp \
         $$PWD/UI/SSSharkThread.cpp
 
@@ -55,7 +54,6 @@
         $$PWD/SiteResponse/soillayer.h \
         $$PWD/SiteResponse/outcropMotion.h \
         $$PWD/SiteResponse/siteLayering.h \
-        $$PWD/UI/ProfileManager.h \
         $$PWD/UI/PostProcessor.h \
         $$PWD/UI/SSSharkThread.h
 
@@ -64,11 +62,20 @@ FORMS    += $$PWD/UI/MainWindow.ui \
     $$PWD/UI/RockOutcrop.ui \
     $$PWD/UI/InsertWindow.ui \
     $$PWD/UI/PM4Sand.ui \
+    $$PWD/UI/PM4Sand_random.ui \
     $$PWD/UI/PM4Silt.ui \
-    $$PWD/UI/ElasticIsotropic.ui \
     $$PWD/UI/DefaultMatTab.ui \
     $$PWD/UI/GroundMotion.ui \
-    $$PWD/UI/FEM.ui
+    $$PWD/UI/FEM.ui \
+    $$PWD/UI/PIMY.ui \
+    $$PWD/UI/PDMY.ui \
+    $$PWD/UI/PDMY02.ui \
+    $$PWD/UI/PDMY03.ui \
+    $$PWD/UI/PDMY03_random.ui \
+    $$PWD/UI/ManzariDafalias.ui \
+    $$PWD/UI/J2Bounding.ui \
+    $$PWD/UI/ElasticIsotropic.ui \
+    $$PWD/UI/ElasticIsotropic_random.ui \
 
 RESOURCES += \
     $$PWD/resources.qrc

@@ -125,10 +125,10 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
 }
 
 /*overide 1983*/
-QDialog
+/*QDialog
 {
-	background: white;
-}
+        background: gray;
+}*/
 
 QPushButton {
     color: black;

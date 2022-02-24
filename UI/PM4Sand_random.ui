@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>PM4SandRandomUi</class>
+ <widget class="QDialog" name="PM4SandRandomUi">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1004</width>
-    <height>416</height>
+    <height>433</height>
    </rect>
   </property>
   <property name="windowTitle">

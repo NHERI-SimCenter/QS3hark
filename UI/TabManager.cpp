@@ -1,4 +1,8 @@
 #include "TabManager.h"
+#include "ElementModel.h"
+#include "PostProcessor.h"
+#include "BonzaTableView.h"
+
 #include <QDebug>
 #include <QAbstractItemModel>
 #include <QLineEdit>
@@ -6,11 +10,28 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QFileInfo>
+#include <QFileDialog>
+#include <QJsonDocument>
+#include <QJsonArray>
 #include <QFile>
 #include <QLabel>
 #include <QComboBox>
+#include <QDialog>
 
-
+#include <ui_FEM.h>
+#include <ui_DefaultMatTab.h>
+#include <ui_PM4Sand.h>
+#include <ui_PM4Sand_random.h>
+#include <ui_PM4Silt.h>
+#include <ui_PIMY.h>
+#include <ui_PDMY.h>
+#include <ui_PDMY02.h>
+#include <ui_PDMY03.h>
+#include <ui_PDMY03_random.h>
+#include <ui_ManzariDafalias.h>
+#include <ui_J2Bounding.h>
+#include <ui_ElasticIsotropic.h>
+#include <ui_ElasticIsotropic_random.h>
 
 TabManager::TabManager(QWidget *parent) : QDialog(parent)
 {
@@ -19,6 +40,28 @@ TabManager::TabManager(QWidget *parent) : QDialog(parent)
 
 TabManager::TabManager(BonzaTableView *tableViewIn, ElementModel *emodel,QWidget *parent) : QDialog(parent),elementModel(emodel)
 {
+
+    qsHtmlName = QDir(rootDir).filePath("/Users/simcenter/Codes/SimCenter/s3hark/resources/ui/chat.html");
+    GMTabHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/index.html");
+    accHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/acc.html");
+    dispHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/disp.html");
+    pwpHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/pwp.html");
+    rupwpHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/rupwp.html");
+    strainHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/strain.html");
+    stressHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/stress.html");
+
+    GMTabHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/index-template.html");
+    accHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/acc-template.html");
+    dispHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/disp-template.html");
+    pwpHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/pwp-template.html");
+    rupwpHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/rupwp-template.html");
+    strainHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/strain-template.html");
+    stressHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/stress-template.html");
+
+    analysisDir = QDir(rootDir).filePath(analysisName);
+    femFilename = QDir(analysisDir).filePath("configure.dat");
+    srtFileName = QDir(analysisDir).filePath("SRT.json");
+
     tableView = tableViewIn;
 
     tableModel = tableView->m_sqlModel;
@@ -61,16 +104,15 @@ void TabManager::init(QTabWidget* theTab){
     //tab->setTabsClosable(true);
 
 
+//    QString uiFEMName = ":/UI/FEM.ui";
+//    QFile uiFEMFile(uiFEMName);
+//    uiFEMFile.open(QIODevice::ReadOnly);
+//    FEMWidget = uiLoader.load(&uiFEMFile,this);
 
+    FEMWidget = new QDialog();
+    Ui::FEMUi ui;
+    ui.setupUi(FEMWidget);
 
-
-    QUiLoader uiLoader;
-
-
-    QString uiFEMName = ":/UI/FEM.ui";
-    QFile uiFEMFile(uiFEMName);
-    uiFEMFile.open(QIODevice::ReadOnly);
-    FEMWidget = uiLoader.load(&uiFEMFile,this);
     hideConfigure();
     tab->addTab(FEMWidget,"Rock Motion");
 
@@ -87,14 +129,15 @@ void TabManager::init(QTabWidget* theTab){
     dimCheckBox->setToolTip("If your rock motion file contains bi-directional shaking data, this will be checked.");
     connect(dimCheckBox, SIGNAL(toggled(bool)), this, SLOT(onShakeDimCheckToggled(bool)));
 
+//    QString uiFileName = ":/UI/DefaultMatTab.ui";
+//    QFile uiFile(uiFileName);
+//    uiFile.open(QIODevice::ReadOnly);
+//    defaultWidget = uiLoader.load(&uiFile,this);
+//    tab->addTab(defaultWidget,"Layer properties");
 
-
-
-    QString uiFileName = ":/UI/DefaultMatTab.ui";
-    QFile uiFile(uiFileName);
-    uiFile.open(QIODevice::ReadOnly);
-    defaultWidget = uiLoader.load(&uiFile,this);
-    tab->addTab(defaultWidget,"Layer properties");
+    defaultWidget = new QDialog();
+    Ui::DefaultMatTabUi ui2;
+    ui2.setupUi(defaultWidget);
 
     /* removing response
     // load ground motion view from html
@@ -127,13 +170,20 @@ void TabManager::init(QTabWidget* theTab){
     */
 
 
-    QFile uiFilePM4Sand(":/UI/PM4Sand.ui");
-    uiFilePM4Sand.open(QIODevice::ReadOnly);
-    PM4SandWidget = uiLoader.load(&uiFilePM4Sand,this);
+//    QFile uiFilePM4Sand(":/UI/PM4Sand.ui");
+//    uiFilePM4Sand.open(QIODevice::ReadOnly);
+//    PM4SandWidget = uiLoader.load(&uiFilePM4Sand,this);
+
+    PM4SandWidget = new QDialog();
+    Ui::PM4SandUi ui3;
+    ui3.setupUi(PM4SandWidget);
+
     for (int i = 0; i < listPM4SandFEM.size(); ++i) {
         QString edtName = listPM4SandFEM[i] ;
         edtsPM4SandFEM.push_back(PM4SandWidget->findChild<QLineEdit*>(edtName));
     }
+
+
     // connect edit signal with onDataEdited
     for (int i = 0; i < edtsPM4SandFEM.size(); ++i) {
         connect(edtsPM4SandFEM[i], SIGNAL(editingFinished()), this, SLOT(onDataEdited()));
@@ -154,11 +204,14 @@ void TabManager::init(QTabWidget* theTab){
     PM4SandWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
     this->setUIToolTips(PM4SandWidget);
 
+//    QFile uiFilePM4Silt(":/UI/PM4Silt.ui");
+//    uiFilePM4Silt.open(QIODevice::ReadOnly);
+//    PM4SiltWidget = uiLoader.load(&uiFilePM4Silt,this);
 
+    PM4SiltWidget = new QDialog();
+    Ui::PM4SiltUi ui4;
+    ui4.setupUi(PM4SiltWidget);
 
-    QFile uiFilePM4Silt(":/UI/PM4Silt.ui");
-    uiFilePM4Silt.open(QIODevice::ReadOnly);
-    PM4SiltWidget = uiLoader.load(&uiFilePM4Silt,this);
     for (int i = 0; i < listPM4SiltFEM.size(); ++i) {
         QString edtName = listPM4SiltFEM[i] ;
         edtsPM4SiltFEM.push_back(PM4SiltWidget->findChild<QLineEdit*>(edtName));
@@ -185,9 +238,14 @@ void TabManager::init(QTabWidget* theTab){
     PM4SiltWidget->findChild<QLineEdit*>("Den")->setPalette(*palette);
     this->setUIToolTips(PM4SiltWidget);
 
-    QFile uiFilePIMY(":/UI/PIMY.ui");
-    uiFilePIMY.open(QIODevice::ReadOnly);
-    PIMYWidget = uiLoader.load(&uiFilePIMY,this);
+//    QFile uiFilePIMY(":/UI/PIMY.ui");
+//    uiFilePIMY.open(QIODevice::ReadOnly);
+//    PIMYWidget = uiLoader.load(&uiFilePIMY,this);
+
+    PIMYWidget = new QDialog();
+    Ui::PIMYUi ui5;
+    ui5.setupUi(PIMYWidget);
+
     for (int i = 0; i < listPIMYFEM.size(); ++i) {
         QString edtName = listPIMYFEM[i] ;
         edtsPIMYFEM.push_back(PIMYWidget->findChild<QLineEdit*>(edtName));
@@ -213,9 +271,14 @@ void TabManager::init(QTabWidget* theTab){
     this->setUIToolTips(PIMYWidget);
 
 
-    QFile uiFilePDMY(":/UI/PDMY.ui");
-    uiFilePDMY.open(QIODevice::ReadOnly);
-    PDMYWidget = uiLoader.load(&uiFilePDMY,this);
+//    QFile uiFilePDMY(":/UI/PDMY.ui");
+//    uiFilePDMY.open(QIODevice::ReadOnly);
+//    PDMYWidget = uiLoader.load(&uiFilePDMY,this);
+
+    PDMYWidget = new QDialog();
+    Ui::PDMYUi ui6;
+    ui6.setupUi(PDMYWidget);
+
     for (int i = 0; i < listPDMYFEM.size(); ++i) {
         QString edtName = listPDMYFEM[i] ;
         edtsPDMYFEM.push_back(PDMYWidget->findChild<QLineEdit*>(edtName));
@@ -241,9 +304,14 @@ void TabManager::init(QTabWidget* theTab){
     this->setUIToolTips(PDMYWidget);
 
 
-    QFile uiFilePDMY02(":/UI/PDMY02.ui");
-    uiFilePDMY02.open(QIODevice::ReadOnly);
-    PDMY02Widget = uiLoader.load(&uiFilePDMY02,this);
+//    QFile uiFilePDMY02(":/UI/PDMY02.ui");
+//    uiFilePDMY02.open(QIODevice::ReadOnly);
+//    PDMY02Widget = uiLoader.load(&uiFilePDMY02,this);
+
+    PDMY02Widget = new QDialog();
+    Ui::PDMY02Ui ui7;
+    ui7.setupUi(PDMY02Widget);
+
     for (int i = 0; i < listPDMY02FEM.size(); ++i) {
         QString edtName = listPDMY02FEM[i] ;
         edtsPDMY02FEM.push_back(PDMY02Widget->findChild<QLineEdit*>(edtName));
@@ -268,10 +336,14 @@ void TabManager::init(QTabWidget* theTab){
     PDMY02Widget->findChild<QLineEdit*>("rho")->setPalette(*palette);
     this->setUIToolTips(PDMY02Widget);
 
+//    QFile uiFileManzariDafalias(":/UI/ManzariDafalias.ui");
+//    uiFileManzariDafalias.open(QIODevice::ReadOnly);
+//    ManzariDafaliasWidget = uiLoader.load(&uiFileManzariDafalias,this);
 
-    QFile uiFileManzariDafalias(":/UI/ManzariDafalias.ui");
-    uiFileManzariDafalias.open(QIODevice::ReadOnly);
-    ManzariDafaliasWidget = uiLoader.load(&uiFileManzariDafalias,this);
+    ManzariDafaliasWidget = new QDialog();
+    Ui::ManzariDafaliasUi ui8;
+    ui8.setupUi(ManzariDafaliasWidget);
+
     for (int i = 0; i < listManzariDafaliasFEM.size(); ++i) {
         QString edtName = listManzariDafaliasFEM[i] ;
         edtsManzariDafaliasFEM.push_back(ManzariDafaliasWidget->findChild<QLineEdit*>(edtName));
@@ -293,9 +365,14 @@ void TabManager::init(QTabWidget* theTab){
     this->setUIToolTips(ManzariDafaliasWidget);
 
 
-    QFile uiFileJ2Bounding(":/UI/J2Bounding.ui");
-    uiFileJ2Bounding.open(QIODevice::ReadOnly);
-    J2BoundingWidget = uiLoader.load(&uiFileJ2Bounding,this);
+//    QFile uiFileJ2Bounding(":/UI/J2Bounding.ui");
+//    uiFileJ2Bounding.open(QIODevice::ReadOnly);
+//    J2BoundingWidget = uiLoader.load(&uiFileJ2Bounding,this);
+
+    J2BoundingWidget = new QDialog();
+    Ui::J2BoundingUi ui9;
+    ui9.setupUi(J2BoundingWidget);
+
     for (int i = 0; i < listJ2BoundingFEM.size(); ++i) {
         QString edtName = listJ2BoundingFEM[i] ;
         edtsJ2BoundingFEM.push_back(J2BoundingWidget->findChild<QLineEdit*>(edtName));
@@ -316,10 +393,14 @@ void TabManager::init(QTabWidget* theTab){
     J2BoundingWidget->findChild<QLineEdit*>("rho")->setPalette(*palette);
     this->setUIToolTips(J2BoundingWidget);
 
+//    QFile uiFileElasticIsotropic(":/UI/ElasticIsotropic.ui");
+//    uiFileElasticIsotropic.open(QIODevice::ReadOnly);
+//    ElasticIsotropicWidget = uiLoader.load(&uiFileElasticIsotropic,this);
 
-    QFile uiFileElasticIsotropic(":/UI/ElasticIsotropic.ui");
-    uiFileElasticIsotropic.open(QIODevice::ReadOnly);
-    ElasticIsotropicWidget = uiLoader.load(&uiFileElasticIsotropic,this);
+    ElasticIsotropicWidget = new QDialog();
+    Ui::ElasticIsotropicUi ui10;
+    ui10.setupUi(ElasticIsotropicWidget);
+
     for (int i = 0; i < listElasticIsotropicFEM.size(); ++i) {
         QString edtName = listElasticIsotropicFEM[i] ;
         edtsElasticIsotropicFEM.push_back(ElasticIsotropicWidget->findChild<QLineEdit*>(edtName));
@@ -363,9 +444,14 @@ void TabManager::init(QTabWidget* theTab){
     this->setUIToolTips(ElasticIsotropicWidget);
 
     // ---- add addtional UI -----
-    QFile uiFileElasticIsotropic_random(":/UI/ElasticIsotropic_random.ui");
-    uiFileElasticIsotropic_random.open(QIODevice::ReadOnly);
-    ElasticRandomWidget = uiLoader.load(&uiFileElasticIsotropic_random,this);
+//    QFile uiFileElasticIsotropic_random(":/UI/ElasticIsotropic_random.ui");
+//    uiFileElasticIsotropic_random.open(QIODevice::ReadOnly);
+//    ElasticRandomWidget = uiLoader.load(&uiFileElasticIsotropic_random,this);
+
+    ElasticRandomWidget = new QDialog();
+    Ui::ElasticRandomWidgetUi ui11;
+    ui11.setupUi(ElasticRandomWidget);
+
     for (int i = 0; i < listElasticRandomFEM.size(); ++i) {
         QString edtName = listElasticRandomFEM[i];
         edtsElasticRandomFEM.push_back(ElasticRandomWidget->findChild<QLineEdit*>(edtName));
@@ -393,11 +479,14 @@ void TabManager::init(QTabWidget* theTab){
     // adding tooltips
     this->setUIToolTips(ElasticRandomWidget);
 
+//    QFile uiFilePDMY03(":/UI/PDMY03.ui");
+//    uiFilePDMY03.open(QIODevice::ReadOnly);
+//    PDMY03Widget = uiLoader.load(&uiFilePDMY03,this);
 
+    PDMY03Widget = new QDialog();
+    Ui::PDMY03Ui ui12;
+    ui12.setupUi(PDMY03Widget);
 
-    QFile uiFilePDMY03(":/UI/PDMY03.ui");
-    uiFilePDMY03.open(QIODevice::ReadOnly);
-    PDMY03Widget = uiLoader.load(&uiFilePDMY03,this);
     for (int i = 0; i < listPDMY03FEM.size(); ++i) {
         QString edtName = listPDMY03FEM[i] ;
         edtsPDMY03FEM.push_back(PDMY03Widget->findChild<QLineEdit*>(edtName));
@@ -415,11 +504,14 @@ void TabManager::init(QTabWidget* theTab){
     PDMY03Widget->findChild<QLineEdit*>("rho")->setPalette(*palette);
     this->setUIToolTips(PDMY03Widget);
 
+//    QFile uiFilePM4Sand_random(":/UI/PM4Sand_random.ui");
+//    uiFilePM4Sand_random.open(QIODevice::ReadOnly);
+//    PM4SandRandomWidget = uiLoader.load(&uiFilePM4Sand_random,this);
 
+    PM4SandRandomWidget = new QDialog();
+    Ui::PM4SandRandomUi ui13;
+    ui13.setupUi(PM4SandRandomWidget);
 
-    QFile uiFilePM4Sand_random(":/UI/PM4Sand_random.ui");
-    uiFilePM4Sand_random.open(QIODevice::ReadOnly);
-    PM4SandRandomWidget = uiLoader.load(&uiFilePM4Sand_random,this);
     for (int i = 0; i < listPM4SandRandomFEM.size(); ++i) {
         QString edtName = listPM4SandRandomFEM[i] ;
         edtsPM4SandRandomFEM.push_back(PM4SandRandomWidget->findChild<QLineEdit*>(edtName));
@@ -447,11 +539,14 @@ void TabManager::init(QTabWidget* theTab){
     varNameComboBox->addItem("Dr");
     this->setUIToolTips(PM4SandRandomWidget);
 
+//    QFile uiFilePDMY03_random(":/UI/PDMY03_random.ui");
+//    uiFilePDMY03_random.open(QIODevice::ReadOnly);
+//    PDMY03RandomWidget = uiLoader.load(&uiFilePDMY03_random,this);
 
+    PDMY03RandomWidget = new QDialog();
+    Ui::PDMY03RandomUi ui14;
+    ui14.setupUi(PDMY03RandomWidget);
 
-    QFile uiFilePDMY03_random(":/UI/PDMY03_random.ui");
-    uiFilePDMY03_random.open(QIODevice::ReadOnly);
-    PDMY03RandomWidget = uiLoader.load(&uiFilePDMY03_random,this);
     for (int i = 0; i < listPDMY03RandomFEM.size(); ++i) {
         QString edtName = listPDMY03RandomFEM[i];
         edtsPDMY03RandomFEM.push_back(PDMY03RandomWidget->findChild<QLineEdit*>(edtName));

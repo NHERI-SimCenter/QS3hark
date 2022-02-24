@@ -2,13 +2,11 @@
 #define ROCK_OUTCROP_H
 
 #include <QWidget>
-#include <QWebEngineView>
 #include <QQuickView>
 #include "Mesher.h"
 #include "ElementModel.h"
 #include <QProcess>
 #include "TabManager.h"
-#include "ProfileManager.h"
 #include "PostProcessor.h"
 #include "SimCenterAppWidget.h"
 #include "SiteResponse.h"
@@ -139,7 +137,6 @@ private:// some of them were public
     QProcess* pythonProcess;
     TabManager* theTabManager;
     QTabWidget* resultsTab;
-    ProfileManager* profiler;
     PostProcessor* postProcessor;
 
     double maxPGA;

@@ -1,30 +1,20 @@
 #ifndef TABMANAGER_H
 #define TABMANAGER_H
 
-#include <QObject>
+class BonzaTableView;
+class BonzaTableModel;
+class ElementModel;
+class PostProcessor;
+class QTabWidget;
+class QDialog;
+class QLineEdit;
+class QLabel;
+
 #include <QDialog>
-#include <QTabWidget>
-
-#include <QUiLoader>
-#include <QFile>
 #include <QModelIndex>
-#include "BonzaTableView.h"
-#include <QWebEngineView>
-#include <QFileDialog>
 #include <QJsonObject>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QFileInfo>
-#include <QWebChannel>
-#include "ElementModel.h"
-#include "PostProcessor.h"
-#include <math.h>
-#include <QStandardPaths>
 #include <QCheckBox>
-#include <QLabel>
-
-
-
+#include <QStandardPaths>
 
 class TabManager : public QDialog
 {
@@ -108,40 +98,40 @@ public slots:
 
 
 private:
-    QTabWidget* tab;
+    QTabWidget* tab = nullptr;
     int currentRow = -9;
     int currentCol = -9;
     QString currentMatType;
-    BonzaTableView *tableView;
-    BonzaTableModel *tableModel;
-    ElementModel* elementModel;
-    PostProcessor *postProcessor;
+    BonzaTableView *tableView = nullptr;
+    BonzaTableModel *tableModel = nullptr;
+    ElementModel* elementModel = nullptr;
+    PostProcessor *postProcessor = nullptr;
 
     //QFile uiFilePM4Sand;
     //QFile uiFileElasticIsotropic;
 
-    QWidget* PM4SandWidget;
-    QWidget* PM4SiltWidget;
-    QWidget* PIMYWidget;
-    QWidget* PDMYWidget;
-    QWidget* PDMY02Widget;
-    QWidget* ManzariDafaliasWidget;
-    QWidget* J2BoundingWidget;
-    QWidget* ElasticIsotropicWidget;
-    QWidget* defaultWidget;
-    QWidget* GMWidget;
-    QWidget* FEMWidget;
+    QDialog* PM4SandWidget = nullptr;
+    QDialog* PM4SiltWidget = nullptr;
+    QDialog* PIMYWidget = nullptr;
+    QDialog* PDMYWidget = nullptr;
+    QDialog* PDMY02Widget = nullptr;
+    QDialog* ManzariDafaliasWidget = nullptr;
+    QDialog* J2BoundingWidget = nullptr;
+    QDialog* ElasticIsotropicWidget = nullptr;
+    QDialog* defaultWidget = nullptr;
+    QWidget* GMWidget = nullptr;
+    QDialog* FEMWidget = nullptr;
     // add addtional UI
-    QWidget* PM4SandRandomWidget;
-    QWidget* PDMY03Widget;
-    QWidget* PDMY03RandomWidget;
-    QWidget* ElasticRandomWidget;
+    QDialog* PM4SandRandomWidget = nullptr;
+    QDialog* PDMY03Widget = nullptr;
+    QDialog* PDMY03RandomWidget = nullptr;
+    QDialog* ElasticRandomWidget = nullptr;
 
-    QWebEngineView *quickstart;
+    QWidget *quickstart = nullptr;
   //    QWebEngineView *GMView;
     QString GMPathStr;
 
-    QWidget* currentWidget;
+    QWidget* currentWidget = nullptr;
     QVector<QLineEdit*> currentEdts;
 
     QList<QString> listFEMtab = {"eSizeH", "eSizeV", "RockVs", "RockDen", "DashpotCoeff", "VisC", "GMPath", "openseesPath"};
@@ -218,30 +208,30 @@ private:
 
 
     QString thisMatType;
-    QString qsHtmlName = QDir(rootDir).filePath("/Users/simcenter/Codes/SimCenter/s3hark/resources/ui/chat.html");
-    QString GMTabHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/index.html");
-    QString accHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/acc.html");
-    QString dispHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/disp.html");
-    QString pwpHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/pwp.html");
-    QString rupwpHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/rupwp.html");
-    QString strainHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/strain.html");
-    QString stressHtmlName = QDir(rootDir).filePath("resources/ui/GroundMotion/stress.html");
+    QString qsHtmlName;
+    QString GMTabHtmlName;
+    QString accHtmlName;
+    QString dispHtmlName;
+    QString pwpHtmlName;
+    QString rupwpHtmlName;
+    QString strainHtmlName;
+    QString stressHtmlName;
 
-    QString GMTabHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/index-template.html");
-    QString accHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/acc-template.html");
-    QString dispHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/disp-template.html");
-    QString pwpHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/pwp-template.html");
-    QString rupwpHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/rupwp-template.html");
-    QString strainHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/strain-template.html");
-    QString stressHtmlNameTmp = QDir(rootDir).filePath("resources/ui/GroundMotion/stress-template.html");
+    QString GMTabHtmlNameTmp;
+    QString accHtmlNameTmp;
+    QString dispHtmlNameTmp;
+    QString pwpHtmlNameTmp;
+    QString rupwpHtmlNameTmp;
+    QString strainHtmlNameTmp;
+    QString stressHtmlNameTmp;
 
 
     QString openseesPathStr;
     //QString rockmotionpathStr;
     QString analysisName = "analysis";
-    QString analysisDir = QDir(rootDir).filePath(analysisName);
-    QString femFilename = QDir(analysisDir).filePath("configure.dat");
-    QString srtFileName = QDir(analysisDir).filePath("SRT.json");
+    QString analysisDir;
+    QString femFilename;
+    QString srtFileName;
 
   //    bool GMViewLoaded = false;
 

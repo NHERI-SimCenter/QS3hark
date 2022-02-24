@@ -15,20 +15,20 @@
 #include <QParallelAnimationGroup>
 #include <QThread>
 #include <QTabWidget>
-#include <QUiLoader>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QSizePolicy>
 #include <QTabBar>
 #include <QSettings>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <string>
 #include <iomanip>
-
-
 
 RockOutcrop::RockOutcrop(QWidget *parent) :
     SimCenterAppWidget(parent),
@@ -191,8 +191,6 @@ RockOutcrop::RockOutcrop(QWidget *parent) :
     resultsTab->addTab(meshContainer,"Mesh");
 
     postProcessor = new PostProcessor(outputDir);
-    profiler = new ProfileManager(resultsTab, postProcessor ,this);
-    //connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
     //postProcessor->update();
 
 
@@ -1410,9 +1408,7 @@ bool RockOutcrop::refreshRun(double step) {
         resultsTab->setCurrentIndex(1);
 
         postProcessor = new PostProcessor(outputDir);
-        profiler->updatePostProcessor(postProcessor);
         theTabManager->updatePostProcessor(postProcessor);
-        connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
         postProcessor->update();
 
         emit signalProgress(100);
@@ -1423,9 +1419,7 @@ bool RockOutcrop::refreshRun(double step) {
         on_killBtn_clicked();
 
         postProcessor = new PostProcessor(outputDir);
-        profiler->updatePostProcessor(postProcessor);
         theTabManager->updatePostProcessor(postProcessor);
-        connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
         postProcessor->update();
 
         //theTabManager->setGMViewLoaded();
@@ -1470,9 +1464,7 @@ void RockOutcrop::onOpenSeesFinished()
             openseesErrCount = 2;
 
             postProcessor = new PostProcessor(outputDir);
-            profiler->updatePostProcessor(postProcessor);
             theTabManager->updatePostProcessor(postProcessor);
-            connect(postProcessor, SIGNAL(updateFinished()), profiler, SLOT(onPostProcessorUpdated()));
             postProcessor->update();
 
            // theTabManager->setGMViewLoaded();
