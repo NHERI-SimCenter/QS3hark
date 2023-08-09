@@ -148,7 +148,7 @@ private:// some of them were public
     bool loadPreviousResults = true;
     bool m_runningStochastic = false;
 
-    SSSharkThread *shark;
+    SSSharkThread *shark = nullptr;
 
  public:
     QString rootDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation); // qApp->applicationDirPath();//

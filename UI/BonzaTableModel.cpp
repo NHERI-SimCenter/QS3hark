@@ -4,7 +4,7 @@
 Qt::ItemFlags BonzaTableModel::flags( const QModelIndex &index ) const
 {
     if(!index.isValid())
-        return nullptr;
+        return Qt::NoItemFlags;
 
     if ( index.column() == CHECKED )
         return (QAbstractTableModel::flags(index) & Qt::ItemIsEditable);

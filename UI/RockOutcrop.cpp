@@ -55,7 +55,7 @@ RockOutcrop::RockOutcrop(QWidget *parent) :
 
     // random seed
     unsigned uintTime = static_cast<unsigned>(QTime::currentTime().msec());
-    qsrand(uintTime);
+    srand(uintTime);
 
     ui->setupUi(this);
     updateCtrl();
@@ -1483,10 +1483,13 @@ void RockOutcrop::onOpenSeesFinished()
             ui->progressBar->hide();
 
         }else{
-            QRegExp rxlen("(.+)(%)");
-            int pos = rxlen.indexIn(str_err);
-            if (pos > -1) {
-                QString value = rxlen.cap(1);
+            QRegularExpression rxlen("(.+)(%)");
+
+            QRegularExpressionMatch match = rxlen.match(str_err);
+
+            if (match.hasMatch()) {
+
+                QString value = match.captured(1);
                 int step = int(ceil(value.toDouble()));
                 if(step>0)
                     emit signalProgress(step);

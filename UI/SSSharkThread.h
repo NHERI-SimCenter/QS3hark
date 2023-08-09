@@ -18,7 +18,6 @@ signals:
     void updateProgress(double);
 
 public:
-    explicit SSSharkThread(QObject *parent = nullptr);
     SSSharkThread(QString srtFileNametmp,QString analysisDirtmp,QString outputDirtmp,QString femLog,QObject *parent = nullptr);
 
     bool updateProgressBar(double step){emit updateProgress(step);return forward;}

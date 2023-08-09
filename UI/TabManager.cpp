@@ -2915,7 +2915,7 @@ void TabManager::fillMatTab(QString thisMatType,const QModelIndex &index){
     checkDefaultFEM(thisMatType, index);
 
     QString FEMString = tableModel->data(tableModel->index(index.row(), FEM)).toString();
-    QStringList FEMStringList = FEMString.split(" ", QString::SkipEmptyParts);
+    QStringList FEMStringList = FEMString.split(" ", Qt::SkipEmptyParts);
 
     cleanForm(currentEdts);
 
@@ -3535,7 +3535,7 @@ void TabManager::cleanForm(QVector<QLineEdit*> currentEdts)
 void TabManager::checkDefaultFEM(QString thisMatType,const QModelIndex &index)
 {
     QString FEMString = tableModel->data(tableModel->index(index.row(), FEM)).toString();
-    QStringList FEMStringList = FEMString.split(" ", QString::SkipEmptyParts);
+    QStringList FEMStringList = FEMString.split(" ", Qt::SkipEmptyParts);
 
     int numPars;
     if (thisMatType == "Elastic")
