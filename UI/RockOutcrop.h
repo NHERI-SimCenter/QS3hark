@@ -42,6 +42,7 @@ public:
     bool inputFromJSON_old(QJsonObject &rvObject);
     bool outputAppDataToJSON(QJsonObject &rvObject);
     bool inputAppDataFromJSON(QJsonObject &rvObject);
+    bool outputCitation(QJsonObject &citatinoObject);
     bool copyFiles(QString &destDir);
 
     // callback setups

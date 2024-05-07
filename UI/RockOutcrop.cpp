@@ -1082,8 +1082,8 @@ void RockOutcrop::on_reBtn_clicked()
     double GWT = ui->tableView->getGWT();
 
     json root = {
-        {"name","Configuration of Site Response Analysis of A Demo Site"},
-        {"author","SimCenter Site Response Tool"}
+        {"name","Configuration of Site Response Analysis of A Demo "},
+        {"author","SimCenter  Response Tool"}
     };
 
     //TODO: this part is actually doing nothing?
@@ -1457,7 +1457,7 @@ void RockOutcrop::onOpenSeesFinished()
 
     if(openseesErrCount==1)
     {
-        if(str_err.contains("Site response analysis is finished."))
+        if(str_err.contains(" response analysis is finished."))
         {
 
             //qDebug() << "opensees says:" << str_err;
@@ -1867,4 +1867,21 @@ bool RockOutcrop::copyDir(const QDir& from, const QDir& to, bool cover=true)
 
 
 
+bool RockOutcrop::outputCitation(QJsonObject &jsonObject){
 
+    QJsonArray siteResponseCitation;
+
+    QJsonObject RandomFieldCitation;
+    RandomFieldCitation.insert("citation",QString("Yamazaki, F., & Shinozuka, M. (1988). Digital generation of non-Gaussian stochastic fields. Journal of Engineering Mechanics, 114(7), 1183-1197."));
+    RandomFieldCitation.insert("description",QString("The random field sampling in the site response analysis follows the implementation detail in this paper."));
+    siteResponseCitation.push_back(RandomFieldCitation);
+
+    QJsonObject PM4SandCitation;
+    PM4SandCitation.insert("citation",QString("Chen, L., & Arduino, P. (2021). Implementation, verification, and validation of the PM4Sand model in OpenSees. Pacific Earthquake Engineering Research (PEER) Center. University of California, Berkeley, Berkeley, USA, Report, 2"));
+    PM4SandCitation.insert("description",QString("The calibration of the PM4Sand model is based on a parametric study using quoFEM as detailed in this report."));
+    siteResponseCitation.push_back(PM4SandCitation);
+
+    jsonObject.insert("citations",siteResponseCitation);
+
+    return true;
+}
