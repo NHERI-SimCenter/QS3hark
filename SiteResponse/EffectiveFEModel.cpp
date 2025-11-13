@@ -855,12 +855,13 @@ int SiteResponseModel::buildEffectiveStressModel2D(bool doAnalysis)
     s << "set dT " << dT << "\n";
     s << "set motionDT " << motionDT << "\n";
     //s << "set mSeries \"Path -dt $motionDT -filePath /Users/simcenter/Codes/SimCenter/SiteResponseTool/test/RSN766_G02_000_VEL.txt -factor $cFactor\""<<"\n";
-    s << "set mSeries \"Path -dt $motionDT -filePath Rock-x.vel -factor $cFactor\""<<"\n";
+    
+    s << "timeSeries Path 10 -dt $motionDT -filePath Rock-x.vel -factor $cFactor\n";
 
     // using a stress input with the dashpot
     if (theMotionX->isInitialized())
     {
-        s << "pattern Plain 10 $mSeries {"<<"\n";
+        s << "pattern Plain 10 10 {"<<"\n";
         s << "    load 1  1.0 0.0 0.0" << "\n";
         s << "}" << "\n" << "\n";
 
